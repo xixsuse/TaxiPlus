@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clickable="true"
+    android:background="@color/white"
+    tools:context=".ui.MainFragment">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/fmp_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_42sdp"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetRight="0dp"
+        app:contentInsetEnd="0dp"
+        android:background="?attr/colorPrimary">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:requiresFadingEdge="horizontal"
+            android:gravity="center_vertical">
+            <ImageButton
+                android:id="@+id/fmp_back"
+                android:layout_width="@dimen/_22sdp"
+                android:layout_height="@dimen/_22sdp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:background="@drawable/icon_menu_white" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/my_places"
+                android:textAlignment="center"
+                android:textSize="@dimen/_16ssp"
+                android:textColor="@color/white"/>
+            <ImageButton
+                android:id="@+id/fmp_add"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:background="@drawable/icon_add" />
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fmp_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/fmp_toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <ProgressBar
+        android:id="@+id/fmp_progressbar"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:indeterminate="true"
+        android:visibility="gone"/>
+</android.support.constraint.ConstraintLayout>

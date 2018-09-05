@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:id="@+id/rpti_view">
+    <View
+        android:id="@+id/rpti_left_line"
+        android:layout_width="0.5dp"
+        android:layout_height="match_parent"
+        android:background="@color/gray"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/_2sdp"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/rpti_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="@dimen/_10ssp"
+            android:textColor="@color/gray"
+            android:maxLines="2"
+            android:ellipsize="end"/>
+        <ImageView
+            android:id="@+id/rpti_icon"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_width="@dimen/_65sdp"
+            android:layout_height="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_2sdp"/>
+    </LinearLayout>
+</LinearLayout>

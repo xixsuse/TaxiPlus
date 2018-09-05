@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="@dimen/_5sdp"
+    android:id="@+id/rmi_view">
+    <ImageView
+        android:id="@+id/rmi_icon"
+        android:layout_width="@dimen/_18sdp"
+        android:layout_height="@dimen/_18sdp"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/rmi_title"/>
+
+    <TextView
+        android:id="@+id/rmi_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/rmi_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_15ssp"
+        android:text="Menu"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/gray"
+        app:layout_constraintTop_toBottomOf="@id/rmi_title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="@dimen/_5sdp"/>
+
+</android.support.constraint.ConstraintLayout>

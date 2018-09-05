@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rhi_view">
+
+    <ImageView
+        android:id="@+id/location_icon"
+        android:layout_width="@dimen/_15sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:background="@drawable/icon_location_marker"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/rhi_address_text"
+        app:layout_constraintBottom_toBottomOf="@id/rhi_address_text"
+        android:layout_margin="@dimen/_5sdp"/>
+
+    <TextView
+        android:id="@+id/rhi_price_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_13ssp"
+        app:layout_constraintTop_toTopOf="@id/rhi_address_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/rhi_date_text"
+        app:layout_constraintStart_toStartOf="@id/rhi_date_text"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginBottom="@dimen/_1sdp"
+        android:text="500"
+        android:maxLines="1"
+        android:ellipsize="end"/>
+    <TextView
+        android:id="@+id/rhi_date_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/_11ssp"
+        app:layout_constraintTop_toBottomOf="@id/rhi_price_text"
+        app:layout_constraintBottom_toBottomOf="@id/rhi_address_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="24.04.2018"
+        android:maxLines="1"
+        android:ellipsize="end"/>
+
+    <TextView
+        android:id="@+id/rhi_address_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/line"
+        app:layout_constraintStart_toEndOf="@id/location_icon"
+        android:layout_marginStart="@dimen/_8sdp"
+        app:layout_constraintEnd_toStartOf="@id/rhi_date_text"
+        android:textSize="@dimen/_15ssp"
+        android:text="Abai 28 - Novai 5"
+        android:textColor="@color/black"/>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/gray"
+        android:layout_marginTop="@dimen/_12sdp"
+        app:layout_constraintTop_toBottomOf="@id/rhi_address_text"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</android.support.constraint.ConstraintLayout>

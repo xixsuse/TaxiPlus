@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="@dimen/_12sdp"
+    android:background="@color/white">
+
+    <EditText
+        android:id="@+id/cncod_name_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_gray_view"
+        android:hint="@string/auth_name"
+        android:padding="@dimen/_6sdp"
+        android:textSize="@dimen/_13ssp"
+        android:textColor="@color/gray"
+        android:textAlignment="center"/>
+    <EditText
+        android:id="@+id/cncod_desc_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/_70sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:background="@drawable/rounded_gray_view"
+        android:hint="@string/enter_desc"
+        android:padding="@dimen/_6sdp"
+        android:textSize="@dimen/_13ssp"
+        android:textColor="@color/gray"
+        android:gravity="center"/>
+
+    <EditText
+        android:id="@+id/cncod_price_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:background="@drawable/rounded_gray_view"
+        android:hint="@string/price"
+        android:padding="@dimen/_6sdp"
+        android:textSize="@dimen/_13ssp"
+        android:inputType="number"
+        android:textColor="@color/gray"
+        android:textAlignment="center"/>
+
+    <Button
+        android:id="@+id/cncod_send_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35sdp"
+        android:background="@drawable/rounded_green_view"
+        android:layout_marginTop="@dimen/_18sdp"
+        android:layout_marginStart="@dimen/_35sdp"
+        android:layout_marginEnd="@dimen/_35sdp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_15ssp"
+        android:textAllCaps="false"
+        android:text="@string/send"/>
+</LinearLayout>

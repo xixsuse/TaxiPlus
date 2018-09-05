@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clickable="true"
+    android:background="@color/white">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/fmc_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_42sdp"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetRight="0dp"
+        app:contentInsetEnd="0dp"
+        android:background="?attr/colorPrimary">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:requiresFadingEdge="horizontal"
+            android:gravity="center_vertical">
+            <ImageButton
+                android:id="@+id/fmc_back"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:background="@drawable/icon_menu_white" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_30sdp"
+                android:text="@string/my_coins"
+                android:textAlignment="center"
+                android:textSize="@dimen/_16ssp"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fmc_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/fmc_toolbar"/>
+    <Button
+        android:id="@+id/fmc_coins_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35sdp"
+        app:layout_constraintTop_toBottomOf="@id/fmc_recyclerview"
+        android:background="@drawable/rounded_green_view"
+        android:layout_margin="@dimen/_20sdp"
+        android:textSize="@dimen/_15ssp"
+        android:textColor="@color/white"
+        android:text="100 монет"
+        android:textAllCaps="false"/>
+</android.support.constraint.ConstraintLayout>

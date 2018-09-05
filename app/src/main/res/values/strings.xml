@@ -1,0 +1,354 @@
+<resources>
+    <string name="app_name">TaxiPlus</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="enter_phone_for_auth">Введите номер телефона для авторизации</string>
+    <string name="enter_name_for_auth">Введите ваше имя для регистрации</string>
+    <string name="enter_code">Введите код из СМС</string>
+
+    <string name="auth_code">Код</string>
+    <string name="auth_name">Имя</string>
+    <string name="enter_phone">Введите номер телефона</string>
+    <string name="enter_email">Введите E-mail</string>
+    <string name="enter_desc">Введите описание</string>
+    <string name="search">Поиск</string>
+    <string name="next">Далее</string>
+    <string name="user_agreement">Пользовательское соглашение</string>
+    <string name="enter_correct_code">Введите корректный код из СМС</string>
+    <string name="enter_correct_phone">Введите правильный номер телефона</string>
+
+    <string name="title_activity_main">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="logout">Выход</string>
+    <string name="trip_history">История поездок</string>
+    <string name="current_trips">Действующие заказы</string>
+    <string name="add_card">Добавить карту</string>
+    <string name="add_place">Добавить место</string>
+    <string name="my_places">Мои места</string>
+    <string name="my_coins">Мои монеты</string>
+    <string name="settings">Настройки</string>
+    <string name="faq">FAQ</string>
+    <string name="faq_all">Часто задаваемые вопросы</string>
+    <string name="order_driver">Трезвый водитель</string>
+    <string name="my_bonuses">Мои монеты</string>
+    <string name="driver_mode">Режим водителя</string>
+    <string name="prefs_theme_key">theme</string>
+
+    <string name="select_mode">Выбрать режим</string>
+    <string name="from">Откуда?</string>
+    <string name="to">Куда?</string>
+    <string name="modeTaxi">Такси</string>
+    <string name="modeLadyTaxi">Lady Такси</string>
+    <string name="modeInvaTaxi">ИнваТакси</string>
+    <string name="modeCitiesTaxi">Межгород</string>
+    <string name="modeCargoTaxi">Грузоперевозка</string>
+    <string name="modeEvo">Эвакуатор</string>
+
+    <string name="save_place">Сохраненное место</string>
+    <string name="set_on_map">Указать местоположение на карте</string>
+    <string name="set_addresses">Укажите обе точки</string>
+    <string name="set_price">Укажите цену</string>
+    <string name="price">Цена</string>
+    <string name="set_comment">Комментарий, пожелания</string>
+    <string name="comment_for_driver">Комментарий к водителю</string>
+    <string name="date">Дата</string>
+
+    <string name="make_order">Заказать</string>
+    <string name="cancel">Отмена</string>
+    <string name="select">Выбрать</string>
+    <string name="month"> месяц</string>
+    <string name="day"> день</string>
+    <string name="weight">Вес</string>
+    <string name="call">Вызвать</string>
+    <string name="to_call">Позвонить</string>
+    <string name="car_model">Марка автомашины</string>
+    <string name="car_type">Модель автомашины</string>
+    <string name="model">Модель эвакуируемого авто</string>
+    <string name="set_weight">указать вес [кг]</string>
+    <string name="set_volume">указать объем [м<sup>3</sup>]</string>
+    <string name="econom_mode">Эконом</string>
+    <string name="comfort_mode">Стандарт</string>
+    <string name="business_mode">VIP</string>
+
+    <string name="by_hand">Оплата наличными</string>
+    <string name="by_card">Оплата картой</string>
+    <string name="by_bonuses">Оплата бонусами</string>
+
+    <string name="offer_name">Имя:</string>
+    <string name="offer_car_model">Марка машины:</string>
+    <string name="offer_car_model_wd">Марка машины</string>
+    <string name="offer_car_number">Номер машины:</string>
+    <string name="offer_date">Дата посадки:</string>
+    <string name="offer_time">Время прибытия:</string>
+    <string name="offer_phone">Номер телефона:</string>
+    <string name="phone">Телефон:</string>
+    <string name="offer_mode">Режим:</string>
+
+    <string name="accept">Принять</string>
+    <string name="decline">Отказать</string>
+    <string name="confirm_order">Оформление заказа</string>
+    <string name="type_massage">Ваше сообщение</string>
+
+    <string name="point_a">Точка А</string>
+    <string name="point_b">Точка В</string>
+    <string name="order_information">Информация о заказе</string>
+    <string name="decline_order">Отменить</string>
+    <string name="select_place">Выберите место</string>
+    <string name="fav_place">Избранное место</string>
+
+    <string name="fill_fields">Заполните все поля</string>
+    <string name="lastname">Фамилия:</string>
+    <string name="coins">Монеты:</string>
+    <string name="recomendations">Рекомендации к сервису</string>
+    <string name="write_recomendations">Написать рекомендацию</string>
+    <string name="rate">Оценить</string>
+    <string name="send">Отправить</string>
+    <string name="enter_gos_number">Гос номер</string>
+    <string name="produced_year">Год выпуска</string>
+    <string name="additional">Дополнительно</string>
+
+    <string name="select_taxipark">Выбрать таксопарк</string>
+    <string name="register">Зарегистрироваться</string>
+    <string name="driver_register">Регистрация водителя</string>
+
+    <string name="mode_city_">Город</string>
+    <string name="mode_intercity">Межгород</string>
+    <string name="mode_cargo">Грузовые</string>
+    <string name="mode_coins">Монеты</string>
+    <string name="mode_night">Ночной режим</string>
+    <string name="mode_day">Дневной режим</string>
+
+    <string name="my_taxipark">Мой таксопарк</string>
+    <string name="intercity">Межгород</string>
+    <string name="general_chat">Общий чат</string>
+    <string name="hide">Скрыть</string>
+    <string name="complaint">Жалоба</string>
+    <string name="on_map">На карте</string>
+    <string name="orders">Заказы</string>
+    <string name="my_orders">Мои заказы</string>
+    <string name="new_order">Оставить заявку</string>
+    <string name="new_order_text">Новый заказ</string>
+    <string name="new_order_in_1_km">в радиусе километра</string>
+    <string name="balance">Баланс</string>
+    <string name="trips_amount">Количество поездок:</string>
+    <string name="earn_coins">Заработано монет:</string>
+    <string name="open_session">Открытие смены</string>
+    <string name="close_session_event">Закрыть смену</string>
+    <string name="open_session_event">Открыть смену</string>
+
+    <string name="successfully_added">Успешно добавлено!</string>
+    <string name="successfully_opened">Успешно открыта!</string>
+    <string name="successfully_closed">Успешна закрыта!</string>
+    <string name="not_found">Адрес не найден</string>
+    <string name="try_later">Попробуйте позже</string>
+
+    <string name="remainder">Остаток:</string>
+    <string name="six_hour">6 часов</string>
+    <string name="unlim">12 часов</string>
+    <string name="select_time">Выберите длину смены</string>
+
+
+    <string name="notifications_admin_channel_name">Name of admin channel</string>
+    <string name="notifications_admin_channel_description">Description of admin channel</string>
+
+    <string name="style_json">
+  [
+    {
+      \"featureType\": \"all\",
+      \"elementType\": \"geometry\",
+      \"stylers\": [
+        {
+          \"color\": \"#242f3e\"
+        }
+      ]
+    },
+    {
+      \"featureType\": \"all\",
+      \"elementType\": \"labels.text.stroke\",
+      \"stylers\": [
+        {
+          \"lightness\": -80
+        }
+      ]
+    },
+    {
+      \"featureType\": \"administrative\",
+      \"elementType\": \"labels.text.fill\",
+      \"stylers\": [
+        {
+          \"color\": \"#746855\"
+        }
+      ]
+    },
+    {
+      \"featureType\": \"administrative.locality\",
+      \"elementType\": \"labels.text.fill\",
+      \"stylers\": [
+        {
+          \"color\": \"#d59563\"
+        }
+      ]
+    },
+    {
+      \"featureType\": \"poi\",
+      \"elementType\": \"labels.text.fill\",
+      \"stylers\": [
+        {
+          \"color\": \"#d59563\"
+        }
+      ]
+    },
+    {
+      \"featureType\": \"poi.park\",
+      \"elementType\": \"geometry\",
+      \"stylers\": [
+        {
+          \"color\": \"#263c3f\"
+        }
+      ]
+    },
+    {
+      \"featureType\": \"poi.park\",
+      \"elementType\": \"labels.text.fill\",
+      \"stylers\": [
+        {
+          \"color\": \"#6b9a76\"
+        }
+      ]
+    },
+    {
+      \"featureType\": \"road\",
+      \"elementType\": \"geometry.fill\",
+      \"stylers\": [
+        {
+          \"color\": \"#2b3544\"
+        }
+      ]
+    },
+    {
+      \"featureType\": \"road\",
+      \"elementType\": \"labels.text.fill\",
+      \"stylers\": [
+        {
+          \"color\": \"#9ca5b3\"
+        }
+      ]
+    },
+    {
+      \"featureType\": \"road.arterial\",
+      \"elementType\": \"geometry.fill\",
+      \"stylers\": [
+        {
+          \"color\": \"#38414e\"
+        }
+      ]
+    },
+    {
+      \"featureType\": \"road.arterial\",
+      \"elementType\": \"geometry.stroke\",
+      \"stylers\": [
+        {
+          \"color\": \"#212a37\"
+        }
+      ]
+    },
+    {
+      \"featureType\": \"road.highway\",
+      \"elementType\": \"geometry.fill\",
+      \"stylers\": [
+        {
+          \"color\": \"#746855\"
+        }
+      ]
+    },
+    {
+      \"featureType\": \"road.highway\",
+      \"elementType\": \"geometry.stroke\",
+      \"stylers\": [
+        {
+          \"color\": \"#1f2835\"
+        }
+      ]
+    },
+    {
+      \"featureType\": \"road.highway\",
+      \"elementType\": \"labels.text.fill\",
+      \"stylers\": [
+        {
+          \"color\": \"#f3d19c\"
+        }
+      ]
+    },
+    {
+      \"featureType\": \"road.local\",
+      \"elementType\": \"geometry.fill\",
+      \"stylers\": [
+        {
+          \"color\": \"#38414e\"
+        }
+      ]
+    },
+    {
+      \"featureType\": \"road.local\",
+      \"elementType\": \"geometry.stroke\",
+      \"stylers\": [
+        {
+          \"color\": \"#212a37\"
+        }
+      ]
+    },
+    {
+      \"featureType\": \"transit\",
+      \"elementType\": \"geometry\",
+      \"stylers\": [
+        {
+          \"color\": \"#2f3948\"
+        }
+      ]
+    },
+    {
+      \"featureType\": \"transit.station\",
+      \"elementType\": \"labels.text.fill\",
+      \"stylers\": [
+        {
+          \"color\": \"#d59563\"
+        }
+      ]
+    },
+    {
+      \"featureType\": \"water\",
+      \"elementType\": \"geometry\",
+      \"stylers\": [
+        {
+          \"color\": \"#17263c\"
+        }
+      ]
+    },
+    {
+      \"featureType\": \"water\",
+      \"elementType\": \"labels.text.fill\",
+      \"stylers\": [
+        {
+          \"color\": \"#515c6d\"
+        }
+      ]
+    },
+    {
+      \"featureType\": \"water\",
+      \"elementType\": \"labels.text.stroke\",
+      \"stylers\": [
+        {
+          \"lightness\": -20
+        }
+      ]
+    }
+  ]
+  </string>
+</resources>

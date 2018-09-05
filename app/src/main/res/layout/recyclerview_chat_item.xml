@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/chat_main_view">
+    <com.daasuu.bl.BubbleLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_7sdp"
+        android:padding="@dimen/_5sdp"
+        app:bl_cornersRadius="@dimen/_8sdp"
+        app:bl_arrowDirection="right"
+        app:bl_arrowHeight="@dimen/_10sdp"
+        app:bl_arrowWidth="@dimen/_5sdp"
+        app:bl_bubbleColor="?attr/colorPrimary"
+        android:id="@+id/rci_bubble_view">
+        <TextView
+            android:id="@+id/rci_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="message"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_12ssp"/>
+
+    </com.daasuu.bl.BubbleLayout>
+</LinearLayout>

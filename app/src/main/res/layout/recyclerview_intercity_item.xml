@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?attr/colorPrimary">
+    <LinearLayout
+        android:id="@+id/rii_info_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/line"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:layout_marginStart="@dimen/_3sdp"
+        android:paddingStart="@dimen/_25sdp"
+        android:paddingBottom="@dimen/_4sdp"
+        android:paddingTop="@dimen/_8sdp">
+        <TextView
+            android:id="@+id/rii_user_info_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/_9ssp"
+            android:text="Name (87773999909)"
+            android:textColor="@color/gray"/>
+        <TextView
+            android:id="@+id/rii_address_from_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:textSize="@dimen/_12ssp"
+            android:text="adress from"
+            android:textColor="@color/black"/>
+        <TextView
+            android:id="@+id/rii_address_to_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/_12ssp"
+            android:text="address to"
+            android:textColor="@color/gray"/>
+        <TextView
+            android:id="@+id/rii_price_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/_12ssp"
+            android:text="5000"
+            android:textColor="@color/carrot"/>
+        <TextView
+            android:id="@+id/rii_date_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/_12ssp"
+            android:text="23.08.2018"
+            android:textColor="@color/gray"/>
+    </LinearLayout>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/gray"/>
+</android.support.constraint.ConstraintLayout>

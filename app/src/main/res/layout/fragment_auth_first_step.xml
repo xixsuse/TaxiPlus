@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.authorization.AuthFirstStepFragment"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:background="@color/white">
+
+
+    <TextView
+        android:id="@+id/enter_phone"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginStart="@dimen/_30sdp"
+        android:layout_marginEnd="@dimen/_30sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/_14ssp"
+        android:text="@string/enter_phone_for_auth"
+        android:textAlignment="center"/>
+
+    <EditText
+        android:id="@+id/fafs_phone_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginTop="@dimen/_100sdp"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
+        app:layout_constraintTop_toBottomOf="@id/enter_phone"
+        android:background="@drawable/border_for_view"
+        android:hint="+7 (_ _ _) _ _ _  _ _  _ _"
+        android:textAlignment="center"
+        android:textSize="@dimen/_14ssp"
+        android:maxLength="17"
+        android:inputType="phone"
+        android:textColor="@color/gray"/>
+    <Button
+        android:id="@+id/fafs_next_button"
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="@dimen/_35sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fafs_phone_edittext"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:background="@drawable/rounded_veiw"
+        android:textSize="@dimen/_15ssp"
+        android:textColor="@color/white"
+        android:text="@string/next"
+        android:textAllCaps="false"
+        />
+    <TextView
+        android:id="@+id/fafs_user_agreement"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/fafs_next_button"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:textAlignment="center"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/_12ssp"
+        android:text="@string/user_agreement" />
+
+    <ProgressBar
+        android:id="@+id/fafs_progressbar"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginBottom="@dimen/_50sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:indeterminate="true"
+        android:visibility="gone"/>
+</android.support.constraint.ConstraintLayout>

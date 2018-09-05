@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:id="@+id/rci_view">
+
+    <TextView
+        android:id="@+id/rci_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="23.09.2018"
+        android:textSize="@dimen/_13ssp"/>
+    
+    <TextView
+        android:id="@+id/rci_coins_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="@dimen/_14ssp"
+        android:textColor="?attr/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="@dimen/_9sdp"
+        android:text="60 coins"
+        />
+    
+    <TextView
+        android:id="@+id/rci_address_from"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_3sdp"
+        app:layout_constraintTop_toBottomOf="@id/rci_date"
+        app:layout_constraintStart_toStartOf="@id/rci_date"
+        app:layout_constraintEnd_toStartOf="@id/rci_coins_number"
+        android:textSize="@dimen/_15ssp"
+        android:textColor="@color/black"
+        android:text="Abai 20 - Novai 1"/>
+
+    <TextView
+        android:id="@+id/rci_address_to"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/rci_address_from"
+        app:layout_constraintStart_toStartOf="@id/rci_date"
+        app:layout_constraintEnd_toStartOf="@id/rci_coins_number"
+        android:textSize="@dimen/_15ssp"
+        android:textColor="@color/black"
+        android:text="Abai 20 - Novai 1"/>
+
+    <TextView
+        android:id="@+id/rci_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/rci_address_to"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/rci_date"
+        android:layout_marginBottom="@dimen/_7sdp"
+        android:layout_marginTop="@dimen/_3sdp"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/_14ssp"
+        android:text="econom"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/gray"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</android.support.constraint.ConstraintLayout>
