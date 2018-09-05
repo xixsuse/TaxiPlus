@@ -3,6 +3,7 @@ package kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;

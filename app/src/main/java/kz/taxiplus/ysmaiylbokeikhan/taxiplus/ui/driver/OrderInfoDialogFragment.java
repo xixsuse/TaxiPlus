@@ -22,7 +22,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
@@ -46,8 +48,10 @@ import java.util.ArrayList;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.NewOrder;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.OrderToDriver;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -68,6 +72,7 @@ public class OrderInfoDialogFragment extends DialogFragment implements OnMapRead
     private Marker mPositionMarker;
     private TextView nameText, priceText, newOrderText;
     private Button acceptButton, declineButton;
+    private ProgressBar progressBar;
 
     private LatLng myLocation;
     private int drawerCounter = 0;
@@ -143,6 +148,7 @@ public class OrderInfoDialogFragment extends DialogFragment implements OnMapRead
         newOrderText = view.findViewById(R.id.foi_new_order_text);
         acceptButton = view.findViewById(R.id.foi_accept_button);
         declineButton = view.findViewById(R.id.foi_decline_button);
+        progressBar = view.findViewById(R.id.foi_progressbar);
 
         if(isNewOrder){
             newOrderText.setVisibility(View.VISIBLE);
@@ -155,7 +161,7 @@ public class OrderInfoDialogFragment extends DialogFragment implements OnMapRead
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                acceptOrder(order.getId());
             }
         });
 
@@ -168,6 +174,7 @@ public class OrderInfoDialogFragment extends DialogFragment implements OnMapRead
     }
 
     private void getFulInfo(String orderId) {
+        progressBar.setVisibility(View.VISIBLE);
         subscription.add(NetworkUtil.getRetrofit()
                 .getOrderInfo(orderId)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -176,6 +183,7 @@ public class OrderInfoDialogFragment extends DialogFragment implements OnMapRead
     }
 
     private void handleResponseLoc(OrderToDriver.GetOrderInfo response) {
+        progressBar.setVisibility(View.GONE);
         if(response.getState().equals("success")){
             to = new LatLng(response.getOrder().getTo_latitude(), response.getOrder().getTo_longitude());
             from = new LatLng(response.getOrder().getFrom_latitude(), response.getOrder().getFrom_longitude());
@@ -187,7 +195,28 @@ public class OrderInfoDialogFragment extends DialogFragment implements OnMapRead
     }
 
     private void handleErrorLoc(Throwable throwable){
+        progressBar.setVisibility(View.GONE);
+    }
 
+    private void acceptOrder(String orderId) {
+        progressBar.setVisibility(View.VISIBLE);
+        subscription.add(NetworkUtil.getRetrofit()
+                .acceptOrderDriver(Utility.getToken(getContext()), orderId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponseAccept, this::handleErrorAccept));
+    }
+
+    private void handleResponseAccept(Response response) {
+        progressBar.setVisibility(View.GONE);
+        if(response.getState().equals("success")){
+            Toast.makeText(getContext(), getResources().getString(R.string.wait_response), Toast.LENGTH_LONG).show();
+            getDialog().dismiss();
+        }
+    }
+
+    private void handleErrorAccept(Throwable throwable){
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override

@@ -86,6 +86,16 @@ public interface RetrofitInterface {
     Observable<SessionPrices> getSessionPrices(@Field("token")String token);
 
     @FormUrlEncoded
+    @POST("accept-driver/")
+    Observable<OrderToDriver.GetOrderInfo> acceptDriver(@Field("order_id")String token,
+                                                        @Field("driver_id")String driver_id);
+
+    @FormUrlEncoded
+    @POST("accept-order/")
+    Observable<Response> acceptOrderDriver(@Field("token")String token,
+                                           @Field("order_id")String order_id);
+
+    @FormUrlEncoded
     @POST("check-location/")
     Observable<Response> sendLoaction(@Field("token")String token,
                                       @Field("latitude")double latitude,

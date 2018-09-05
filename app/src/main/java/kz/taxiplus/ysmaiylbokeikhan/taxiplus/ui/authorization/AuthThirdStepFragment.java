@@ -111,7 +111,7 @@ public class AuthThirdStepFragment extends Fragment {
         }
     }
     private void handleError(Throwable throwable) {
-
+        progressBar.setVisibility(View.GONE);
     }
 
     private void changeFireBaseToken(String token, String push_id) {

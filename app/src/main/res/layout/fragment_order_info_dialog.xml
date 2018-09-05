@@ -29,6 +29,7 @@
         android:visibility="gone" />
 
     <LinearLayout
+        android:id="@+id/info_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
@@ -130,5 +131,17 @@
                 android:text="@string/decline"/>
         </LinearLayout>
     </LinearLayout>
+
+
+    <ProgressBar
+        android:id="@+id/foi_progressbar"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        app:layout_constraintTop_toTopOf="@id/info_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/info_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:indeterminate="true"
+        android:visibility="gone"/>
 
 </android.support.constraint.ConstraintLayout>

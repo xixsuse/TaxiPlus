@@ -106,6 +106,15 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if(myLocation != null) {
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(myLocation, 16);
+            map.animateCamera(cameraUpdate);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
@@ -156,7 +165,9 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         }else {
             if(user.getRole_id().equals("1")) {
                 newOrderView.setVisibility(View.VISIBLE);
+                openSessionView.setVisibility(View.GONE);
             }else {
+                newOrderView.setVisibility(View.GONE);
                 openSessionView.setVisibility(View.VISIBLE);
             }
         }
@@ -177,13 +188,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
                     CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom( myLocation, 17);
                     map.animateCamera(cameraUpdate);
                 }
-
-//                fragmentTransaction = getFragmentManager().beginTransaction();
-//                ChatFragment chatFragment = new ChatFragment();
-//
-//                fragmentTransaction.add(R.id.main_activity_frame, chatFragment, ChatFragment.TAG);
-//                fragmentTransaction.addToBackStack(ChatFragment.TAG);
-//                fragmentTransaction.commit();
             }
         });
 

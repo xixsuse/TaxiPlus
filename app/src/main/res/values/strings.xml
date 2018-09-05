@@ -153,6 +153,7 @@
     <string name="six_hour">6 часов</string>
     <string name="unlim">12 часов</string>
     <string name="select_time">Выберите длину смены</string>
+    <string name="wait_response">Ожидайте ответа от пользователя</string>
 
 
     <string name="notifications_admin_channel_name">Name of admin channel</string>

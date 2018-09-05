@@ -89,6 +89,7 @@ public class OrderToDriver {
     public class GetOrderInfo{
         private OrderToDriver order;
         private User client;
+        private User driver;
         private String state;
 
         public OrderToDriver getOrder() {
@@ -101,6 +102,10 @@ public class OrderToDriver {
 
         public String getState() {
             return state;
+        }
+
+        public User getDriver() {
+            return driver;
         }
     }
 

@@ -6,11 +6,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,20 +25,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import io.paperdb.Paper;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.City;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Order;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.RecyclerMenuItem;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.ActiveOrdersFragment;
@@ -50,7 +42,6 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.CityFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.DriverProfileFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.IntercityFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.MyBalanceFragment;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.OpenSessionFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.OrderInfoDialogFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.MyPlacesFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.BaseActivity;
@@ -97,11 +88,6 @@ public class MainActivity extends BaseActivity
                 new IntentFilter("thisIsForMyFragment"));
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
     private void initViews() {
         userLogo = navigationView.findViewById(R.id.manhm_imageView);
         userName = navigationView.findViewById(R.id.manhm_name);
@@ -143,7 +129,7 @@ public class MainActivity extends BaseActivity
         MainFragment mainFragment = new MainFragment();
 
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.main_activity_frame, mainFragment, MainFragment.TAG);
+        fragmentTransaction.add(R.id.main_activity_frame, mainFragment, MainFragment.TAG);
         fragmentTransaction.addToBackStack(MainFragment.TAG);
         fragmentTransaction.commit();
     }
@@ -198,46 +184,6 @@ public class MainActivity extends BaseActivity
         menuAdapter = new RecyclerMenuAdapter(recyclerMenuItemList, MainActivity.this);
         menuRecyclerView.setAdapter(menuAdapter);
         menuRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-    }
-
-    public void drawerAction() {
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        }else {
-            drawer.openDrawer(Gravity.START);
-        }
-    }
-
-    public void recreateActivity() {
-        Intent intent = getIntent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        finish();
-        overridePendingTransition(0, 0);
-        startActivity(intent);
-        overridePendingTransition(0, 0);
-    }
-
-    @Override
-    public void onBackPressed() {
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            int count = getSupportFragmentManager().getBackStackEntryCount();
-
-            if(count != 1){
-                super.onBackPressed();
-            }
-        }
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     private final BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
@@ -403,6 +349,38 @@ public class MainActivity extends BaseActivity
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            int count = getSupportFragmentManager().getBackStackEntryCount();
+
+            if(count != 1){
+                super.onBackPressed();
+            }
+        }
+    }
+
+    public void drawerAction() {
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }else {
+            drawer.openDrawer(Gravity.START);
+        }
+    }
+
+    public void recreateActivity() {
+        Intent intent = getIntent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
+    }
+
     private void setNightMode(int mode) {
         if(mode == 2){
             Utility.setTheme(getApplicationContext(), 1);
@@ -421,5 +399,13 @@ public class MainActivity extends BaseActivity
             mode = getResources().getString(R.string.mode_night);
         }
         return mode;
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

@@ -24,20 +24,13 @@ public class SplashActivity extends BaseActivity {
 
                 if(Paper.book().read(Constants.USER) == null){
                     intent = new Intent(SplashActivity.this, AuthActivity.class);
-                    intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
                     startActivity(intent);
-                }else {
+                }else{
                     intent = new Intent(SplashActivity.this, MainActivity.class);
-                    intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
                     startActivity(intent);
                 }
                 finish();
             }
         },1000);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 }
