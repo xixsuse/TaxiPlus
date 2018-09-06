@@ -5,8 +5,10 @@ public class Response {
     private String token;
     private String message;
     private String type;
+    private String balance;
     private User user;
     private int code;
+    private int is_active;
 
     public String getState() {
         return state;
@@ -30,5 +32,13 @@ public class Response {
 
     public User getUser() {
         return user;
+    }
+
+    public int getIs_active() {
+        return is_active;
+    }
+
+    public String getBalance() {
+        return balance;
     }
 }

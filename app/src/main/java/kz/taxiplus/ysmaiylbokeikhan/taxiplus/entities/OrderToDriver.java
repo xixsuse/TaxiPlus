@@ -1,5 +1,8 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 public class OrderToDriver {
     private String status;
     private String last_edit;
@@ -86,11 +89,28 @@ public class OrderToDriver {
         return order_type;
     }
 
-    public class GetOrderInfo{
+    public static class GetOrderInfo implements Parcelable{
         private OrderToDriver order;
         private User client;
         private User driver;
+        private String car;
         private String state;
+
+        protected GetOrderInfo(Parcel in) {
+            state = in.readString();
+        }
+
+        public static final Creator<GetOrderInfo> CREATOR = new Creator<GetOrderInfo>() {
+            @Override
+            public GetOrderInfo createFromParcel(Parcel in) {
+                return new GetOrderInfo(in);
+            }
+
+            @Override
+            public GetOrderInfo[] newArray(int size) {
+                return new GetOrderInfo[size];
+            }
+        };
 
         public OrderToDriver getOrder() {
             return order;
@@ -106,6 +126,20 @@ public class OrderToDriver {
 
         public User getDriver() {
             return driver;
+        }
+
+        public String getCar() {
+            return car;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(state);
         }
     }
 

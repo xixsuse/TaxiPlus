@@ -106,42 +106,42 @@
             android:textSize="@dimen/_14sdp"
             android:textColor="?attr/colorPrimary"/>
 
-        <ImageView
-            android:id="@+id/nof_date_icon"
-            android:layout_width="@dimen/_15sdp"
-            android:layout_height="@dimen/_15sdp"
-            android:background="@drawable/icon_clock"
-            app:layout_constraintTop_toTopOf="@id/date"
-            app:layout_constraintBottom_toBottomOf="@id/date"
-            app:layout_constraintStart_toStartOf="parent"/>
-        <TextView
-            android:id="@+id/date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/offer_date"
-            android:layout_marginTop="@dimen/_17sdp"
-            app:layout_constraintTop_toBottomOf="@id/number"
-            app:layout_constraintStart_toEndOf="@id/nof_name_icon"
-            android:layout_marginStart="@dimen/_12sdp"
-            android:textSize="@dimen/_14sdp"
-            android:textColor="?attr/colorPrimary"/>
-        <TextView
-            android:id="@+id/nof_date_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@id/date"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/date"
-            android:text="date"
-            android:textSize="@dimen/_14sdp"
-            android:textColor="?attr/colorPrimary"/>
+        <!--<ImageView-->
+            <!--android:id="@+id/nof_date_icon"-->
+            <!--android:layout_width="@dimen/_15sdp"-->
+            <!--android:layout_height="@dimen/_15sdp"-->
+            <!--android:background="@drawable/icon_clock"-->
+            <!--app:layout_constraintTop_toTopOf="@id/date"-->
+            <!--app:layout_constraintBottom_toBottomOf="@id/date"-->
+            <!--app:layout_constraintStart_toStartOf="parent"/>-->
+        <!--<TextView-->
+            <!--android:id="@+id/date"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/offer_date"-->
+            <!--android:layout_marginTop="@dimen/_17sdp"-->
+            <!--app:layout_constraintTop_toBottomOf="@id/number"-->
+            <!--app:layout_constraintStart_toEndOf="@id/nof_name_icon"-->
+            <!--android:layout_marginStart="@dimen/_12sdp"-->
+            <!--android:textSize="@dimen/_14sdp"-->
+            <!--android:textColor="?attr/colorPrimary"/>-->
+        <!--<TextView-->
+            <!--android:id="@+id/nof_date_text"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:layout_constraintTop_toTopOf="@id/date"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintBottom_toBottomOf="@id/date"-->
+            <!--android:text="date"-->
+            <!--android:textSize="@dimen/_14sdp"-->
+            <!--android:textColor="?attr/colorPrimary"/>-->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="@dimen/_70sdp"
-            app:layout_constraintTop_toBottomOf="@id/date">
+            android:layout_marginTop="@dimen/_60sdp"
+            app:layout_constraintTop_toBottomOf="@id/number">
 
             <Button
                 android:id="@+id/nof_accept_button"
@@ -167,5 +167,15 @@
                 android:textSize="@dimen/_16ssp"
                 android:textAllCaps="false"/>
         </LinearLayout>
+        <ProgressBar
+            android:id="@+id/nof_progressbar"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:indeterminate="true"
+            android:visibility="gone"/>
     </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

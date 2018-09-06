@@ -5,35 +5,26 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
 import io.paperdb.Paper;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Order;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Application;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -51,6 +42,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        Paper.init(getApplicationContext());
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -59,39 +51,38 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         String type = remoteMessage.getData().get("type");
 
-        //silent push notification
-        if(type.equals("1")){
+        if(type.equals("1")){//silent push notification
             String orderId = remoteMessage.getData().get("order_id");
             if(getLocation() != null){
                 subscription = new CompositeSubscription();
                 sendLocation(getLocation(), orderId);
             }
-        }else if(type.equals("101")){//new order in 1km
+        }else {//real push notifications
             if(Application.isActivityVisible()){
-                getOrder(remoteMessage.getData());
+                handlePush(remoteMessage.getData());
             }else {
                 int notificationId = new Random().nextInt(60000);
                 NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
                     .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle(getResources().getString(R.string.new_order_text))
-                    .setContentText(getResources().getString(R.string.new_order_in_1_km))
+                    .setContentTitle(setNotificationTitle(type))
+                    .setContentText(setNotificationBody(type))
                     .setAutoCancel(true)
                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.notify(notificationId, notificationBuilder.build());
             }
-        }else if(type.equals("201")){
-
         }
-
     }
 
-    private void getOrder(Map<String, String> data) {
+    private void handlePush(Map<String, String> data) {
+        Intent intent = new Intent("thisIsForMyFragment");
         String orderid = data.get("order_id");
+        String type = data.get("type");
+        String driverId = data.get("driver_id");
 
-        String filter = "thisIsForMyFragment";
-        Intent intent = new Intent(filter);
+        intent.putExtra(Constants.DRIVERID, driverId);
         intent.putExtra(Constants.ORDERID, orderid);
+        intent.putExtra(Constants.TYPE, type);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
@@ -170,5 +161,41 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         LatLng latLng = Paper.book().read(Constants.MYLOCATION);
 
         return latLng;
+    }
+
+    private String setNotificationTitle(String type){
+        String text = "";
+        switch (type){
+            case "101":
+                text = getResources().getString(R.string.new_order_text);
+                break;
+
+            case "201":
+                text = getResources().getString(R.string.new_offer);
+                break;
+
+            case "301":
+                text = getResources().getString(R.string.user_accepted);
+                break;
+        }
+        return text;
+    }
+
+    private String setNotificationBody(String type){
+        String text = "";
+        switch (type){
+            case "101":
+                text = getResources().getString(R.string.new_order_in_1_km);
+                break;
+
+            case "201":
+                text = getResources().getString(R.string.new_offer_body);
+                break;
+
+            case "301":
+                text = "";
+                break;
+        }
+        return text;
     }
 }

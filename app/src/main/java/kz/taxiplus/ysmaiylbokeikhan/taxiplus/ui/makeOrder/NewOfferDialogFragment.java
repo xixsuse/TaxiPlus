@@ -4,37 +4,40 @@ package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.DriverOffer;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.OrderToDriver;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
-
-import static android.app.Activity.RESULT_OK;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 public class NewOfferDialogFragment extends DialogFragment {
     public static final String TAG = Constants.NEWOFFERDIALOGFRAGMENTTAG;
-    private static final String OFFER = "offer";
+    private static final String DRIVERID = "driver_id";
+    private static final String ORDERID = "order_id";
 
-    private DriverOffer offer;
+    private String driverId, orderId;
+    private ProgressBar progressBar;
 
     private TextView offerNameText, offerCarModelText, offerCarNumberText, offerDataText;
     private Button offerAccept, offerDecline;
+    private CompositeSubscription subscription;
 
-    public static NewOfferDialogFragment newInstance(DriverOffer offer) {
+    public static NewOfferDialogFragment newInstance(String driverId, String orderId) {
         NewOfferDialogFragment fragment = new NewOfferDialogFragment();
         Bundle args = new Bundle();
-        args.putParcelable(OFFER, offer);
+        args.putString(DRIVERID, driverId);
+        args.putString(ORDERID, orderId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,7 +57,8 @@ public class NewOfferDialogFragment extends DialogFragment {
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Light_Panel);
 
         if (getArguments() != null) {
-            offer = getArguments().getParcelable(OFFER);
+            driverId = getArguments().getString(DRIVERID);
+            orderId = getArguments().getString(ORDERID);
         }
     }
 
@@ -64,32 +68,29 @@ public class NewOfferDialogFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.fragment_new_offer_dialog, container, false);
 
         initViews(view);
-        newResponse(offer);
+        getFulInfo(driverId);
         return view;
     }
 
     private void initViews(View view) {
+        subscription = new CompositeSubscription();
         offerNameText= view.findViewById(R.id.nof_name_text);
         offerCarModelText= view.findViewById(R.id.nof_model_text);
         offerCarNumberText= view.findViewById(R.id.nof_number_text);
-        offerDataText= view.findViewById(R.id.nof_date_text);
+//        offerDataText= view.findViewById(R.id.nof_date_text);
         offerAccept= view.findViewById(R.id.nof_accept_button);
         offerDecline= view.findViewById(R.id.nof_decline_button);
+        progressBar= view.findViewById(R.id.nof_progressbar);
+
+        setListeners();
     }
 
-    private void newResponse(DriverOffer offer) {
-        offerNameText.setText(offer.getDriverName());
-        offerCarModelText.setText(offer.getCarModel());
-        offerCarNumberText.setText(offer.getCarNumber());
-        offerDataText.setText(setDataString(offer.getDate()));
-
+    private void setListeners() {
         offerAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), NewOfferDialogFragment.class);
-
-                getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK, intent);
-                getDialog().dismiss();
+                acceptDriver(driverId, orderId);
+//                getDialog().dismiss();
             }
         });
 
@@ -101,11 +102,49 @@ public class NewOfferDialogFragment extends DialogFragment {
         });
     }
 
-    private String setDataString(String miliseconds){
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    private void getFulInfo(String driverId) {
+        progressBar.setVisibility(View.VISIBLE);
+        subscription.add(NetworkUtil.getRetrofit()
+                .getDriverInfo(driverId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponseLoc, this::handleErrorLoc));
+    }
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(Long.parseLong(miliseconds));
-        return formatter.format(calendar.getTime());
+    private void handleResponseLoc(OrderToDriver.GetOrderInfo response) {
+        progressBar.setVisibility(View.GONE);
+        if(response.getState().equals("success")){
+            offerNameText.setText(response.getDriver().getName());
+            offerCarModelText.setText(response.getCar());
+            offerCarNumberText.setText(response.getDriver().getCar_number());
+        }
+    }
+
+    private void handleErrorLoc(Throwable throwable){
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private void acceptDriver(String driverId, String orderId) {
+        progressBar.setVisibility(View.VISIBLE);
+        subscription.add(NetworkUtil.getRetrofit()
+                .acceptDriver(orderId, driverId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponseAccept, this::handleErrorAccept));
+    }
+
+    private void handleResponseAccept(OrderToDriver.GetOrderInfo response) {
+        progressBar.setVisibility(View.GONE);
+        if(response.getState().equals("success")){
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+            CheckoutOrderDialogFragment checkoutOrderDialogFragment = CheckoutOrderDialogFragment.newInstance(response);
+            getDialog().dismiss();
+            checkoutOrderDialogFragment.show(fragmentManager, CheckoutOrderDialogFragment.TAG);
+        }
+    }
+
+    private void handleErrorAccept(Throwable throwable){
+        progressBar.setVisibility(View.GONE);
     }
 }

@@ -87,7 +87,7 @@ public interface RetrofitInterface {
 
     @FormUrlEncoded
     @POST("accept-driver/")
-    Observable<OrderToDriver.GetOrderInfo> acceptDriver(@Field("order_id")String token,
+    Observable<OrderToDriver.GetOrderInfo> acceptDriver(@Field("order_id")String order_id,
                                                         @Field("driver_id")String driver_id);
 
     @FormUrlEncoded
@@ -104,6 +104,14 @@ public interface RetrofitInterface {
     @FormUrlEncoded
     @POST("get-order-info/")
     Observable<OrderToDriver.GetOrderInfo> getOrderInfo(@Field("order_id")String order_id);
+
+    @FormUrlEncoded
+    @POST("get-driver-info/")
+    Observable<OrderToDriver.GetOrderInfo> getDriverInfo(@Field("driver_id")String driver_id);
+
+    @FormUrlEncoded
+    @POST("get-my-session/")
+    Observable<Response> checkSession(@Field("token")String token);
 
     @FormUrlEncoded
     @POST("make-order/")

@@ -25,6 +25,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import java.util.ArrayList;
@@ -44,6 +46,7 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.IntercityFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.MyBalanceFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.OrderInfoDialogFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.MyPlacesFragment;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.NewOfferDialogFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.BaseActivity;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
@@ -189,9 +192,19 @@ public class MainActivity extends BaseActivity
     private final BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, android.content.Intent intent) {
+            String type = intent.getStringExtra(Constants.TYPE);
             String orderId = intent.getStringExtra(Constants.ORDERID);
-            OrderInfoDialogFragment newOrderDialogFragment = OrderInfoDialogFragment.newInstance(orderId);
-            newOrderDialogFragment.show(getSupportFragmentManager(), OrderInfoDialogFragment.TAG);
+
+            if(type.equals("101")){
+                OrderInfoDialogFragment newOrderDialogFragment = OrderInfoDialogFragment.newInstance(orderId);
+                newOrderDialogFragment.show(getSupportFragmentManager(), OrderInfoDialogFragment.TAG);
+            }else if(type.equals("201")){
+                String driverId = intent.getStringExtra(Constants.DRIVERID);
+                NewOfferDialogFragment newOfferDialogFragment = NewOfferDialogFragment.newInstance(driverId, orderId);
+                newOfferDialogFragment.show(getSupportFragmentManager(), NewOfferDialogFragment.TAG);
+            }else if(type.equals("301")){
+                Toast.makeText(MainActivity.this, getResources().getString(R.string.user_accepted), Toast.LENGTH_LONG).show();
+            }
         }
     };
 

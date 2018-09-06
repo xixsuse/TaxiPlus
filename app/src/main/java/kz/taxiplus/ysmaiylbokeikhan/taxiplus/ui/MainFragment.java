@@ -169,6 +169,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
             }else {
                 newOrderView.setVisibility(View.GONE);
                 openSessionView.setVisibility(View.VISIBLE);
+                checkSession();
             }
         }
     }
@@ -427,12 +428,14 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
                     map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
 
                     toButton.setText(toAddress.getAddress());
-                }else if(requestCode == Constants.MAINFRAGMENTCODEOFFER){
-                    CheckoutOrderDialogFragment checkoutOrderDialogFragment = CheckoutOrderDialogFragment.newInstance();
-                    checkoutOrderDialogFragment.setTargetFragment(MainFragment.this, Constants.MAINFRAGMENTCODECHECKOUT);
-
-                    checkoutOrderDialogFragment.show(getFragmentManager(), CheckoutOrderDialogFragment.TAG);
-                }else if(requestCode == Constants.MAINFRAGMENTCODECHECKOUT){
+                }
+//                else if(requestCode == Constants.MAINFRAGMENTCODEOFFER){
+//                    CheckoutOrderDialogFragment checkoutOrderDialogFragment = CheckoutOrderDialogFragment.newInstance();
+//                    checkoutOrderDialogFragment.setTargetFragment(MainFragment.this, Constants.MAINFRAGMENTCODECHECKOUT);
+//
+//                    checkoutOrderDialogFragment.show(getFragmentManager(), CheckoutOrderDialogFragment.TAG);
+//                }
+                else if(requestCode == Constants.MAINFRAGMENTCODECHECKOUT){
                     map.clear();
                     newOrderView.setVisibility(View.VISIBLE);
                 }
@@ -469,6 +472,34 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     }
 
     private void handleError(Throwable throwable) {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private void checkSession(){
+        progressBar.setVisibility(View.VISIBLE);
+        subscription.add(NetworkUtil.getRetrofit()
+                .checkSession(Utility.getToken(getContext()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponseCheck, this::handleErrorCheck));
+    }
+
+    private void handleResponseCheck(Response response) {
+        if(response.getState().equals("success")){
+            if(response.getIs_active() == 1){
+                user.setSessionOpened(true);
+                sessionText.setText(getResources().getString(R.string.close_session_event));
+            }else {
+                user.setSessionOpened(false);
+                sessionText.setText(getResources().getString(R.string.open_session_event));
+            }
+            user.setBalance(response.getBalance());
+            Paper.book().write(Constants.USER, user);
+        }
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private void handleErrorCheck(Throwable throwable) {
         progressBar.setVisibility(View.GONE);
     }
 
