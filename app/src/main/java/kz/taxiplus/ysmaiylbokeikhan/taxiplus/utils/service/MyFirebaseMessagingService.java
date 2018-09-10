@@ -2,11 +2,13 @@ package kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.service;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.os.Build;
+import android.os.Parcelable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -15,11 +17,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 import io.paperdb.Paper;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.SplashActivity;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
@@ -62,12 +67,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 handlePush(remoteMessage.getData());
             }else {
                 int notificationId = new Random().nextInt(60000);
+
+                Map<String, String> body = remoteMessage.getData();
+                Intent intentResult = new Intent(this, SplashActivity.class);
+                intentResult.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intentResult.putExtra(Constants.PENDINGINTENTEXTRA, remoteMessage);
+
+                PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, intentResult, PendingIntent.FLAG_ONE_SHOT);
+
                 NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle(setNotificationTitle(type))
                     .setContentText(setNotificationBody(type))
                     .setAutoCancel(true)
-                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                        .setContentIntent(pendingIntent);
+
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.notify(notificationId, notificationBuilder.build());
             }

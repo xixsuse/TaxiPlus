@@ -62,6 +62,7 @@ public class Constants {
     public static final String ORDERID = "orderId";
     public static final String DRIVERID = "driverId";
     public static final String TYPE = "type";
+    public static final String PENDINGINTENTEXTRA = "pendingIntentExtra";
 
     public static final String FRAGMENTTYPE = "fragmentType";
     public static final String NIGHTMODE = "nightMode";

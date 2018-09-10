@@ -125,6 +125,7 @@ public class OpenSessionFragment extends Fragment {
     }
 
     private void handleResponsePrice(SessionPrices response) {
+        //TODO: if unauth
         if(response.getState().equals("success")){
             sixHourPrice = response.getSix_hours_price();
             unlimPrice = response.getUnlim_price();

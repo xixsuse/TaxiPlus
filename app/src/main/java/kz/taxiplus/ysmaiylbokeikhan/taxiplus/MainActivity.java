@@ -29,6 +29,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.firebase.messaging.RemoteMessage;
+
 import java.util.ArrayList;
 import java.util.List;
 import io.paperdb.Paper;
@@ -86,7 +88,7 @@ public class MainActivity extends BaseActivity
 
         initViews();
         openMainFragment();
-
+        checkRemoteMessage();
         LocalBroadcastManager.getInstance(MainActivity.this).registerReceiver(myBroadcastReceiver,
                 new IntentFilter("thisIsForMyFragment"));
     }
@@ -187,6 +189,26 @@ public class MainActivity extends BaseActivity
         menuAdapter = new RecyclerMenuAdapter(recyclerMenuItemList, MainActivity.this);
         menuRecyclerView.setAdapter(menuAdapter);
         menuRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+    }
+
+
+    private void checkRemoteMessage() {
+        RemoteMessage remoteMessage = getIntent().getParcelableExtra(Constants.PENDINGINTENTEXTRA);
+        if(remoteMessage != null){
+            String type = remoteMessage.getData().get("type");
+            String orderId = remoteMessage.getData().get("order_id");
+
+            if (type.equals("101")) {
+                OrderInfoDialogFragment newOrderDialogFragment = OrderInfoDialogFragment.newInstance(orderId);
+                newOrderDialogFragment.show(getSupportFragmentManager(), OrderInfoDialogFragment.TAG);
+            } else if (type.equals("201")) {
+                String driverId = remoteMessage.getData().get("driver_id");
+                NewOfferDialogFragment newOfferDialogFragment = NewOfferDialogFragment.newInstance(driverId, orderId);
+                newOfferDialogFragment.show(getSupportFragmentManager(), NewOfferDialogFragment.TAG);
+            } else if (type.equals("301")) {
+                Toast.makeText(MainActivity.this, getResources().getString(R.string.user_accepted), Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     private final BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {

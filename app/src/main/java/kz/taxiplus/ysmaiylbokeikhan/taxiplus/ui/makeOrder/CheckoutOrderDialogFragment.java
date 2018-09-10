@@ -9,6 +9,7 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Order;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.OrderToDriver;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 
@@ -38,7 +40,9 @@ public class CheckoutOrderDialogFragment extends DialogFragment {
     private static final int REQUEST_CALL_PERMISSION = 123;
 
     private OrderToDriver.GetOrderInfo orderInfo;
+    private BottomSheetBehavior sheetBehavior;
 
+    private ConstraintLayout layoutBottomSheet;
     private TextView confirmFromText, confirmToText, confNameText;
     private TextView confPhoneText, confModelText, confNumberText;
     private TextView confDateText, confModeText;
@@ -76,12 +80,13 @@ public class CheckoutOrderDialogFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_checkout_order_dialog, container, false);
 
-        initViews(view);
-        setInfo();
+        initViewsBottomSheet(view);
+        setInfo(orderInfo);
         return view;
     }
 
-    private void initViews(View view) {
+    private void initViewsBottomSheet(View view) {
+        layoutBottomSheet = view.findViewById(R.id.bottom_sheet);
         confirmFromText = view.findViewById(R.id.mf_confirm_from_text);
         confirmToText = view.findViewById(R.id.mf_confirm_to_text);
 
@@ -94,6 +99,8 @@ public class CheckoutOrderDialogFragment extends DialogFragment {
         confDateText = view.findViewById(R.id.mf_confirm_date_text);
 
         confCallButton = view.findViewById(R.id.mf_confirm_call_button);
+        sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
+        sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         confCallButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,9 +114,9 @@ public class CheckoutOrderDialogFragment extends DialogFragment {
         });
     }
 
-    private void setInfo() {
-        confirmFromText.setText(getAddressFromLatLng(new LatLng(orderInfo.getOrder().getFrom_latitude(), orderInfo.getOrder().getFrom_longitude())));
-        confirmToText.setText(getAddressFromLatLng(new LatLng(orderInfo.getOrder().getTo_latitude(), orderInfo.getOrder().getTo_longitude())));
+    private void setInfo(OrderToDriver.GetOrderInfo orderInfo) {
+        confirmFromText.setText(getAddressFromLatLngStr(new LatLng(orderInfo.getOrder().getFrom_latitude(), orderInfo.getOrder().getFrom_longitude())));
+        confirmToText.setText(getAddressFromLatLngStr(new LatLng(orderInfo.getOrder().getTo_latitude(), orderInfo.getOrder().getTo_longitude())));
 
         confNameText.setText(orderInfo.getDriver().getName());
         confPhoneText.setText(orderInfo.getDriver().getPhone());
@@ -175,7 +182,7 @@ public class CheckoutOrderDialogFragment extends DialogFragment {
         return typeString;
     }
 
-    private String getAddressFromLatLng(LatLng latLng){
+    private String getAddressFromLatLngStr(LatLng latLng){
         List<Address> addressList;
         Address addresReturn = null;
         String title;

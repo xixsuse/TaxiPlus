@@ -94,6 +94,7 @@
     <string name="accept">Принять</string>
     <string name="decline">Отказать</string>
     <string name="confirm_order">Оформление заказа</string>
+    <string name="info_order">Информация о заказе</string>
     <string name="type_massage">Ваше сообщение</string>
 
     <string name="point_a">Точка А</string>
