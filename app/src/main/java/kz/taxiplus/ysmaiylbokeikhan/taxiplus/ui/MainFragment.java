@@ -1,5 +1,6 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui;
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -17,10 +18,12 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -84,6 +87,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
 
     private LatLng myLocation;
     private int drawerCounter = 0;
+    private int driverButtonType = 0;
     private int theme;
     private Order order;
     private User user;
@@ -92,6 +96,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     private boolean isClickableA = false;
     private boolean isClickableB = false;
     private OrderToDriver.GetOrderInfo orderInfo;
+    private String orderId = "12";
 
     private Marker mPositionMarker;
     public MapView mapView;
@@ -109,7 +114,8 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     private TextView confirmFromText, confirmToText, confNameText;
     private TextView confPhoneText, confModelText, confNumberText;
     private TextView confDateText, confModeText;
-    private Button confCallButton;
+    private Button cameButton, endOrder;
+    private ImageButton confCallButton, chatButton;
 
     private FragmentTransaction fragmentTransaction;
     private CompositeSubscription subscription;
@@ -161,6 +167,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         openSessionView = view.findViewById(R.id.mf_open_session_view);
         sessionText = view.findViewById(R.id.mf_open_session_text);
         progressBar = view.findViewById(R.id.mf_progressbar);
+        cameButton = view.findViewById(R.id.mf_came_button);
 
         theme = Paper.book().read(getString(R.string.prefs_theme_key), 1);
         user = Paper.book().read(Constants.USER);
@@ -280,6 +287,24 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
                     fragmentTransaction.commit();
                 }else {
                     closeSession();
+                }
+            }
+        });
+
+        cameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (driverButtonType){
+                    case 0:
+                        driverIsCame(orderId);
+                        break;
+                    case 1:
+
+                        break;
+
+                    case 2:
+
+                        break;
                 }
             }
         });
@@ -523,8 +548,35 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         progressBar.setVisibility(View.GONE);
     }
 
+    private void driverIsCame(String order_id){
+        progressBar.setVisibility(View.VISIBLE);
+        subscription.add(NetworkUtil.getRetrofit()
+                .driverCame(Utility.getToken(getContext()), order_id)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponseCame, this::handleErrorCame));
+    }
+
+    private void handleResponseCame(Response response) {
+        if(response.getState().equals("success")){
+            driverButtonType = 1;
+            Toast.makeText(getContext(), getResources().getString(R.string.came_button_response), Toast.LENGTH_LONG).show();
+        }
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private void handleErrorCame(Throwable throwable) {
+        progressBar.setVisibility(View.GONE);
+    }
+
     // helper functions
+    public void clientIsAccepted(String orderId){
+        this.orderId = orderId;
+        cameButton.setVisibility(View.VISIBLE);
+    }
+
     public void setCheckoutView(OrderToDriver.GetOrderInfo orderInfo){
+        this.orderInfo = orderInfo;
         if(view != null){
             initViewsBottomSheet(view);
             setInfo(orderInfo);
@@ -545,6 +597,8 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         confDateText = view.findViewById(R.id.mf_confirm_date_text);
 
         confCallButton = view.findViewById(R.id.mf_confirm_call_button);
+        chatButton = view.findViewById(R.id.mf_confirm_chat_button);
+        endOrder = view.findViewById(R.id.mf_confirm_end_order_button);
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
         sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
@@ -558,6 +612,46 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
                 }else {
                     requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL_PERMISSION);
                 }
+            }
+        });
+
+        endOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+                builder1.setMessage(getResources().getString(R.string.fill_fields));
+                builder1.setCancelable(true);
+
+                builder1.setPositiveButton(
+                        getResources().getText(R.string.yes),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                builder1.setNegativeButton(
+                        getResources().getText(R.string.no),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
+            }
+        });
+
+        chatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragmentTransaction = getFragmentManager().beginTransaction();
+
+                ChatFragment chatFragment = new ChatFragment();
+                fragmentTransaction.add(R.id.main_activity_frame, chatFragment, ChatFragment.TAG);
+                fragmentTransaction.addToBackStack(ChatFragment.TAG);
+                fragmentTransaction.commit();
             }
         });
     }

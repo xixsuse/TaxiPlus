@@ -114,6 +114,11 @@ public interface RetrofitInterface {
     Observable<Response> checkSession(@Field("token")String token);
 
     @FormUrlEncoded
+    @POST("driver-came/")
+    Observable<Response> driverCame(@Field("token")String token, @Field("order_id") String order_id);
+
+
+    @FormUrlEncoded
     @POST("make-order/")
     Observable<Response> makeOrder(@Field("token")String token,
                                    @Field("latitude_a")double latitude_a,

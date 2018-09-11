@@ -207,6 +207,10 @@ public class MainActivity extends BaseActivity
                 newOfferDialogFragment.show(getSupportFragmentManager(), NewOfferDialogFragment.TAG);
             } else if (type.equals("301")) {
                 Toast.makeText(MainActivity.this, getResources().getString(R.string.user_accepted), Toast.LENGTH_LONG).show();
+                MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag(MainFragment.TAG);
+                mainFragment.clientIsAccepted(orderId);
+            }else if(type.equals("401")){
+                Toast.makeText(MainActivity.this, getResources().getString(R.string.driver_is_came), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -226,6 +230,10 @@ public class MainActivity extends BaseActivity
                 newOfferDialogFragment.show(getSupportFragmentManager(), NewOfferDialogFragment.TAG);
             }else if(type.equals("301")){
                 Toast.makeText(MainActivity.this, getResources().getString(R.string.user_accepted), Toast.LENGTH_LONG).show();
+                MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag(MainFragment.TAG);
+                mainFragment.clientIsAccepted(orderId);
+            }else if(type.equals("401")){
+                Toast.makeText(MainActivity.this, getResources().getString(R.string.driver_is_came), Toast.LENGTH_LONG).show();
             }
         }
     };

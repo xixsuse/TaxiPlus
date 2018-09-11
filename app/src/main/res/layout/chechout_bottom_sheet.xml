@@ -9,19 +9,28 @@
     android:padding="@dimen/_8sdp"
     tools:context=".ui.makeOrder.CheckoutOrderDialogFragment"
     app:behavior_hideable="true"
-    app:behavior_peekHeight="@dimen/_40sdp"
+    app:behavior_peekHeight="@dimen/_58sdp"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
     android:id="@+id/bottom_sheet"
-    android:visibility="gone">
+    android:visibility="visible">
 
+    <ImageView
+        android:id="@+id/swipe_view"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_13sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/icon_swipe"/>
     <TextView
         android:id="@+id/confirm_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/swipe_view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:textAlignment="center"
+        android:layout_marginTop="@dimen/_5sdp"
         android:textSize="@dimen/_16ssp"
         android:textColor="?attr/colorPrimary"
         android:text="@string/info_order"
@@ -271,18 +280,44 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:textSize="@dimen/_13ssp"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/mf_confirm_call_button"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_35sdp"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
         android:layout_marginTop="@dimen/_20sdp"
-        android:layout_marginStart="@dimen/_20sdp"
-        android:layout_marginEnd="@dimen/_20sdp"
+        android:padding="@dimen/_7sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mf_confirm_mode_text"
+        android:background="@drawable/circle_green_view"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:src="@drawable/icon_call"
+        android:scaleType="centerCrop"/>
+    <ImageButton
+        android:id="@+id/mf_confirm_chat_button"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:padding="@dimen/_9sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mf_confirm_mode_text"
+        android:background="@drawable/circle_green_view"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:src="@drawable/icon_message"
+        android:scaleType="centerCrop"/>
+
+    <Button
+        android:id="@+id/mf_confirm_end_order_button"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:layout_marginStart="@dimen/_8sdp"
         android:textColor="@color/white"
         android:textSize="@dimen/_16ssp"
+        android:text="@string/order_id_ended"
         android:textAllCaps="false"
-        android:text="@string/to_call"
-        app:layout_constraintTop_toBottomOf="@id/mf_confirm_mode_text"
-        android:background="@drawable/rounded_green_view"
-        />
+        app:layout_constraintStart_toEndOf="@id/mf_confirm_call_button"
+        app:layout_constraintEnd_toStartOf="@id/mf_confirm_chat_button"
+        app:layout_constraintTop_toTopOf="@id/mf_confirm_call_button"
+        app:layout_constraintBottom_toBottomOf="@id/mf_confirm_call_button"
+        android:background="@drawable/rounded_green_circle_view"/>
 </android.support.constraint.ConstraintLayout>

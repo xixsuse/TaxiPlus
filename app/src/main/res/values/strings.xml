@@ -159,7 +159,15 @@
 
     <string name="new_offer">Водитель откликнулся</string>
     <string name="new_offer_body">на Ваш заказ</string>
-
+    <string name="came_button">Я подъехал</string>
+    <string name="driver_is_came">Водитель подъехал</string>
+    <string name="start_way_button">Начал заказ</string>
+    <string name="end_way_button">Окончил заказ</string>
+    <string name="came_button_response">Ждите клиента</string>
+    <string name="order_id_ended">Завершить поездку</string>
+    <string name="is_order_ended">Вы подъехали?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
 
     <string name="notifications_admin_channel_name">Name of admin channel</string>
     <string name="notifications_admin_channel_description">Description of admin channel</string>
