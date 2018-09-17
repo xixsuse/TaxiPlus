@@ -12,7 +12,8 @@
     app:behavior_peekHeight="@dimen/_58sdp"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
     android:id="@+id/bottom_sheet"
-    android:visibility="visible">
+    android:clickable="true"
+    android:visibility="gone">
 
     <ImageView
         android:id="@+id/swipe_view"
@@ -305,19 +306,4 @@
         android:src="@drawable/icon_message"
         android:scaleType="centerCrop"/>
 
-    <Button
-        android:id="@+id/mf_confirm_end_order_button"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_marginEnd="@dimen/_8sdp"
-        android:layout_marginStart="@dimen/_8sdp"
-        android:textColor="@color/white"
-        android:textSize="@dimen/_16ssp"
-        android:text="@string/order_id_ended"
-        android:textAllCaps="false"
-        app:layout_constraintStart_toEndOf="@id/mf_confirm_call_button"
-        app:layout_constraintEnd_toStartOf="@id/mf_confirm_chat_button"
-        app:layout_constraintTop_toTopOf="@id/mf_confirm_call_button"
-        app:layout_constraintBottom_toBottomOf="@id/mf_confirm_call_button"
-        android:background="@drawable/rounded_green_circle_view"/>
 </android.support.constraint.ConstraintLayout>

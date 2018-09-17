@@ -1,6 +1,5 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui;
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -13,12 +12,11 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,10 +50,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
+
 import io.paperdb.Paper;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.MainActivity;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.DriverOffer;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Order;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.OrderToDriver;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Place;
@@ -63,11 +62,8 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.OpenSessionFragment;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.CheckoutOrderDialogFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.FromAndToFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.ModesDialogFragment;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.MyPlacesFragment;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.NewOfferDialogFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.SelectModeFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
@@ -83,7 +79,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     private static final String ORDERINFO = "order_info";
     public static final int REQUEST_GPS_PERMISSION = 123;
     private static final int REQUEST_CALL_PERMISSION = 103;
-
+    private static final String NULLTAG = "NullPointerException";
 
     private LatLng myLocation;
     private int drawerCounter = 0;
@@ -96,9 +92,9 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     private boolean isClickableA = false;
     private boolean isClickableB = false;
     private OrderToDriver.GetOrderInfo orderInfo;
-    private String orderId = "12";
+    private String orderId;
 
-    private Marker mPositionMarker;
+    private Marker mPositionMarker, markerTo, markerFrom;
     public MapView mapView;
     private GoogleMap map;
     private View view;
@@ -114,7 +110,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     private TextView confirmFromText, confirmToText, confNameText;
     private TextView confPhoneText, confModelText, confNumberText;
     private TextView confDateText, confModeText;
-    private Button cameButton, endOrder;
+    private Button cameButton;
     private ImageButton confCallButton, chatButton;
 
     private FragmentTransaction fragmentTransaction;
@@ -125,15 +121,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             order = getArguments().getParcelable(Constants.NEWORDER);
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if(myLocation != null) {
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(myLocation, 16);
-            map.animateCamera(cameraUpdate);
         }
     }
 
@@ -157,6 +144,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     }
 
     private void initViews(View view) {
+//        Paper.book().delete(Constants.LASTPLACES);
         subscription = new CompositeSubscription();
         menuIcon = view.findViewById(R.id.mf_menu_icon);
         myLocationIcon = view.findViewById(R.id.mf_my_location);
@@ -180,7 +168,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         setListeners();
     }
 
-    private void setViewsVisability() {
+    private void setViewsVisibility() {
         if (order != null) {
             to = new LatLng(order.getToAddess().getLatitude(), order.getToAddess().getLongitude());
             from = new LatLng(order.getFromAddess().getLatitude(), order.getFromAddess().getLongitude());
@@ -193,8 +181,11 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
             }else {
                 newOrderView.setVisibility(View.GONE);
                 openSessionView.setVisibility(View.VISIBLE);
-                checkSession();
             }
+
+            LatLng latLng = Paper.book().read(Constants.MYLOCATION, new LatLng(0,0));
+            String push_id = Paper.book().read(Constants.FIREBASE_TOKEN, "");
+            checkSession(latLng, push_id);
         }
     }
 
@@ -294,17 +285,21 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         cameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (driverButtonType){
-                    case 0:
-                        driverIsCame(orderId);
-                        break;
-                    case 1:
+                try {
+                    switch (driverButtonType){
+                        case 0:
+                            driverIsCame(orderId);
+                            break;
+                        case 1:
+                            driverGo(orderId);
+                            break;
 
-                        break;
-
-                    case 2:
-
-                        break;
+                        case 2:
+                            driverFinish(orderId);
+                            break;
+                    }
+                }catch (Throwable e){
+                    Log.d(NULLTAG,": orderId is null");
                 }
             }
         });
@@ -317,7 +312,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
             map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             map.getUiSettings().setMyLocationButtonEnabled(false);
             map.getUiSettings().setMyLocationButtonEnabled(true);
-
 
             if(theme == 2){
                 googleMap.setMapStyle(new MapStyleOptions(getResources()
@@ -355,35 +349,54 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
             if (location != null) {
                 drawMarker(location);
             }
-            setViewsVisability();
+            setViewsVisibility();
 
             map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
                 public void onMapClick(LatLng latLng) {
                     if(isClickableA){
                         Address address = getAddressFromLatLng(latLng);
-                        String title = address.getAddressLine(0).substring(0, address.getAddressLine(0).indexOf(","));
+                        try {
+                            String title = address.getAddressLine(0).substring(0, address.getAddressLine(0).indexOf(","));
+                            fromAddress = new Place(title, address.getLatitude(), address.getLongitude());
+                            fromButton.setText(title);
 
-                        fromAddress = new Place(title, address.getLatitude(), address.getLongitude());
-                        fromButton.setText(title);
+                            if(markerFrom != null){
+                                markerFrom.remove();
+                            }
+                            markerFrom = map.addMarker(
+                                    new MarkerOptions()
+                                    .icon(BitmapDescriptorFactory.fromBitmap(setIcon(R.drawable.icon_point_a)))
+                                    .position(latLng).title(getString(R.string.point_a)));
 
-                        map.clear();
-                        map.addMarker(new MarkerOptions()
-                                .icon(BitmapDescriptorFactory.fromBitmap(setIcon(R.drawable.icon_point_a)))
-                                .position(latLng).title(getString(R.string.point_a)));
-                        map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                            map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                        }catch (Throwable throwable){}
                     }else if(isClickableB){
                         Address address = getAddressFromLatLng(latLng);
-                        String title = address.getAddressLine(0).substring(0, address.getAddressLine(0).indexOf(","));
+                        try {
+                            String title = address.getAddressLine(0).substring(0, address.getAddressLine(0).indexOf(","));
+                            toAddress = new Place(title, address.getLatitude(), address.getLongitude());
+                            toButton.setText(title);
 
-                        toAddress = new Place(title, address.getLatitude(), address.getLongitude());
-                        toButton.setText(title);
+                            if(markerTo != null){
+                                markerTo.remove();
+                            }
+                            markerTo = map.addMarker(
+                                    new MarkerOptions()
+                                    .icon(BitmapDescriptorFactory.fromBitmap(setIcon(R.drawable.icon_point_b)))
+                                    .position(latLng).title(getString(R.string.point_b)));
+                            map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                        }catch (Throwable throwable){}
+                    }
+                }
+            });
 
-                        map.clear();
-                        map.addMarker(new MarkerOptions()
-                                .icon(BitmapDescriptorFactory.fromBitmap(setIcon(R.drawable.icon_point_b)))
-                                .position(latLng).title(getString(R.string.point_b)));
-                        map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+            map.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                @Override
+                public void onMapLoaded() {
+                    if(myLocation != null) {
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(myLocation, 16);
+                        map.animateCamera(cameraUpdate);
                     }
                 }
             });
@@ -462,9 +475,12 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
             if(data.getStringExtra(Constants.FROMMAP) == null){
                 if (requestCode == Constants.MAINFRAGMENTCODEFROM) {
                     fromAddress = data.getParcelableExtra("address");
-
                     LatLng latLng = new LatLng(fromAddress.getLatitude(), fromAddress.getLongitude());
-                    map.addMarker(new MarkerOptions()
+                    if(markerFrom != null){
+                        markerFrom.remove();
+                    }
+                    markerFrom = map.addMarker(
+                            new MarkerOptions()
                             .icon(BitmapDescriptorFactory.fromBitmap(setIcon(R.drawable.icon_point_a)))
                             .position(latLng).title(fromAddress.getAddress()));
                     map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
@@ -472,11 +488,15 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
                     fromButton.setText(fromAddress.getAddress());
                 }else if (requestCode == Constants.MAINFRAGMENTCODETO) {
                     toAddress = data.getParcelableExtra("address");
-
                     LatLng latLng = new LatLng(toAddress.getLatitude(), toAddress.getLongitude());
-                    map.addMarker(new MarkerOptions()
+                    if(markerTo != null){
+                        markerTo.remove();
+                    }
+                    markerTo = map.addMarker(
+                            new MarkerOptions()
                             .icon(BitmapDescriptorFactory.fromBitmap(setIcon(R.drawable.icon_point_b)))
-                            .position(latLng).title(toAddress.getAddress()));
+                            .position(latLng).title(toAddress.getAddress())
+                    );
                     map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
 
                     toButton.setText(toAddress.getAddress());
@@ -520,28 +540,35 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         progressBar.setVisibility(View.GONE);
     }
 
-    private void checkSession(){
+    private void checkSession(LatLng latLng, String push_id){
         progressBar.setVisibility(View.VISIBLE);
         subscription.add(NetworkUtil.getRetrofit()
-                .checkSession(Utility.getToken(getContext()))
+                .checkState(Utility.getToken(getContext()), push_id, latLng.latitude, latLng.longitude, "0")
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(this::handleResponseCheck, this::handleErrorCheck));
     }
 
     private void handleResponseCheck(Response response) {
+        progressBar.setVisibility(View.GONE);
+
         if(response.getState().equals("success")){
-            if(response.getIs_active() == 1){
-                user.setSessionOpened(true);
-                sessionText.setText(getResources().getString(R.string.close_session_event));
-            }else {
-                user.setSessionOpened(false);
-                sessionText.setText(getResources().getString(R.string.open_session_event));
+            if(user.getRole_id().equals("2")){
+                if(response.getIs_session_opened() == 1){
+                    user.setSessionOpened(true);
+                    sessionText.setText(getResources().getString(R.string.close_session_event));
+                }else {
+                    user.setSessionOpened(false);
+                    sessionText.setText(getResources().getString(R.string.open_session_event));
+                }
+
+                if(response.getIs_active() != 1){
+                    ((MainActivity) Objects.requireNonNull(getActivity())).openInfoDialogView(getResources().getString(R.string.on_moderation),R.drawable.icon_error);
+                }
             }
             user.setBalance(response.getBalance());
             Paper.book().write(Constants.USER, user);
         }
-        progressBar.setVisibility(View.GONE);
     }
 
     private void handleErrorCheck(Throwable throwable) {
@@ -560,12 +587,58 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     private void handleResponseCame(Response response) {
         if(response.getState().equals("success")){
             driverButtonType = 1;
+            cameButton.setText(getResources().getString(R.string.start_trip));
             Toast.makeText(getContext(), getResources().getString(R.string.came_button_response), Toast.LENGTH_LONG).show();
         }
         progressBar.setVisibility(View.GONE);
     }
 
     private void handleErrorCame(Throwable throwable) {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private void driverGo(String order_id){
+        progressBar.setVisibility(View.VISIBLE);
+        subscription.add(NetworkUtil.getRetrofit()
+                .driverGo(Utility.getToken(getContext()), order_id)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponseGo, this::handleErrorGo));
+    }
+
+    private void handleResponseGo(Response response) {
+        if(response.getState().equals("success")){
+            driverButtonType = 2;
+            cameButton.setText(getResources().getString(R.string.end_trip));
+            Toast.makeText(getContext(), getResources().getString(R.string.trip_is_started), Toast.LENGTH_LONG).show();
+        }
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private void handleErrorGo(Throwable throwable) {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private void driverFinish(String order_id){
+        progressBar.setVisibility(View.VISIBLE);
+        subscription.add(NetworkUtil.getRetrofit()
+                .driverFinisg(Utility.getToken(getContext()), order_id)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponseFinish, this::handleErrorFinish));
+    }
+
+    private void handleResponseFinish(Response response) {
+        if(response.getState().equals("success")){
+            driverButtonType = 0;
+            cameButton.setText(getResources().getString(R.string.came_button));
+            cameButton.setVisibility(View.GONE);
+            Toast.makeText(getContext(), getResources().getString(R.string.trip_is_ended), Toast.LENGTH_LONG).show();
+        }
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private void handleErrorFinish(Throwable throwable) {
         progressBar.setVisibility(View.GONE);
     }
 
@@ -577,7 +650,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
 
     public void setCheckoutView(OrderToDriver.GetOrderInfo orderInfo){
         this.orderInfo = orderInfo;
-        if(view != null){
+        if(view != null && orderInfo!= null){
             initViewsBottomSheet(view);
             setInfo(orderInfo);
         }
@@ -598,7 +671,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
 
         confCallButton = view.findViewById(R.id.mf_confirm_call_button);
         chatButton = view.findViewById(R.id.mf_confirm_chat_button);
-        endOrder = view.findViewById(R.id.mf_confirm_end_order_button);
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
         sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
@@ -612,34 +684,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
                 }else {
                     requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL_PERMISSION);
                 }
-            }
-        });
-
-        endOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
-                builder1.setMessage(getResources().getString(R.string.fill_fields));
-                builder1.setCancelable(true);
-
-                builder1.setPositiveButton(
-                        getResources().getText(R.string.yes),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-                builder1.setNegativeButton(
-                        getResources().getText(R.string.no),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-                AlertDialog alert11 = builder1.create();
-                alert11.show();
             }
         });
 
@@ -810,5 +854,11 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         String permission = "android.permission.CALL_PHONE";
         int res = getContext().checkCallingOrSelfPermission(permission);
         return (res == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private LatLng getLocation(){
+        LatLng latLng = Paper.book().read(Constants.MYLOCATION);
+
+        return latLng;
     }
 }

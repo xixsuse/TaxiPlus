@@ -24,10 +24,12 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.paperdb.Paper;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Model;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Order;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.PayType;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Place;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Price;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
@@ -120,6 +122,7 @@ public class ModesDialogFragment extends Fragment {
 
     private void handleResponseMakeOrder(Response response) {
       if (response.getState().equals("success")){
+          writePlaceToLastplaces(order.getFromAddess(), order.getToAddess());
           getActivity().onBackPressed();
       }
     }
@@ -316,5 +319,20 @@ public class ModesDialogFragment extends Fragment {
         public int getItemCount() {
             return payTypes.size();
         }
+    }
+
+    private void writePlaceToLastplaces(Place from, Place to){
+        List<Place> lastplaces = Paper.book().read(Constants.LASTPLACES, new ArrayList<>());
+        lastplaces.add(from);
+        lastplaces.add(to);
+
+        if(lastplaces.size() > 2){
+            int i = lastplaces.size()-3;
+            while (i >=0 ){
+                lastplaces.remove(i);
+                i--;
+            }
+        }
+        Paper.book().write(Constants.LASTPLACES, lastplaces);
     }
 }

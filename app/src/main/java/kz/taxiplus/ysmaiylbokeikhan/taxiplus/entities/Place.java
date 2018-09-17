@@ -17,10 +17,6 @@ public class Place implements Parcelable{
         this.latitude = latitude;
     }
 
-    public Place(String address) {
-        this.address = address;
-    }
-
     protected Place(Parcel in) {
         address = in.readString();
         user_id = in.readString();

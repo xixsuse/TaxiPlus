@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
+    android:padding="@dimen/_15sdp"
+    android:orientation="vertical"
+    android:background="@color/white">
+    <ImageView
+        android:id="@+id/cdv_image"
+        android:layout_width="@dimen/_53sdp"
+        android:layout_height="@dimen/_53sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/cdv_title_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4sdp"
+        app:layout_constraintTop_toBottomOf="@id/cdv_image"
+        android:textAlignment="center"
+        android:textSize="@dimen/_14ssp"
+        android:textColor="@color/gray" />
+
+    <Button
+        android:id="@+id/cdv_close_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cdv_title_text"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:text="@string/close"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:textAllCaps="false"
+        android:background="@color/trans"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="@dimen/_15ssp"
+        android:visibility="visible"/>
+</android.support.constraint.ConstraintLayout>

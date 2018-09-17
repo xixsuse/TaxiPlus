@@ -52,10 +52,11 @@
             android:id="@+id/rcoi_hide_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_15sdp"
-            android:layout_marginEnd="@dimen/_20sdp"
-            android:layout_marginTop="@dimen/_7sdp"
-            android:layout_marginBottom="@dimen/_7sdp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:paddingStart="@dimen/_15sdp"
+            android:paddingEnd="@dimen/_20sdp"
+            android:paddingTop="@dimen/_7sdp"
+            android:paddingBottom="@dimen/_7sdp"
             android:orientation="vertical"
             android:gravity="center">
             <ImageButton
@@ -73,10 +74,11 @@
             android:id="@+id/rcoi_complaint_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_20sdp"
-            android:layout_marginEnd="@dimen/_20sdp"
-            android:layout_marginTop="@dimen/_7sdp"
-            android:layout_marginBottom="@dimen/_7sdp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:paddingStart="@dimen/_20sdp"
+            android:paddingEnd="@dimen/_20sdp"
+            android:paddingTop="@dimen/_7sdp"
+            android:paddingBottom="@dimen/_7sdp"
             android:orientation="vertical"
             android:gravity="center">
             <ImageButton
@@ -94,10 +96,11 @@
             android:id="@+id/rcoi_onmap_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_20sdp"
-            android:layout_marginEnd="@dimen/_20sdp"
-            android:layout_marginTop="@dimen/_7sdp"
-            android:layout_marginBottom="@dimen/_7sdp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:paddingStart="@dimen/_20sdp"
+            android:paddingEnd="@dimen/_20sdp"
+            android:paddingTop="@dimen/_7sdp"
+            android:paddingBottom="@dimen/_7sdp"
             android:orientation="vertical"
             android:gravity="center">
             <ImageButton

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
+    android:padding="@dimen/_15sdp"
+    android:orientation="vertical"
+    android:background="@color/white">
+    <ImageView
+        android:id="@+id/crv_image"
+        android:layout_width="@dimen/_53sdp"
+        android:layout_height="@dimen/_53sdp"
+        android:background="@drawable/icon_rate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/crv_title_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4sdp"
+        app:layout_constraintTop_toBottomOf="@id/crv_image"
+        android:textAlignment="center"
+        android:text="@string/rate_driver_text"
+        android:textSize="@dimen/_12ssp"
+        android:textColor="@color/gray" />
+
+    <RatingBar
+        android:id="@+id/crv_ratingbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:stepSize="1"
+        style="@style/MyRatingBar"
+        android:scaleX="0.8"
+        android:scaleY="0.8"
+        app:layout_constraintTop_toBottomOf="@id/crv_title_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/crv_rate_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/crv_ratingbar"
+        android:text="@string/rate"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:textAllCaps="false"
+        android:background="@color/trans"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="@dimen/_15ssp"
+        android:visibility="visible"/>
+</android.support.constraint.ConstraintLayout>

@@ -67,8 +67,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 handlePush(remoteMessage.getData());
             }else {
                 int notificationId = new Random().nextInt(60000);
-
-                Map<String, String> body = remoteMessage.getData();
                 Intent intentResult = new Intent(this, SplashActivity.class);
                 intentResult.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intentResult.putExtra(Constants.PENDINGINTENTEXTRA, remoteMessage);

@@ -1,7 +1,10 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import java.util.List;
 
@@ -24,5 +27,14 @@ public class Utility {
         User user = Paper.book().read(Constants.USER);
 
         return user.getToken();
+    }
+
+    public static void dismissKeyboard(Activity activity){
+        View v = activity.getWindow().getCurrentFocus();
+        if (v != null) {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            assert imm != null;
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
     }
 }

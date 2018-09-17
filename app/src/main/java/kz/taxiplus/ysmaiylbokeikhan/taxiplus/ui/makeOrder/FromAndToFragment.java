@@ -6,52 +6,95 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.maps.android.SphericalUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import io.paperdb.Paper;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Place;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.MainFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.PlaceArrayAdapter;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
 
 import static android.app.Activity.RESULT_OK;
 
-public class FromAndToFragment extends Fragment {
+public class FromAndToFragment extends Fragment implements
+        GoogleApiClient.OnConnectionFailedListener,
+        GoogleApiClient.ConnectionCallbacks{
+
     public static final String TAG = Constants.FROMFRAGMENTTAG;
+    private static final int GOOGLE_API_CLIENT_ID = 0;
+
     private int mode = 0;
 
     private ConstraintLayout onMapView, savedPlaceView;
 
     private RecyclerView recyclerView;
-    private EditText addressEditText;
+    private AutoCompleteTextView addressEditText;
     private RecyclerPlaceAdapter adapter;
     private FragmentTransaction fragmentTransaction;
+
+    private GoogleApiClient mGoogleApiClient;
+    private PlaceArrayAdapter mPlaceArrayAdapter;
+    private AutocompleteFilter filter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_from, container, false);
+        Paper.init(getContext());
+
         initViews(view);
         return view;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        mGoogleApiClient.stopAutoManage(getActivity());
+        mGoogleApiClient.disconnect();
+    }
+
     private void initViews(View view){
+        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                .addApi(Places.GEO_DATA_API)
+                .enableAutoManage(getActivity(), GOOGLE_API_CLIENT_ID, this)
+                .addConnectionCallbacks(this)
+                .build();
+
         recyclerView = view.findViewById(R.id.ff_recyclerview);
         savedPlaceView = view.findViewById(R.id.ff_save_place);
         onMapView = view.findViewById(R.id.ff_on_map);
@@ -66,6 +109,12 @@ public class FromAndToFragment extends Fragment {
 
         setPlaces();
         setListeners();
+
+        filter = new AutocompleteFilter.Builder().setCountry("KZ").build();
+        mPlaceArrayAdapter = new PlaceArrayAdapter(getContext(), android.R.layout.simple_list_item_1,
+                toBounds(new LatLng(43.249940, 76.895426), 15000), filter);
+        addressEditText.setAdapter(mPlaceArrayAdapter);
+        addressEditText.setOnItemClickListener(mAutocompleteClickListener);
     }
 
     private void setListeners() {
@@ -94,55 +143,34 @@ public class FromAndToFragment extends Fragment {
                 getFragmentManager().popBackStack();
             }
         });
-
-        addressEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    onMapSearch(addressEditText.getText().toString());
-                    return true;
-                }
-                return false;
-            }
-        });
     }
 
-    public void onMapSearch(String location) {
-        List<Address> addressList = null;
-
-        if (location != null || !location.equals("")) {
-            Geocoder geocoder = new Geocoder(getContext(), getResources().getConfiguration().locale);
-            try {
-                addressList = geocoder.getFromLocationName(location, 5);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if(addressList != null && addressList.size() > 0){
-                Address address = addressList.get(0);
-                String title = address.getAddressLine(0).substring(0, address.getAddressLine(0).indexOf(","));
-
-                Place place = new Place(title, address.getLatitude(), address.getLongitude());
-
-                Intent intent = new Intent(getContext(), FromAndToFragment.class);
-                intent.putExtra("address", place);
-
-                getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK, intent);
-                getFragmentManager().popBackStack();
-            }else {
-                Toast.makeText(getContext(), getResources().getString(R.string.not_found), Toast.LENGTH_LONG).show();
-            }
+    private AdapterView.OnItemClickListener mAutocompleteClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            final PlaceArrayAdapter.PlaceAutocomplete item = mPlaceArrayAdapter.getItem(position);
+            final String placeId = String.valueOf(item.placeId);
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                    .getPlaceById(mGoogleApiClient, placeId);
+            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
         }
-    }
+    };
 
-    // TODO: set last selected two places
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback = places -> {
+        if (places.getStatus().isSuccess()) {
+            final com.google.android.gms.location.places.Place place = places.get(0);
+            Place returnPlace = new Place(place.getName().toString(), place.getLatLng().latitude, place.getLatLng().longitude);
+            Intent intent = new Intent(getContext(), FromAndToFragment.class);
+            intent.putExtra("address", returnPlace);
+
+            getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK, intent);
+            getFragmentManager().popBackStack();
+            Utility.dismissKeyboard(getActivity());
+        }
+    };
+
     private void setPlaces() {
-        List<Place> places = new ArrayList<>();
-
-        Place place = new Place("Абая - Манаса");
-        Place place1 = new Place("Жандосова - Манаса");
-
-        places.add(place);
-        places.add(place1);
+        List<Place> places = Paper.book().read(Constants.LASTPLACES, new ArrayList<>());
 
         adapter = new RecyclerPlaceAdapter(places, getContext());
         recyclerView.setAdapter(adapter);
@@ -163,6 +191,21 @@ public class FromAndToFragment extends Fragment {
                 getFragmentManager().popBackStack();
             }
         }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        mPlaceArrayAdapter.setGoogleApiClient(mGoogleApiClient);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mPlaceArrayAdapter.setGoogleApiClient(null);
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 
     public class RecyclerPlaceAdapter extends RecyclerView.Adapter<RecyclerPlaceAdapter.ViewHolder> {
@@ -201,7 +244,11 @@ public class FromAndToFragment extends Fragment {
             holder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), FromAndToFragment.class);
+                    intent.putExtra("address", placeList.get(position));
 
+                    getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK, intent);
+                    getFragmentManager().popBackStack();
                 }
             });
         }
@@ -210,5 +257,14 @@ public class FromAndToFragment extends Fragment {
         public int getItemCount() {
             return placeList.size();
         }
+    }
+
+    public LatLngBounds toBounds(LatLng center, double radiusInMeters) {
+        double distanceFromCenterToCorner = radiusInMeters * Math.sqrt(2.0);
+        LatLng southwestCorner =
+                SphericalUtil.computeOffset(center, distanceFromCenterToCorner, 225.0);
+        LatLng northeastCorner =
+                SphericalUtil.computeOffset(center, distanceFromCenterToCorner, 45.0);
+        return new LatLngBounds(southwestCorner, northeastCorner);
     }
 }

@@ -22,6 +22,7 @@
             android:layout_height="@dimen/_25sdp"
             android:layout_marginEnd="@dimen/_5sdp"
             android:background="@drawable/icon_my_location"
+            android:foreground="?android:attr/selectableItemBackground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -127,17 +128,6 @@
                 android:textAlignment="center" />
         </LinearLayout>
 
-        <ProgressBar
-            android:id="@+id/mf_progressbar"
-            android:layout_width="@dimen/_40sdp"
-            android:layout_height="@dimen/_40sdp"
-            android:layout_marginBottom="@dimen/_50sdp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:indeterminate="true"
-            android:visibility="gone"/>
-
         <Button
             android:id="@+id/mf_came_button"
             android:layout_width="match_parent"
@@ -153,6 +143,17 @@
             android:text="@string/came_button"
             android:maxLines="1"
             android:ellipsize="end"
+            android:visibility="gone"/>
+
+        <ProgressBar
+            android:id="@+id/mf_progressbar"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_marginBottom="@dimen/_50sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:indeterminate="true"
             android:visibility="gone"/>
     </android.support.constraint.ConstraintLayout>
     <include layout="@layout/chechout_bottom_sheet"/>

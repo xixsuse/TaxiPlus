@@ -96,6 +96,12 @@ public interface RetrofitInterface {
                                            @Field("order_id")String order_id);
 
     @FormUrlEncoded
+    @POST("rate-driver/")
+    Observable<Response> rateDriver(@Field("token")String token,
+                                    @Field("order_id")String order_id,
+                                    @Field("value") String value);
+
+    @FormUrlEncoded
     @POST("check-location/")
     Observable<Response> sendLoaction(@Field("token")String token,
                                       @Field("latitude")double latitude,
@@ -110,13 +116,25 @@ public interface RetrofitInterface {
     Observable<OrderToDriver.GetOrderInfo> getDriverInfo(@Field("driver_id")String driver_id);
 
     @FormUrlEncoded
-    @POST("get-my-session/")
-    Observable<Response> checkSession(@Field("token")String token);
+    @POST("set-push-id/")
+    Observable<Response> checkState(@Field("token")String token,
+                                    @Field("push_id")String push_id,
+                                    @Field("lat")double lat,
+                                    @Field("long")double longi,
+                                    @Field("platform") String platform);
 
     @FormUrlEncoded
     @POST("driver-came/")
     Observable<Response> driverCame(@Field("token")String token, @Field("order_id") String order_id);
 
+
+    @FormUrlEncoded
+    @POST("go/")
+    Observable<Response> driverGo(@Field("token")String token, @Field("order_id") String order_id);
+
+    @FormUrlEncoded
+    @POST("finish-order/")
+    Observable<Response> driverFinisg(@Field("token")String token, @Field("order_id") String order_id);
 
     @FormUrlEncoded
     @POST("make-order/")

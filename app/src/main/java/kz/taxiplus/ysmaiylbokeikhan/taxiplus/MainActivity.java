@@ -1,15 +1,14 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -22,8 +21,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +36,9 @@ import java.util.ArrayList;
 import java.util.List;
 import io.paperdb.Paper;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.RecyclerMenuItem;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.ActiveOrdersFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.FaqFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.HistoryFragment;
@@ -52,11 +55,15 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.NewOfferDialogFragment
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.BaseActivity;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private User user;
     private int theme;
+    private float rating = 0;
 
     private DrawerLayout drawer;
     private NavigationView navigationView;
@@ -68,6 +75,7 @@ public class MainActivity extends BaseActivity
 
     private RecyclerMenuAdapter menuAdapter;
     private FragmentTransaction fragmentTransaction;
+    private CompositeSubscription subscription;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,6 +102,7 @@ public class MainActivity extends BaseActivity
     }
 
     private void initViews() {
+        subscription = new CompositeSubscription();
         userLogo = navigationView.findViewById(R.id.manhm_imageView);
         userName = navigationView.findViewById(R.id.manhm_name);
         userPhone = navigationView.findViewById(R.id.manhm_phone);
@@ -191,7 +200,6 @@ public class MainActivity extends BaseActivity
         menuRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
     }
 
-
     private void checkRemoteMessage() {
         RemoteMessage remoteMessage = getIntent().getParcelableExtra(Constants.PENDINGINTENTEXTRA);
         if(remoteMessage != null){
@@ -211,6 +219,8 @@ public class MainActivity extends BaseActivity
                 mainFragment.clientIsAccepted(orderId);
             }else if(type.equals("401")){
                 Toast.makeText(MainActivity.this, getResources().getString(R.string.driver_is_came), Toast.LENGTH_LONG).show();
+            }else if(type.equals("501")){
+                openRateDialogView(orderId);
             }
         }
     }
@@ -233,7 +243,9 @@ public class MainActivity extends BaseActivity
                 MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag(MainFragment.TAG);
                 mainFragment.clientIsAccepted(orderId);
             }else if(type.equals("401")){
-                Toast.makeText(MainActivity.this, getResources().getString(R.string.driver_is_came), Toast.LENGTH_LONG).show();
+                openInfoDialogView(getResources().getString(R.string.driver_is_came), R.drawable.icon_big_clock);
+            }else if(type.equals("501")){
+                openRateDialogView(orderId);
             }
         }
     };
@@ -442,6 +454,78 @@ public class MainActivity extends BaseActivity
             mode = getResources().getString(R.string.mode_night);
         }
         return mode;
+    }
+
+    public void openInfoDialogView(String message, int image){
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.custom_dialog_view);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        Button closeButton = (Button) dialog.findViewById(R.id.cdv_close_button);
+        TextView textView = (TextView) dialog.findViewById(R.id.cdv_title_text);
+        ImageView imageView = (ImageView) dialog.findViewById(R.id.cdv_image);
+
+        textView.setText(message);
+        imageView.setBackground(getResources().getDrawable(image));
+
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void openRateDialogView(String orderId){
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.custom_rate_view);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        Button rateButton = (Button) dialog.findViewById(R.id.crv_rate_button);
+        RatingBar ratingBar = (RatingBar) dialog.findViewById(R.id.crv_ratingbar);
+
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float r, boolean fromUser) {
+                rating = r;
+            }
+        });
+
+
+        rateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(orderId != null && rating != 0){
+                    rateDriver(orderId, String.valueOf(rating));
+                }
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    //requests
+    private void rateDriver(String orderId, String value){
+        subscription.add(NetworkUtil.getRetrofit()
+                .rateDriver(Utility.getToken(MainActivity.this), orderId, value)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponseRate, this::handleErrorRate));
+    }
+
+    private void handleResponseRate(Response response) {
+        if(response.getState().equals("success")){
+            Toast.makeText(this, getResources().getString(R.string.successfully_rated), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void handleErrorRate(Throwable throwable) {
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

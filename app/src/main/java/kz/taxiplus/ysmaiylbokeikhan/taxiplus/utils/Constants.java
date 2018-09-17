@@ -53,16 +53,19 @@ public class Constants {
     public static final String TOADDRESS = "toAddress";
     public static final String FROMADDRESS = "fromAddress";
     public static final String ADDRESS = "Address";
-    public static final String URL = "http://78.40.108.39/profile/account/";
+    public static final String URL = "http://185.236.130.126/profile/account/";
     public static final String NEWORDER = "newOrder";
     public static final String SELECTEDMODEL = "selectedModel";
     public static final String SELECTEDTAXIPARK = "selectedTaxipark";
+
     public static final String MODELMODE = "modelMode";
     public static final String MODELID = "modelId";
     public static final String ORDERID = "orderId";
     public static final String DRIVERID = "driverId";
     public static final String TYPE = "type";
     public static final String PENDINGINTENTEXTRA = "pendingIntentExtra";
+
+    public static final String LASTPLACES = "lastPlaces";
 
     public static final String FRAGMENTTYPE = "fragmentType";
     public static final String NIGHTMODE = "nightMode";

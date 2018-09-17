@@ -97,19 +97,21 @@ public class OpenSessionFragment extends Fragment {
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId){
-                    case R.id.fos_six_hour_rabiobutton:
-                        time = 6;
-                        remainderText.setText(String.valueOf(Integer.valueOf(balance) - Integer.valueOf(sixHourPrice)));
-                        selectedPrice = sixHourPrice;
-                        break;
+                try {
+                    switch (checkedId) {
+                        case R.id.fos_six_hour_rabiobutton:
+                            time = 6;
+                            remainderText.setText(String.valueOf(Integer.valueOf(balance) - Integer.valueOf(sixHourPrice)));
+                            selectedPrice = sixHourPrice;
+                            break;
 
-                    case R.id.fos_unlim_rabiobutton:
-                        time = 12;
-                        remainderText.setText(String.valueOf(Integer.valueOf(balance) - Integer.valueOf(unlimPrice)));
-                        selectedPrice = unlimPrice;
-                        break;
-                }
+                        case R.id.fos_unlim_rabiobutton:
+                            time = 12;
+                            remainderText.setText(String.valueOf(Integer.valueOf(balance) - Integer.valueOf(unlimPrice)));
+                            selectedPrice = unlimPrice;
+                            break;
+                    }
+                }catch (Throwable e){}
             }
         });
     }
@@ -125,7 +127,6 @@ public class OpenSessionFragment extends Fragment {
     }
 
     private void handleResponsePrice(SessionPrices response) {
-        //TODO: if unauth
         if(response.getState().equals("success")){
             sixHourPrice = response.getSix_hours_price();
             unlimPrice = response.getUnlim_price();

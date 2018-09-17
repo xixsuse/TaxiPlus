@@ -9,6 +9,7 @@ public class Response {
     private User user;
     private int code;
     private int is_active;
+    private int is_session_opened;
 
     public String getState() {
         return state;
@@ -40,5 +41,9 @@ public class Response {
 
     public String getBalance() {
         return balance;
+    }
+
+    public int getIs_session_opened() {
+        return is_session_opened;
     }
 }
