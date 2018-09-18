@@ -40,7 +40,6 @@ import rx.subscriptions.CompositeSubscription;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String ADMIN_CHANNEL_ID = "ADMIN_CHANNEL_ID";
-    private static final String TAG = "MyFirebaseIIDService";
 
     CompositeSubscription subscription;
     NotificationManager notificationManager;
@@ -81,7 +80,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .setContentText(setNotificationBody(type))
                     .setAutoCancel(true)
                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                        .setContentIntent(pendingIntent);
+                    .setContentIntent(pendingIntent);
 
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.notify(notificationId, notificationBuilder.build());

@@ -1,4 +1,4 @@
-package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui;
+package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user;
 
 
 import android.os.Bundle;

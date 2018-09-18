@@ -1,4 +1,4 @@
-package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui;
+package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user;
 
 
 import android.Manifest;
@@ -34,7 +34,6 @@ import java.io.IOException;
 import java.util.List;
 
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Place;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
