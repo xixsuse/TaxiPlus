@@ -66,6 +66,8 @@ public class Constants {
     public static final String PENDINGINTENTEXTRA = "pendingIntentExtra";
 
     public static final String LASTPLACES = "lastPlaces";
+    public static final String DRIVERLATITUDE = "driverLatitude";
+    public static final String DRIVERLONGITUDE = "driverLongitude";
 
     public static final String FRAGMENTTYPE = "fragmentType";
     public static final String NIGHTMODE = "nightMode";

@@ -177,6 +177,8 @@
 
     <string name="rate_driver_text">Оцените поездку</string>
     <string name="successfully_rated">Успешно оценено</string>
+    <string name="share">Поделится</string>
+    <string name="share_via">Поделится используя:</string>
     <string name="on_moderation">Вы находитесь на модерации администратора</string>
 
     <string name="notifications_admin_channel_name">Name of admin channel</string>

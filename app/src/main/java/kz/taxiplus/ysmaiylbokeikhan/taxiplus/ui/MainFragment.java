@@ -1,6 +1,9 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui;
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +19,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,8 +66,10 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.OpenSessionFragment;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.OrderInfoDialogFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.FromAndToFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.ModesDialogFragment;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.NewOfferDialogFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.SelectModeFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
@@ -93,8 +99,9 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     private boolean isClickableB = false;
     private OrderToDriver.GetOrderInfo orderInfo;
     private String orderId;
+    private String mainState;
 
-    private Marker mPositionMarker, markerTo, markerFrom;
+    private Marker mPositionMarker, markerTo, markerFrom, driverCarMarker;
     public MapView mapView;
     private GoogleMap map;
     private View view;
@@ -156,6 +163,10 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         sessionText = view.findViewById(R.id.mf_open_session_text);
         progressBar = view.findViewById(R.id.mf_progressbar);
         cameButton = view.findViewById(R.id.mf_came_button);
+        layoutBottomSheet = view.findViewById(R.id.bottom_sheet);
+
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(myBroadcastReceiver,
+                new IntentFilter("thisIsForMainFragment"));
 
         theme = Paper.book().read(getString(R.string.prefs_theme_key), 1);
         user = Paper.book().read(Constants.USER);
@@ -417,7 +428,9 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     @Override
     public void onDirectionSuccess(Direction direction, String rawBody) {
         if (direction.isOK()) {
-            openModeFragment(order);
+            if(order != null) {
+                openModeFragment(order);
+            }
 
             map.addMarker(new MarkerOptions()
                     .icon(BitmapDescriptorFactory.fromBitmap(setIcon(R.drawable.icon_point_b)))
@@ -540,6 +553,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         progressBar.setVisibility(View.GONE);
     }
 
+
     private void checkSession(LatLng latLng, String push_id){
         progressBar.setVisibility(View.VISIBLE);
         subscription.add(NetworkUtil.getRetrofit()
@@ -566,6 +580,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
                     ((MainActivity) Objects.requireNonNull(getActivity())).openInfoDialogView(getResources().getString(R.string.on_moderation),R.drawable.icon_error);
                 }
             }
+            setState(response);
             user.setBalance(response.getBalance());
             Paper.book().write(Constants.USER, user);
         }
@@ -574,6 +589,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     private void handleErrorCheck(Throwable throwable) {
         progressBar.setVisibility(View.GONE);
     }
+
 
     private void driverIsCame(String order_id){
         progressBar.setVisibility(View.VISIBLE);
@@ -597,6 +613,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         progressBar.setVisibility(View.GONE);
     }
 
+
     private void driverGo(String order_id){
         progressBar.setVisibility(View.VISIBLE);
         subscription.add(NetworkUtil.getRetrofit()
@@ -618,6 +635,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     private void handleErrorGo(Throwable throwable) {
         progressBar.setVisibility(View.GONE);
     }
+
 
     private void driverFinish(String order_id){
         progressBar.setVisibility(View.VISIBLE);
@@ -642,7 +660,137 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         progressBar.setVisibility(View.GONE);
     }
 
+
+    private void getOrderInfo(String order_id){
+        progressBar.setVisibility(View.VISIBLE);
+        subscription.add(NetworkUtil.getRetrofit()
+                .getOrderInfo(order_id)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponseOrderInfo, this::handleErrorOrderInfo));
+    }
+
+    private void handleResponseOrderInfo(OrderToDriver.GetOrderInfo response) {
+        if(response.getState().equals("success")){
+            if(view != null){
+                if(!mainState.equals("1")) {
+                    initViewsBottomSheet(view);
+                    setInfo(response);
+                }
+                from = new LatLng(response.getOrder().getFrom_latitude(), response.getOrder().getFrom_longitude());
+                to = new LatLng(response.getOrder().getTo_latitude(), response.getOrder().getTo_longitude());
+
+                sendRequest(from, to);
+            }
+        }
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private void handleErrorOrderInfo(Throwable throwable) {
+        progressBar.setVisibility(View.GONE);
+    }
+
     // helper functions
+    private void setState(Response response) {
+        mainState = response.getStatus();
+        orderId = response.getOrder_id();
+
+        switch (mainState){
+            case "0"://cancelled
+                if(user.getRole_id().equals("1")){
+                    newOrderView.setVisibility(View.VISIBLE);
+                    openSessionView.setVisibility(View.GONE);
+                    cameButton.setVisibility(View.GONE);
+                    layoutBottomSheet.setVisibility(View.GONE);
+                }else {
+                    newOrderView.setVisibility(View.GONE);
+                    openSessionView.setVisibility(View.VISIBLE);
+                    cameButton.setVisibility(View.GONE);
+                    layoutBottomSheet.setVisibility(View.GONE);
+                }
+                break;
+
+            case "1": // on waiting
+                if(user.getRole_id().equals("1")){
+                    newOrderView.setVisibility(View.GONE);
+                    openSessionView.setVisibility(View.GONE);
+                    cameButton.setVisibility(View.GONE);
+
+                    getOrderInfo(orderId);
+                }
+                break;
+
+            case "2": // on the way to client
+                if(user.getRole_id().equals("1")){
+                    newOrderView.setVisibility(View.GONE);
+                    openSessionView.setVisibility(View.GONE);
+                    cameButton.setVisibility(View.GONE);
+
+                    getOrderInfo(orderId);
+                }else {
+                    newOrderView.setVisibility(View.GONE);
+                    openSessionView.setVisibility(View.GONE);
+                    cameButton.setVisibility(View.VISIBLE);
+                    layoutBottomSheet.setVisibility(View.GONE);
+
+                    cameButton.setText(getResources().getString(R.string.came_button));
+                    driverButtonType = 0;
+                }
+                break;
+
+            case "3": // on waiting response
+                if(user.getRole_id().equals("1")){
+                    newOrderView.setVisibility(View.GONE);
+                    openSessionView.setVisibility(View.GONE);
+                    cameButton.setVisibility(View.GONE);
+
+                    getOrderInfo(orderId);
+                }else {
+                    newOrderView.setVisibility(View.GONE);
+                    openSessionView.setVisibility(View.GONE);
+                    cameButton.setVisibility(View.VISIBLE);
+                    layoutBottomSheet.setVisibility(View.GONE);
+
+                    cameButton.setText(getResources().getString(R.string.start_trip));
+                    driverButtonType = 1;
+                }
+                break;
+
+            case "4": // on the way with client
+                if(user.getRole_id().equals("1")){
+                    newOrderView.setVisibility(View.GONE);
+                    openSessionView.setVisibility(View.GONE);
+                    cameButton.setVisibility(View.GONE);
+
+                    getOrderInfo(orderId);
+                }else {
+                    newOrderView.setVisibility(View.GONE);
+                    openSessionView.setVisibility(View.GONE);
+                    cameButton.setVisibility(View.VISIBLE);
+                    layoutBottomSheet.setVisibility(View.GONE);
+
+                    cameButton.setText(getResources().getString(R.string.end_trip));
+                    driverButtonType = 2;
+                }
+                break;
+
+            case "5": // ended
+                if(user.getRole_id().equals("1")){
+                    newOrderView.setVisibility(View.VISIBLE);
+                    openSessionView.setVisibility(View.GONE);
+                    cameButton.setVisibility(View.GONE);
+                    layoutBottomSheet.setVisibility(View.GONE);
+                }else {
+                    newOrderView.setVisibility(View.GONE);
+                    openSessionView.setVisibility(View.VISIBLE);
+                    cameButton.setVisibility(View.GONE);
+                    layoutBottomSheet.setVisibility(View.GONE);
+                    driverButtonType = 0;
+                }
+                break;
+        }
+    }
+
     public void clientIsAccepted(String orderId){
         this.orderId = orderId;
         cameButton.setVisibility(View.VISIBLE);
@@ -657,7 +805,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     }
 
     private void initViewsBottomSheet(View view) {
-        layoutBottomSheet = view.findViewById(R.id.bottom_sheet);
         confirmFromText = view.findViewById(R.id.mf_confirm_from_text);
         confirmToText = view.findViewById(R.id.mf_confirm_to_text);
 
@@ -701,6 +848,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     }
 
     private void setInfo(OrderToDriver.GetOrderInfo orderInfo) {
+        this.orderInfo = orderInfo;
         confirmFromText.setText(getAddressFromLatLngStr(new LatLng(orderInfo.getOrder().getFrom_latitude(), orderInfo.getOrder().getFrom_longitude())));
         confirmToText.setText(getAddressFromLatLngStr(new LatLng(orderInfo.getOrder().getTo_latitude(), orderInfo.getOrder().getTo_longitude())));
 
@@ -856,9 +1004,32 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         return (res == PackageManager.PERMISSION_GRANTED);
     }
 
-    private LatLng getLocation(){
-        LatLng latLng = Paper.book().read(Constants.MYLOCATION);
-
-        return latLng;
+    public void clearMap(){
+        map.clear();
+        newOrderView.setVisibility(View.VISIBLE);
+        layoutBottomSheet.setVisibility(View.GONE);
     }
+
+    private final BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, android.content.Intent intent) {
+            double latitude = Double.valueOf(intent.getStringExtra(Constants.DRIVERLATITUDE));
+            double longitude = Double.valueOf(intent.getStringExtra(Constants.DRIVERLONGITUDE));
+
+            if(driverCarMarker != null){
+                driverCarMarker.remove();
+            }
+
+            if(map!= null) {
+                driverCarMarker = map.addMarker(
+                        new MarkerOptions()
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_taxi))
+                                .position(new LatLng(latitude, longitude))
+                                .title("Driver")
+                );
+                map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(latitude, longitude)));
+            }
+
+        }
+    };
 }

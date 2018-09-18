@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,6 +73,7 @@ public class MainActivity extends BaseActivity
     private TextView userName, userPhone;
     private RecyclerView menuRecyclerView;
     private Button logoutButton;
+    private ProgressBar progressBar;
 
     private RecyclerMenuAdapter menuAdapter;
     private FragmentTransaction fragmentTransaction;
@@ -108,6 +110,7 @@ public class MainActivity extends BaseActivity
         userPhone = navigationView.findViewById(R.id.manhm_phone);
         menuRecyclerView = navigationView.findViewById(R.id.ma_recyclerView);
         logoutButton = navigationView.findViewById(R.id.ma_logout_button);
+        progressBar = findViewById(R.id.main_progressbar);
         theme = Paper.book().read(getString(R.string.prefs_theme_key), 1);
 
 
@@ -159,6 +162,7 @@ public class MainActivity extends BaseActivity
         RecyclerMenuItem menuItem6 = new RecyclerMenuItem(getResources().getString(R.string.order_driver), R.drawable.icon_driver, 6);
         RecyclerMenuItem menuItem7 = new RecyclerMenuItem(getResources().getString(R.string.my_bonuses), R.drawable.icon_driver, 7);
         RecyclerMenuItem menuItem8 = new RecyclerMenuItem(getResources().getString(R.string.driver_mode), R.drawable.icon_switch, 8);
+        RecyclerMenuItem menuItem9 = new RecyclerMenuItem(getResources().getString(R.string.share), R.drawable.icon_share, 18);
 
         recyclerMenuItemList.add(menuItem);
         recyclerMenuItemList.add(menuItem1);
@@ -169,6 +173,7 @@ public class MainActivity extends BaseActivity
         recyclerMenuItemList.add(menuItem6);
         recyclerMenuItemList.add(menuItem7);
         recyclerMenuItemList.add(menuItem8);
+        recyclerMenuItemList.add(menuItem9);
 
         menuAdapter = new RecyclerMenuAdapter(recyclerMenuItemList, MainActivity.this);
         menuRecyclerView.setAdapter(menuAdapter);
@@ -185,6 +190,7 @@ public class MainActivity extends BaseActivity
         RecyclerMenuItem menuItem5 = new RecyclerMenuItem(getResources().getString(R.string.mode_coins), R.drawable.icon_faq, 15);
         RecyclerMenuItem menuItem6 = new RecyclerMenuItem(getResources().getString(R.string.settings), R.drawable.icon_settings, 16);
         RecyclerMenuItem menuItem7 = new RecyclerMenuItem(getModeString(), R.drawable.icon_driver, 17);
+        RecyclerMenuItem menuItem8 = new RecyclerMenuItem(getResources().getString(R.string.share), R.drawable.icon_share, 18);
 
         recyclerMenuItemList.add(menuItem);
         recyclerMenuItemList.add(menuItem1);
@@ -194,6 +200,7 @@ public class MainActivity extends BaseActivity
         recyclerMenuItemList.add(menuItem5);
         recyclerMenuItemList.add(menuItem6);
         recyclerMenuItemList.add(menuItem7);
+        recyclerMenuItemList.add(menuItem8);
 
         menuAdapter = new RecyclerMenuAdapter(recyclerMenuItemList, MainActivity.this);
         menuRecyclerView.setAdapter(menuAdapter);
@@ -249,6 +256,163 @@ public class MainActivity extends BaseActivity
             }
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            int count = getSupportFragmentManager().getBackStackEntryCount();
+
+            if(count != 1){
+                super.onBackPressed();
+            }
+        }
+    }
+
+    public void drawerAction() {
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }else {
+            drawer.openDrawer(Gravity.START);
+        }
+    }
+
+    public void recreateActivity() {
+        Intent intent = getIntent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
+    }
+
+    private void setNightMode(int mode) {
+        if(mode == 2){
+            Utility.setTheme(getApplicationContext(), 1);
+            recreateActivity();
+        }else {
+            Utility.setTheme(getApplicationContext(), 2);
+            recreateActivity();
+        }
+    }
+
+    private String getModeString(){
+        String mode;
+        if(theme == 2){
+            mode = getResources().getString(R.string.mode_day);
+        }else {
+            mode = getResources().getString(R.string.mode_night);
+        }
+        return mode;
+    }
+
+    public void openInfoDialogView(String message, int image){
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.custom_dialog_view);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        Button closeButton = (Button) dialog.findViewById(R.id.cdv_close_button);
+        TextView textView = (TextView) dialog.findViewById(R.id.cdv_title_text);
+        ImageView imageView = (ImageView) dialog.findViewById(R.id.cdv_image);
+
+        textView.setText(message);
+        imageView.setBackground(getResources().getDrawable(image));
+
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void openRateDialogView(String orderId){
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.custom_rate_view);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        Button rateButton = (Button) dialog.findViewById(R.id.crv_rate_button);
+        RatingBar ratingBar = (RatingBar) dialog.findViewById(R.id.crv_ratingbar);
+
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float r, boolean fromUser) {
+                rating = r;
+            }
+        });
+
+
+        rateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(orderId != null && rating != 0){
+                    rateDriver(orderId, String.valueOf(rating));
+                    MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag(MainFragment.TAG);
+                    mainFragment.clearMap();
+                }
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    //requests
+    private void rateDriver(String orderId, String value){
+        subscription.add(NetworkUtil.getRetrofit()
+                .rateDriver(Utility.getToken(MainActivity.this), orderId, value)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponseRate, this::handleErrorRate));
+    }
+
+    private void handleResponseRate(Response response) {
+        if(response.getState().equals("success")){
+            Toast.makeText(this, getResources().getString(R.string.successfully_rated), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void handleErrorRate(Throwable throwable) {
+
+    }
+
+
+    private void shareApp(){
+        progressBar.setVisibility(View.VISIBLE);
+        subscription.add(NetworkUtil.getRetrofit()
+                .getReferalLink(Utility.getToken(MainActivity.this))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponseShare, this::handleErrorShare));
+    }
+
+    private void handleResponseShare(Response response) {
+        progressBar.setVisibility(View.GONE);
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, response.getLink());
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, getResources().getString(R.string.share_via)));
+    }
+
+    private void handleErrorShare(Throwable throwable) {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 
     public class RecyclerMenuAdapter extends RecyclerView.Adapter<RecyclerMenuAdapter.ViewHolder> {
         public Context mContext;
@@ -392,6 +556,9 @@ public class MainActivity extends BaseActivity
                             setNightMode(mode);
                             break;
 
+                        case 18:
+                            shareApp();
+                            break;
                     }
                     fragmentTransaction.commit();
                 }
@@ -402,137 +569,5 @@ public class MainActivity extends BaseActivity
         public int getItemCount() {
             return menuList.size();
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            int count = getSupportFragmentManager().getBackStackEntryCount();
-
-            if(count != 1){
-                super.onBackPressed();
-            }
-        }
-    }
-
-    public void drawerAction() {
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        }else {
-            drawer.openDrawer(Gravity.START);
-        }
-    }
-
-    public void recreateActivity() {
-        Intent intent = getIntent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        finish();
-        overridePendingTransition(0, 0);
-        startActivity(intent);
-        overridePendingTransition(0, 0);
-    }
-
-    private void setNightMode(int mode) {
-        if(mode == 2){
-            Utility.setTheme(getApplicationContext(), 1);
-            recreateActivity();
-        }else {
-            Utility.setTheme(getApplicationContext(), 2);
-            recreateActivity();
-        }
-    }
-
-    private String getModeString(){
-        String mode;
-        if(theme == 2){
-            mode = getResources().getString(R.string.mode_day);
-        }else {
-            mode = getResources().getString(R.string.mode_night);
-        }
-        return mode;
-    }
-
-    public void openInfoDialogView(String message, int image){
-        final Dialog dialog = new Dialog(MainActivity.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.custom_dialog_view);
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        Button closeButton = (Button) dialog.findViewById(R.id.cdv_close_button);
-        TextView textView = (TextView) dialog.findViewById(R.id.cdv_title_text);
-        ImageView imageView = (ImageView) dialog.findViewById(R.id.cdv_image);
-
-        textView.setText(message);
-        imageView.setBackground(getResources().getDrawable(image));
-
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-    }
-
-    private void openRateDialogView(String orderId){
-        final Dialog dialog = new Dialog(MainActivity.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.custom_rate_view);
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        Button rateButton = (Button) dialog.findViewById(R.id.crv_rate_button);
-        RatingBar ratingBar = (RatingBar) dialog.findViewById(R.id.crv_ratingbar);
-
-        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float r, boolean fromUser) {
-                rating = r;
-            }
-        });
-
-
-        rateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(orderId != null && rating != 0){
-                    rateDriver(orderId, String.valueOf(rating));
-                }
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-    }
-
-    //requests
-    private void rateDriver(String orderId, String value){
-        subscription.add(NetworkUtil.getRetrofit()
-                .rateDriver(Utility.getToken(MainActivity.this), orderId, value)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(this::handleResponseRate, this::handleErrorRate));
-    }
-
-    private void handleResponseRate(Response response) {
-        if(response.getState().equals("success")){
-            Toast.makeText(this, getResources().getString(R.string.successfully_rated), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void handleErrorRate(Throwable throwable) {
-
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 }

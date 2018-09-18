@@ -140,10 +140,6 @@ public class NewOfferDialogFragment extends DialogFragment {
             MainFragment mainFragment = (MainFragment) getFragmentManager().findFragmentByTag(MainFragment.TAG);
             getDialog().dismiss();
             mainFragment.setCheckoutView(response);
-
-//            CheckoutOrderDialogFragment checkoutOrderDialogFragment = CheckoutOrderDialogFragment.newInstance(response);
-//            getDialog().dismiss();
-//            checkoutOrderDialogFragment.show(fragmentManager, CheckoutOrderDialogFragment.TAG);
         }
     }
 

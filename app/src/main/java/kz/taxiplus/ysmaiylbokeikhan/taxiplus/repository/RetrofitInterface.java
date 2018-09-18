@@ -148,4 +148,7 @@ public interface RetrofitInterface {
                                    @Field("date")long date,
                                    @Field("payment_type")int payment_type);
 
+    @FormUrlEncoded
+    @POST("get-referal-link/")
+    Observable<Response> getReferalLink(@Field("token")String token);
 }

@@ -6,6 +6,9 @@ public class Response {
     private String message;
     private String type;
     private String balance;
+    private String link;
+    private String status;
+    private String order_id;
     private User user;
     private int code;
     private int is_active;
@@ -45,5 +48,17 @@ public class Response {
 
     public int getIs_session_opened() {
         return is_session_opened;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getOrder_id() {
+        return order_id;
     }
 }

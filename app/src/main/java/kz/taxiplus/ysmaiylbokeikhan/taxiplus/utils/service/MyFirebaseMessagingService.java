@@ -62,6 +62,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 subscription = new CompositeSubscription();
                 sendLocation(getLocation(), orderId);
             }
+        }else if(type.equals("601") && Application.isActivityVisible()){//draw drivers current location
+            drawDriverLocation(remoteMessage.getData());
         }else {//real push notifications
             if(Application.isActivityVisible()){
                 handlePush(remoteMessage.getData());
@@ -96,6 +98,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         intent.putExtra(Constants.DRIVERID, driverId);
         intent.putExtra(Constants.ORDERID, orderid);
         intent.putExtra(Constants.TYPE, type);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    private void drawDriverLocation(Map<String, String> data){
+        Intent intent = new Intent("thisIsForMainFragment");
+        String latitude = data.get("lat");
+        String longitude = data.get("long");
+
+        intent.putExtra(Constants.DRIVERLATITUDE, latitude);
+        intent.putExtra(Constants.DRIVERLONGITUDE, longitude);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
@@ -141,6 +153,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void handleErrorChange(Throwable throwable) {
 
     }
+
 
     private void sendLocation(LatLng latLng, String orderId) {
         subscription.add(NetworkUtil.getRetrofit()
