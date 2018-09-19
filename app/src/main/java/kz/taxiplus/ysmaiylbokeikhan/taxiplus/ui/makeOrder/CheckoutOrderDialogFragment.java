@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,11 +27,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Order;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.OrderToDriver;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
-
-import static android.app.Activity.RESULT_OK;
 
 public class CheckoutOrderDialogFragment extends DialogFragment {
     public static final String TAG = Constants.CHECKOUTFRAGMENTFRAGMENTTAG;

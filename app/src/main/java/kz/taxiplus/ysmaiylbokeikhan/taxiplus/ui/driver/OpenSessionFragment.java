@@ -13,6 +13,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import io.paperdb.Paper;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
@@ -71,6 +73,7 @@ public class OpenSessionFragment extends Fragment {
         }else {
             openButton.setText(getResources().getString(R.string.open_session_event));
         }
+        checkSession(Paper.book().read(Constants.MYLOCATION), Paper.book().read(Constants.FIREBASE_TOKEN));
         setListeners();
     }
 
@@ -117,6 +120,27 @@ public class OpenSessionFragment extends Fragment {
     }
 
     //requests
+    private void checkSession(LatLng latLng, String push_id){
+        progressBar.setVisibility(View.VISIBLE);
+        subscription.add(NetworkUtil.getRetrofit()
+                .checkState(Utility.getToken(getContext()), push_id, latLng.latitude, latLng.longitude, "0")
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponseCheck, this::handleErrorCheck));
+    }
+
+    private void handleResponseCheck(Response response) {
+        if(response.getState().equals("success")){
+            user.setBalance(response.getBalance());
+            Paper.book().write(Constants.USER, user);
+        }
+    }
+
+    private void handleErrorCheck(Throwable throwable) {
+
+    }
+
+
     private void getPrices(){
         progressBar.setVisibility(View.VISIBLE);
         subscription.add(NetworkUtil.getRetrofit()
@@ -186,6 +210,7 @@ public class OpenSessionFragment extends Fragment {
     private void handleError(Throwable throwable) {
         progressBar.setVisibility(View.GONE);
     }
+
 
     private void saveUserSession(boolean sessionState){
         balance = String.valueOf(Integer.valueOf(balance) - Integer.valueOf(selectedPrice));

@@ -1,50 +1,66 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities;
 
+import android.location.Address;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.android.gms.maps.model.LatLng;
-
 public class NewOrder implements Parcelable{
-    private String phone;
-    private String user_name;
-    private String fromAddress;
-    private String toAddress;
-    private String price;
-    private String date;
-    private LatLng fromLatLng;
-    private LatLng tomLatLng;
+    private Place toAddess;
+    private Place fromAddess;
+    private int mode;
+    private String comment;
+    private long date;
+    private String cost;
+    private String carModel;
+    private String volume;
+    private String weight;
+    private String toAddressString;
+    private String fromAddressString;
+    private String status;
 
-    public NewOrder(String phone, String user_name, String fromAddress, String toAddress, String price, LatLng from, LatLng to) {
-        this.phone = phone;
-        this.user_name = user_name;
-        this.fromAddress = fromAddress;
-        this.toAddress = toAddress;
-        this.price = price;
-        this.fromLatLng = from;
-        this.tomLatLng = to;
+    public NewOrder(Place toAddess, Place fromAddess, int mode, String comment, long date) {
+        this.toAddess = toAddess;
+        this.fromAddess = fromAddess;
+        this.mode = mode;
+        this.comment = comment;
+        this.date = date;
     }
 
-    public NewOrder(String phone, String user_name, String fromAddress, String toAddress, String price, String date,LatLng from, LatLng to) {
-        this.phone = phone;
-        this.user_name = user_name;
-        this.fromAddress = fromAddress;
-        this.toAddress = toAddress;
-        this.price = price;
+    public NewOrder(Place toAddess, Place fromAddess, int mode, String comment, long date, String volume, String weight) {
+        this.toAddess = toAddess;
+        this.fromAddess = fromAddess;
+        this.mode = mode;
+        this.comment = comment;
         this.date = date;
-        this.fromLatLng = from;
-        this.tomLatLng = to;
+        this.volume = volume;
+        this.weight = weight;
+    }
+
+    public NewOrder(Place toAddess, Place fromAddess, int mode, String comment, long date, String carModel) {
+        this.toAddess = toAddess;
+        this.fromAddess = fromAddess;
+        this.mode = mode;
+        this.comment = comment;
+        this.date = date;
+        this.carModel = carModel;
+    }
+
+    public NewOrder() {
     }
 
     protected NewOrder(Parcel in) {
-        phone = in.readString();
-        user_name = in.readString();
-        fromAddress = in.readString();
-        toAddress = in.readString();
-        price = in.readString();
-        date = in.readString();
-        fromLatLng = in.readParcelable(LatLng.class.getClassLoader());
-        tomLatLng = in.readParcelable(LatLng.class.getClassLoader());
+        toAddess = in.readParcelable(Address.class.getClassLoader());
+        fromAddess = in.readParcelable(Address.class.getClassLoader());
+        mode = in.readInt();
+        comment = in.readString();
+        date = in.readLong();
+        cost = in.readString();
+        carModel = in.readString();
+        volume = in.readString();
+        weight = in.readString();
+        toAddressString = in.readString();
+        fromAddressString = in.readString();
+        status = in.readString();
     }
 
     public static final Creator<NewOrder> CREATOR = new Creator<NewOrder>() {
@@ -59,68 +75,100 @@ public class NewOrder implements Parcelable{
         }
     };
 
-    public String getPhone() {
-        return phone;
+    public Place getToAddess() {
+        return toAddess;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setToAddess(Place toAddess) {
+        this.toAddess = toAddess;
     }
 
-    public String getUser_name() {
-        return user_name;
+    public Place getFromAddess() {
+        return fromAddess;
     }
 
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
+    public void setFromAddess(Place fromAddess) {
+        this.fromAddess = fromAddess;
     }
 
-    public String getFromAddress() {
-        return fromAddress;
+    public int getMode() {
+        return mode;
     }
 
-    public void setFromAddress(String fromAddress) {
-        this.fromAddress = fromAddress;
+    public void setMode(int mode) {
+        this.mode = mode;
     }
 
-    public String getToAddress() {
-        return toAddress;
+    public String getComment() {
+        return comment;
     }
 
-    public void setToAddress(String toAddress) {
-        this.toAddress = toAddress;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public String getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
-    public LatLng getFromLatLng() {
-        return fromLatLng;
+    public String getCost() {
+        return cost;
     }
 
-    public void setFromLatLng(LatLng fromLatLng) {
-        this.fromLatLng = fromLatLng;
+    public void setCost(String cost) {
+        this.cost = cost;
     }
 
-    public LatLng getTomLatLng() {
-        return tomLatLng;
+    public String getCarModel() {
+        return carModel;
     }
 
-    public void setTomLatLng(LatLng tomLatLng) {
-        this.tomLatLng = tomLatLng;
+    public void setCarModel(String carModel) {
+        this.carModel = carModel;
+    }
+
+    public String getVolume() {
+        return volume;
+    }
+
+    public void setVolume(String volume) {
+        this.volume = volume;
+    }
+
+    public String getWeight() {
+        return weight;
+    }
+
+    public void setWeight(String weight) {
+        this.weight = weight;
+    }
+
+    public String getToAddressString() {
+        return toAddressString;
+    }
+
+    public void setToAddressString(String toAddressString) {
+        this.toAddressString = toAddressString;
+    }
+
+    public String getFromAddressString() {
+        return fromAddressString;
+    }
+
+    public void setFromAddressString(String fromAddressString) {
+        this.fromAddressString = fromAddressString;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
@@ -130,13 +178,17 @@ public class NewOrder implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(phone);
-        dest.writeString(user_name);
-        dest.writeString(fromAddress);
-        dest.writeString(toAddress);
-        dest.writeString(price);
-        dest.writeString(date);
-        dest.writeParcelable(fromLatLng, flags);
-        dest.writeParcelable(tomLatLng, flags);
+        dest.writeParcelable(toAddess, flags);
+        dest.writeParcelable(fromAddess, flags);
+        dest.writeInt(mode);
+        dest.writeString(comment);
+        dest.writeLong(date);
+        dest.writeString(cost);
+        dest.writeString(carModel);
+        dest.writeString(volume);
+        dest.writeString(weight);
+        dest.writeString(toAddressString);
+        dest.writeString(fromAddressString);
+        dest.writeString(status);
     }
 }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
+    android:padding="@dimen/_15sdp"
+    android:orientation="vertical"
+    android:background="@color/white">
+    <ImageView
+        android:id="@+id/ccv_image"
+        android:layout_width="@dimen/_53sdp"
+        android:layout_height="@dimen/_53sdp"
+        android:background="@drawable/icon_error"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/ccv_title_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4sdp"
+        app:layout_constraintTop_toBottomOf="@id/ccv_image"
+        android:textAlignment="center"
+        android:text="@string/complaint_couse"
+        android:textSize="@dimen/_12ssp"
+        android:textColor="@color/gray" />
+
+    <EditText
+        android:id="@+id/ccv_cause_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:minHeight="@dimen/_50sdp"
+        android:hint="@string/complaint"
+        android:textSize="@dimen/_13ssp"
+        android:padding="@dimen/_4sdp"
+        app:layout_constraintTop_toBottomOf="@id/ccv_title_text"
+        android:background="@drawable/rounded_gray_view"/>
+
+    <Button
+        android:id="@+id/ccv_send_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_7sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ccv_cause_view"
+        android:text="@string/send"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:textAllCaps="false"
+        android:background="@color/trans"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="@dimen/_15ssp"
+        android:visibility="visible"/>
+</android.support.constraint.ConstraintLayout>

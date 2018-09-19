@@ -3,6 +3,8 @@ package kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 public class OrderToDriver {
     private String status;
     private String last_edit;
@@ -142,5 +144,4 @@ public class OrderToDriver {
             dest.writeString(state);
         }
     }
-
 }

@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.MainActivity;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Order;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 
 public class CityFragment extends Fragment {
@@ -69,7 +70,7 @@ public class CityFragment extends Fragment {
         TabLayout.Tab general = tabLayout.getTabAt(0);
         TabLayout.Tab myPark = tabLayout.getTabAt(1);
         general.setCustomView(fragmentPagerAdapter.getTabView(getResources().getString(R.string.general_chat), "0"));
-        myPark.setCustomView(fragmentPagerAdapter.getTabView(getResources().getString(R.string.my_taxipark), "3"));
+        myPark.setCustomView(fragmentPagerAdapter.getTabView(getResources().getString(R.string.my_taxipark), "0"));
     }
 
     private void initViews(View view) {
@@ -104,10 +105,10 @@ public class CityFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position){
                 case 0:
-                    return GeneralOrdersFragment.newInstance(CityFragment.TAG);
+                    return GeneralOrdersFragment.newInstance("sharedOrders");
 
                 case 1:
-                    return GeneralOrdersFragment.newInstance(CityFragment.TAG);
+                    return GeneralOrdersFragment.newInstance("ownOrders");
 
                 default:
                     return GeneralOrdersFragment.newInstance(CityFragment.TAG);

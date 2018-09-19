@@ -3,15 +3,12 @@ package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,17 +23,14 @@ import java.util.List;
 
 import io.paperdb.Paper;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Model;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Order;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.NewOrder;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.PayType;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Place;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Price;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.MainFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
-import okhttp3.internal.cache.InternalCache;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -46,7 +40,7 @@ public class ModesDialogFragment extends Fragment {
     private static final String ORDER = "order";
     private static final String ARG_PARAM2 = "param2";
 
-    private Order order;
+    private NewOrder order;
     private int selectedPayType = 0;
     private int selectedModeType = 0;
 
@@ -59,7 +53,7 @@ public class ModesDialogFragment extends Fragment {
     private RecyclerPayTypeAdapter payTypeAdapter;
     private CompositeSubscription subscription;
 
-    public static ModesDialogFragment newInstance(Order order) {
+    public static ModesDialogFragment newInstance(NewOrder order) {
         ModesDialogFragment fragment = new ModesDialogFragment();
         Bundle args = new Bundle();
         args.putParcelable(ORDER, order);

@@ -21,7 +21,7 @@ import java.util.List;
 
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.MainActivity;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Order;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.NewOrder;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 
 public class ActiveOrdersFragment extends Fragment {
@@ -61,8 +61,8 @@ public class ActiveOrdersFragment extends Fragment {
         initViews(view);
 
 
-        List<Order> orders = new ArrayList<>();
-        Order order = new Order();
+        List<NewOrder> orders = new ArrayList<>();
+        NewOrder order = new NewOrder();
         order.setToAddressString("Новаи Жандосова");
         order.setFromAddressString("Жандосова Гагарина");
         order.setCost("500");
@@ -88,7 +88,7 @@ public class ActiveOrdersFragment extends Fragment {
         });
     }
 
-    private void setRecyclerView(List<Order> orders) {
+    private void setRecyclerView(List<NewOrder> orders) {
         adapter = new RecyclerActiveOrdersAdapter(orders, getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
@@ -96,7 +96,7 @@ public class ActiveOrdersFragment extends Fragment {
 
     public class RecyclerActiveOrdersAdapter extends RecyclerView.Adapter<RecyclerActiveOrdersAdapter.ViewHolder> {
         public Context mContext;
-        public List<Order> orderList;
+        public List<NewOrder> orderList;
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public TextView date, address, price;
@@ -112,7 +112,7 @@ public class ActiveOrdersFragment extends Fragment {
             }
         }
 
-        public RecyclerActiveOrdersAdapter(List<Order> orderList, Context mContext) {
+        public RecyclerActiveOrdersAdapter(List<NewOrder> orderList, Context mContext) {
             this.orderList = orderList;
             this.mContext = mContext;
         }
@@ -147,7 +147,7 @@ public class ActiveOrdersFragment extends Fragment {
         }
     }
 
-    private void openDetails(Order order){
+    private void openDetails(NewOrder order){
         final Dialog dialog = new Dialog(getContext());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.custom_alert_dialog_order_details);

@@ -36,6 +36,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.ArrayList;
 import java.util.List;
 import io.paperdb.Paper;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Order;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.RecyclerMenuItem;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
@@ -238,7 +239,7 @@ public class MainActivity extends BaseActivity
             String type = intent.getStringExtra(Constants.TYPE);
             String orderId = intent.getStringExtra(Constants.ORDERID);
 
-            if(type.equals("101")){
+            if(type.equals("101")) {
                 OrderInfoDialogFragment newOrderDialogFragment = OrderInfoDialogFragment.newInstance(orderId);
                 newOrderDialogFragment.show(getSupportFragmentManager(), OrderInfoDialogFragment.TAG);
             }else if(type.equals("201")){
@@ -248,7 +249,9 @@ public class MainActivity extends BaseActivity
             }else if(type.equals("301")){
                 Toast.makeText(MainActivity.this, getResources().getString(R.string.user_accepted), Toast.LENGTH_LONG).show();
                 MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag(MainFragment.TAG);
-                mainFragment.clientIsAccepted(orderId);
+                if(mainFragment != null) {
+                    mainFragment.clientIsAccepted(orderId);
+                }
             }else if(type.equals("401")){
                 openInfoDialogView(getResources().getString(R.string.driver_is_came), R.drawable.icon_big_clock);
             }else if(type.equals("501")){

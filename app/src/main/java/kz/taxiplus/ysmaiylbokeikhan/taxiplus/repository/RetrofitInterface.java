@@ -3,6 +3,7 @@ package kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository;
 import java.util.HashMap;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Facility;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Model;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Order;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.OrderToDriver;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Place;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Price;
@@ -151,4 +152,23 @@ public interface RetrofitInterface {
     @FormUrlEncoded
     @POST("get-referal-link/")
     Observable<Response> getReferalLink(@Field("token")String token);
+
+
+    @FormUrlEncoded
+    @POST("get-own-orders/")
+    Observable<Order.GetOrders> getOwnOrders(@Field("token")String token);
+
+    @FormUrlEncoded
+    @POST("get-shared-orders/")
+    Observable<Order.GetOrders> getSharedOrders(@Field("token")String token);
+
+    @FormUrlEncoded
+    @POST("add-complaint/")
+    Observable<Response> addComplaint(@Field("token")String token,
+                                      @Field("text")String text,
+                                      @Field("order_id")String orderId);
+    @FormUrlEncoded
+    @POST("reject-order/")
+    Observable<Response> rejectOrder(@Field("token")String token,
+                                     @Field("order_id")String orderId);
 }

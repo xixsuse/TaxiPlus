@@ -2,7 +2,6 @@ package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.location.Address;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -18,7 +17,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jzxiang.pickerview.TimePickerDialog;
 import com.jzxiang.pickerview.data.Type;
@@ -27,15 +25,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Order;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.NewOrder;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Place;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.MainFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.OnSwipeTouchListener;
 import rx.functions.Action1;
 import rx.subjects.BehaviorSubject;
-import rx.subjects.PublishSubject;
-import rx.subjects.Subject;
 
 public class MakeOrderFragment extends Fragment implements OnDateSetListener {
     public static final String TAG = Constants.MAKEORDERFRAGMENTTAG;
@@ -142,16 +138,16 @@ public class MakeOrderFragment extends Fragment implements OnDateSetListener {
         makeOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Order order;
+                NewOrder order;
                 if(mode == 5){
-                    order = new Order(toAddress, fromAddress, mode, commentEditText.getText().toString(),
+                    order = new NewOrder(toAddress, fromAddress, mode, commentEditText.getText().toString(),
                             selectedDate, modelEditText.getText().toString());
                 }else if(mode == 4){
-                    order = new Order(toAddress, fromAddress, mode, commentEditText.getText().toString(),
+                    order = new NewOrder(toAddress, fromAddress, mode, commentEditText.getText().toString(),
                             selectedDate, volumeEditText.getText().toString(), weightEditText.getText().toString());
 
                 }else {
-                    order = new Order(toAddress, fromAddress, mode, commentEditText.getText().toString(), selectedDate);
+                    order = new NewOrder(toAddress, fromAddress, mode, commentEditText.getText().toString(), selectedDate);
                 }
 
                 Bundle bundle = new Bundle();

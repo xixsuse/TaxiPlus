@@ -59,7 +59,7 @@ import java.util.Objects;
 import io.paperdb.Paper;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.MainActivity;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Order;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.NewOrder;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.OrderToDriver;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Place;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
@@ -90,7 +90,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     private int drawerCounter = 0;
     private int driverButtonType = 0;
     private int theme;
-    private Order order;
+    private NewOrder order;
     private User user;
     private LatLng to, from;
     private Place fromAddress, toAddress;
@@ -859,7 +859,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         confDateText.setText(setDataString(orderInfo.getOrder().getDate()));
     }
 
-    private void openModeFragment(Order order) {
+    private void openModeFragment(NewOrder order) {
         fragmentTransaction = getFragmentManager().beginTransaction();
         ModesDialogFragment modesDialogFragment = ModesDialogFragment.newInstance(order);
         fragmentTransaction.add(R.id.main_activity_frame, modesDialogFragment, ModesDialogFragment.TAG);

@@ -10,6 +10,7 @@
 
 
     <ImageView
+        android:id="@+id/logo"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_100sdp"
         android:background="@drawable/main_logo"
@@ -18,5 +19,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="@dimen/_100sdp"/>
+
+    <ProgressBar
+        android:layout_width="@dimen/_45sdp"
+        android:layout_height="@dimen/_45sdp"
+        android:indeterminate="true"
+        app:layout_constraintTop_toBottomOf="@id/logo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:theme="@style/AppTheme.ProgressbarColor"/>
 
 </android.support.constraint.ConstraintLayout>
