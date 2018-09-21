@@ -171,4 +171,9 @@ public interface RetrofitInterface {
     @POST("reject-order/")
     Observable<Response> rejectOrder(@Field("token")String token,
                                      @Field("order_id")String orderId);
+
+    @FormUrlEncoded
+    @POST("cancel-order/")
+    Observable<Response> cancelOrder(@Field("token")String token,
+                                     @Field("order_id")String orderId);
 }

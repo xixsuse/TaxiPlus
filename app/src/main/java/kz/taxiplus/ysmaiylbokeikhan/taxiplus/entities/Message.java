@@ -1,14 +1,19 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities;
 
+import java.util.Date;
+
 public class Message {
     private String message;
     private long time;
     private String from;
 
-    public Message(String message, long time, String from) {
+    public Message(String message, String from) {
         this.message = message;
-        this.time = time;
+        this.time = new Date().getTime();
         this.from = from;
+    }
+
+    public Message() {
     }
 
     public String getMessage() {

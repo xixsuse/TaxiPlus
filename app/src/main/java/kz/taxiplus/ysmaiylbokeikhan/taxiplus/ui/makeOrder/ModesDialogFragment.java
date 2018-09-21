@@ -29,6 +29,7 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Place;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Price;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.MainFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
 import rx.android.schedulers.AndroidSchedulers;
@@ -117,6 +118,12 @@ public class ModesDialogFragment extends Fragment {
     private void handleResponseMakeOrder(Response response) {
       if (response.getState().equals("success")){
           writePlaceToLastplaces(order.getFromAddess(), order.getToAddess());
+
+          MainFragment mainFragment = (MainFragment) getFragmentManager().findFragmentByTag(MainFragment.TAG);
+          if(mainFragment!= null){
+              mainFragment.setCancelButton(response.getOrder_id());
+          }
+
           getActivity().onBackPressed();
       }
     }

@@ -2,6 +2,7 @@ package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,23 +17,34 @@ import android.widget.TextView;
 
 import com.daasuu.bl.ArrowDirection;
 import com.daasuu.bl.BubbleLayout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import io.paperdb.Paper;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Message;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 
 public class ChatFragment extends Fragment {
     public static final String TAG = Constants.CHATFRAGMENTTAG;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String RECIPIENTPHONE = "recipientPhone";
+    private static final String RECIPIENTNAME = "recipientName";
 
-    private String mParam1;
-    private String mParam2;
+    private String chatUrl, recipientPhone, recipientName;
+
+    private User user;
     private List<Message> messageList = new ArrayList<>();
 
     private TextView nameText, numberText;
@@ -41,12 +53,13 @@ public class ChatFragment extends Fragment {
     private ImageButton sendButton;
 
     private RecyclerChatAdapter chatAdapter;
+    private DatabaseReference databaseReference;
 
-    public static ChatFragment newInstance(String param1, String param2) {
+    public static ChatFragment newInstance(String recipientPhone, String recipientName) {
         ChatFragment fragment = new ChatFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(RECIPIENTPHONE, recipientPhone);
+        args.putString(RECIPIENTNAME, recipientName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,8 +68,8 @@ public class ChatFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            recipientPhone = getArguments().getString(RECIPIENTPHONE);
+            recipientName = getArguments().getString(RECIPIENTNAME);
         }
     }
 
@@ -64,18 +77,32 @@ public class ChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
+        user = Paper.book().read(Constants.USER);
+        if(user.getRole_id().equals("2")){
+            chatUrl = user.getPhone() + recipientPhone;
+        }else {
+            chatUrl = recipientPhone + user.getPhone();
+        }
+
         initViews(view);
         return view;
     }
 
     private void initViews(View view){
+        databaseReference = FirebaseDatabase.getInstance().getReference("Message");
+
         nameText = view.findViewById(R.id.fc_name_text);
         numberText = view.findViewById(R.id.fc_number_text);
         inputEditText = view.findViewById(R.id.fc_input_edittext);
         recyclerView = view.findViewById(R.id.fс_recyclerview);
         sendButton = view.findViewById(R.id.fc_send_button);
 
+        numberText.setText(recipientPhone);
+        nameText.setText(recipientName);
+
         setListeners();
+        checkIfChatExist();
+        getMessages();
     }
 
     private void setListeners() {
@@ -90,27 +117,53 @@ public class ChatFragment extends Fragment {
         });
     }
 
-    private void sendMessage(String message){
-        Random random = new Random();
-        String me = "";
-        int r = random.nextInt(10);
+    private void checkIfChatExist(){
+        Query query = databaseReference.orderByChild("id").equalTo(chatUrl);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue() == null){
+                    HashMap<String, String> newChat = new HashMap<>();
+                    newChat.put("sender", user.getPhone());
+                    newChat.put("id", chatUrl);
+                    databaseReference.child(chatUrl).setValue(newChat);
+                }
+            }
 
-        if(r%2==0){
-            me = "me";
-        }else {
-            me = "notme";
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-        Message messageObject = new Message(message, Calendar.getInstance().getTimeInMillis(), me);
-        messageList.add(messageObject);
+            }
+        });
+    }
+
+    private void getMessages() {
+        databaseReference.child(chatUrl).child("chat").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                messageList.clear();
+                for(DataSnapshot data: dataSnapshot.getChildren()) {
+                    messageList.add(data.getValue(Message.class));
+                }
+                setAdapter(messageList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void setAdapter(List<Message> messageList){
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         chatAdapter = new RecyclerChatAdapter(messageList);
         recyclerView.setAdapter(chatAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        chatAdapter.notifyItemInserted(0);
         recyclerView.scrollToPosition(messageList.size()-1);
     }
-
 
     public class RecyclerChatAdapter extends RecyclerView.Adapter<RecyclerChatAdapter.ViewHolder>{
         private List<Message> messagesList;
@@ -120,13 +173,14 @@ public class ChatFragment extends Fragment {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder{
-            public TextView message;
+            public TextView message, time;
             public BubbleLayout bubbleLayout;
             public LinearLayout view;
 
             public ViewHolder(View itemView) {
                 super(itemView);
                 message = (TextView) itemView.findViewById(R.id.rci_text);
+                time = (TextView) itemView.findViewById(R.id.rci_date_text);
                 bubbleLayout = (BubbleLayout) itemView.findViewById(R.id.rci_bubble_view);
                 view = (LinearLayout) itemView.findViewById(R.id.chat_main_view);
             }
@@ -143,12 +197,12 @@ public class ChatFragment extends Fragment {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             holder.message.setText(messagesList.get(position).getMessage());
-
+            holder.time.setText(getDate(messageList.get(position).getTime()));
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
             int padding = getResources().getDimensionPixelOffset(R.dimen._5sdp);
             lp.setMargins(padding, padding, padding, padding);
-            if(messagesList.get(position).getFrom().equals("me")){
+            if(messagesList.get(position).getFrom().equals(user.getPhone())){
                 holder.bubbleLayout.setArrowDirection(ArrowDirection.RIGHT);
                 holder.bubbleLayout.setBubbleColor(getResources().getColor(R.color.colorPrimary));
                 holder.message.setTextColor(getResources().getColor(R.color.white));
@@ -167,5 +221,18 @@ public class ChatFragment extends Fragment {
         public int getItemCount() {
             return messagesList.size();
         }
+    }
+
+    private void sendMessage(String msg){
+        Message message = new Message(msg, user.getPhone());
+        databaseReference.child(chatUrl).child("chat").push().setValue(message);
+    }
+
+    public static String getDate(long milliSeconds) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliSeconds);
+        return formatter.format(calendar.getTime());
     }
 }

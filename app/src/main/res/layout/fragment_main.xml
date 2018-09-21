@@ -128,6 +128,36 @@
                 android:textAlignment="center" />
         </LinearLayout>
 
+        <!--Connect view for driver-->
+        <LinearLayout
+            android:id="@+id/mf_connect_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mf_my_location"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <ImageButton
+                android:id="@+id/mf_chat_button"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:padding="@dimen/_9sdp"
+                android:background="@drawable/circle_green_view"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:src="@drawable/icon_message"
+                android:scaleType="centerCrop"/>
+            <ImageButton
+                android:id="@+id/mf_call_button"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:padding="@dimen/_7sdp"
+                android:background="@drawable/circle_green_view"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:src="@drawable/icon_call"
+                android:scaleType="centerCrop"/>
+        </LinearLayout>
         <Button
             android:id="@+id/mf_came_button"
             android:layout_width="match_parent"
@@ -141,6 +171,23 @@
             android:textAllCaps="false"
             android:textSize="@dimen/_15ssp"
             android:text="@string/came_button"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/mf_cancel_button"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_35sdp"
+            android:layout_marginBottom="@dimen/_8sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/rounded_green_view"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:textColor="@color/white"
+            android:textAllCaps="false"
+            android:textSize="@dimen/_15ssp"
+            android:text="@string/cancel_order"
             android:maxLines="1"
             android:ellipsize="end"
             android:visibility="gone"/>

@@ -154,6 +154,7 @@ public class MainActivity extends BaseActivity
 
     private void setUserMenu() {
         List<RecyclerMenuItem>recyclerMenuItemList = new ArrayList<>();
+        RecyclerMenuItem menuItem0 = new RecyclerMenuItem(getResources().getString(R.string.main), R.drawable.icon_main, 100);
         RecyclerMenuItem menuItem = new RecyclerMenuItem(getResources().getString(R.string.trip_history), R.drawable.icon_history, 0);
         RecyclerMenuItem menuItem1 = new RecyclerMenuItem(getResources().getString(R.string.current_trips), R.drawable.icon_current_order, 1);
         RecyclerMenuItem menuItem2 = new RecyclerMenuItem(getResources().getString(R.string.add_card), R.drawable.icon_add_card, 2);
@@ -165,6 +166,7 @@ public class MainActivity extends BaseActivity
         RecyclerMenuItem menuItem8 = new RecyclerMenuItem(getResources().getString(R.string.driver_mode), R.drawable.icon_switch, 8);
         RecyclerMenuItem menuItem9 = new RecyclerMenuItem(getResources().getString(R.string.share), R.drawable.icon_share, 18);
 
+        recyclerMenuItemList.add(menuItem0);
         recyclerMenuItemList.add(menuItem);
         recyclerMenuItemList.add(menuItem1);
         recyclerMenuItemList.add(menuItem2);
@@ -183,6 +185,7 @@ public class MainActivity extends BaseActivity
 
     private void setDriverMenu(){
         List<RecyclerMenuItem>recyclerMenuItemList = new ArrayList<>();
+        RecyclerMenuItem menuItem0 = new RecyclerMenuItem(getResources().getString(R.string.main), R.drawable.icon_main, 100);
         RecyclerMenuItem menuItem = new RecyclerMenuItem(getResources().getString(R.string.mode_city_), R.drawable.icon_history, 10);
         RecyclerMenuItem menuItem1 = new RecyclerMenuItem(getResources().getString(R.string.mode_intercity), R.drawable.icon_current_order, 11);
         RecyclerMenuItem menuItem2 = new RecyclerMenuItem(getResources().getString(R.string.mode_cargo), R.drawable.icon_add_card, 12);
@@ -193,6 +196,7 @@ public class MainActivity extends BaseActivity
         RecyclerMenuItem menuItem7 = new RecyclerMenuItem(getModeString(), R.drawable.icon_driver, 17);
         RecyclerMenuItem menuItem8 = new RecyclerMenuItem(getResources().getString(R.string.share), R.drawable.icon_share, 18);
 
+        recyclerMenuItemList.add(menuItem0);
         recyclerMenuItemList.add(menuItem);
         recyclerMenuItemList.add(menuItem1);
         recyclerMenuItemList.add(menuItem2);
@@ -463,6 +467,12 @@ public class MainActivity extends BaseActivity
                     }
                     FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                     switch (menuList.get(position).getIndex()){
+                        case 100:
+                            MainFragment mainFragment = new MainFragment();
+                            fragmentTransaction.replace(R.id.main_activity_frame, mainFragment, MainFragment.TAG);
+                            fragmentTransaction.addToBackStack(MainFragment.TAG);
+                            break;
+
                         case 0:
                             HistoryFragment historyFragment = new HistoryFragment();
                             fragmentTransaction.replace(R.id.main_activity_frame, historyFragment, HistoryFragment.TAG);

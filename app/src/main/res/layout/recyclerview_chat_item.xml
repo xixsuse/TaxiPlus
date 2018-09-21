@@ -4,11 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/chat_main_view">
+    android:id="@+id/chat_main_view"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/rci_date_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/_11ssp"
+        android:textAlignment="center"/>
     <com.daasuu.bl.BubbleLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_7sdp"
         android:padding="@dimen/_5sdp"
         app:bl_cornersRadius="@dimen/_8sdp"
         app:bl_arrowDirection="right"

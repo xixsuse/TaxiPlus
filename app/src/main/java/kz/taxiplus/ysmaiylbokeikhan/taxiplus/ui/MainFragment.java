@@ -106,7 +106,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     private View view;
 
     private ImageView myLocationIcon;
-    private LinearLayout menuIcon, openSessionView;
+    private LinearLayout menuIcon, openSessionView, connectView;
     private ConstraintLayout newOrderView;
     private Button fromButton, toButton, modeButton;
     private TextView sessionText;
@@ -116,8 +116,8 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     private TextView confirmFromText, confirmToText, confNameText;
     private TextView confPhoneText, confModelText, confNumberText;
     private TextView confDateText, confModeText;
-    private Button cameButton;
-    private ImageButton confCallButton, chatButton;
+    private Button cameButton, cancelButton;
+    private ImageButton confCallButton, chatButton, driverCall, driverChat;
 
     private FragmentTransaction fragmentTransaction;
     private CompositeSubscription subscription;
@@ -163,6 +163,10 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         progressBar = view.findViewById(R.id.mf_progressbar);
         cameButton = view.findViewById(R.id.mf_came_button);
         layoutBottomSheet = view.findViewById(R.id.bottom_sheet);
+        connectView = view.findViewById(R.id.mf_connect_view);
+        driverCall = view.findViewById(R.id.mf_call_button);
+        driverChat = view.findViewById(R.id.mf_chat_button);
+        cancelButton = view.findViewById(R.id.mf_cancel_button);
 
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(myBroadcastReceiver,
                 new IntentFilter("thisIsForMainFragment"));
@@ -310,6 +314,43 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
                     }
                 }catch (Throwable e){
                     Log.d(NULLTAG,": orderId is null");
+                }
+            }
+        });
+
+        driverCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(orderInfo != null){
+                    if(checkCallPermission()){
+                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:+" + orderInfo.getClient().getPhone()));
+                        startActivity(intent);
+                    }else {
+                        requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL_PERMISSION);
+                    }
+                }
+            }
+        });
+
+        driverChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(orderInfo != null){
+                    fragmentTransaction = getFragmentManager().beginTransaction();
+
+                    ChatFragment chatFragment = ChatFragment.newInstance(orderInfo.getClient().getPhone(), orderInfo.getClient().getName());
+                    fragmentTransaction.add(R.id.main_activity_frame, chatFragment, ChatFragment.TAG);
+                    fragmentTransaction.addToBackStack(ChatFragment.TAG);
+                    fragmentTransaction.commit();
+                }
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(orderId != null){
+                    cancelOrder(orderId);
                 }
             }
         });
@@ -647,9 +688,13 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
 
     private void handleResponseFinish(Response response) {
         if(response.getState().equals("success")){
+            orderInfo = null;
             driverButtonType = 0;
             cameButton.setText(getResources().getString(R.string.came_button));
             cameButton.setVisibility(View.GONE);
+            connectView.setVisibility(View.GONE);
+            map.clear();
+            openSessionView.setVisibility(View.VISIBLE);
             Toast.makeText(getContext(), getResources().getString(R.string.trip_is_ended), Toast.LENGTH_LONG).show();
         }
         progressBar.setVisibility(View.GONE);
@@ -670,22 +715,50 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     }
 
     private void handleResponseOrderInfo(OrderToDriver.GetOrderInfo response) {
+        this.orderInfo = response;
         if(response.getState().equals("success")){
             if(view != null){
-                if(!mainState.equals("1")) {
-                    initViewsBottomSheet(view);
-                    setInfo(response);
-                }
                 from = new LatLng(response.getOrder().getFrom_latitude(), response.getOrder().getFrom_longitude());
                 to = new LatLng(response.getOrder().getTo_latitude(), response.getOrder().getTo_longitude());
-
                 sendRequest(from, to);
+
+                if(user.getRole_id().equals("1")){
+                    if(!mainState.equals("1")) {
+                        initViewsBottomSheet(view);
+                        setInfo(response);
+                    }
+                }else {
+                    connectView.setVisibility(View.VISIBLE);
+                }
             }
         }
         progressBar.setVisibility(View.GONE);
     }
 
     private void handleErrorOrderInfo(Throwable throwable) {
+        progressBar.setVisibility(View.GONE);
+    }
+
+
+    private void cancelOrder(String order_id){
+        progressBar.setVisibility(View.VISIBLE);
+        subscription.add(NetworkUtil.getRetrofit()
+                .cancelOrder(Utility.getToken(getContext()), order_id)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponseCancelOrder, this::handleErrorCancelOrder));
+    }
+
+    private void handleResponseCancelOrder(Response response) {
+        progressBar.setVisibility(View.GONE);
+        if(response.getState().equals("success")){
+            cancelButton.setVisibility(View.GONE);
+            clearMap();
+            Toast.makeText(getContext(), getResources().getText(R.string.order_is_canceled), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void handleErrorCancelOrder(Throwable throwable) {
         progressBar.setVisibility(View.GONE);
     }
 
@@ -714,18 +787,18 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
                     newOrderView.setVisibility(View.GONE);
                     openSessionView.setVisibility(View.GONE);
                     cameButton.setVisibility(View.GONE);
+                    cancelButton.setVisibility(View.VISIBLE);
 
                     getOrderInfo(orderId);
                 }
                 break;
 
             case "2": // on the way to client
+                getOrderInfo(orderId);
                 if(user.getRole_id().equals("1")){
                     newOrderView.setVisibility(View.GONE);
                     openSessionView.setVisibility(View.GONE);
                     cameButton.setVisibility(View.GONE);
-
-                    getOrderInfo(orderId);
                 }else {
                     newOrderView.setVisibility(View.GONE);
                     openSessionView.setVisibility(View.GONE);
@@ -738,12 +811,11 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
                 break;
 
             case "3": // on waiting response
+                getOrderInfo(orderId);
                 if(user.getRole_id().equals("1")){
                     newOrderView.setVisibility(View.GONE);
                     openSessionView.setVisibility(View.GONE);
                     cameButton.setVisibility(View.GONE);
-
-                    getOrderInfo(orderId);
                 }else {
                     newOrderView.setVisibility(View.GONE);
                     openSessionView.setVisibility(View.GONE);
@@ -756,12 +828,11 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
                 break;
 
             case "4": // on the way with client
+                getOrderInfo(orderId);
                 if(user.getRole_id().equals("1")){
                     newOrderView.setVisibility(View.GONE);
                     openSessionView.setVisibility(View.GONE);
                     cameButton.setVisibility(View.GONE);
-
-                    getOrderInfo(orderId);
                 }else {
                     newOrderView.setVisibility(View.GONE);
                     openSessionView.setVisibility(View.GONE);
@@ -792,11 +863,13 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
 
     public void clientIsAccepted(String orderId){
         this.orderId = orderId;
+        getOrderInfo(orderId);
         cameButton.setVisibility(View.VISIBLE);
     }
 
     public void setCheckoutView(OrderToDriver.GetOrderInfo orderInfo){
         this.orderInfo = orderInfo;
+        cancelButton.setVisibility(View.GONE);
         if(view != null && orderInfo!= null){
             initViewsBottomSheet(view);
             setInfo(orderInfo);
@@ -836,12 +909,14 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         chatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragmentTransaction = getFragmentManager().beginTransaction();
+                if(orderInfo != null) {
+                    fragmentTransaction = getFragmentManager().beginTransaction();
 
-                ChatFragment chatFragment = new ChatFragment();
-                fragmentTransaction.add(R.id.main_activity_frame, chatFragment, ChatFragment.TAG);
-                fragmentTransaction.addToBackStack(ChatFragment.TAG);
-                fragmentTransaction.commit();
+                    ChatFragment chatFragment = ChatFragment.newInstance(orderInfo.getDriver().getPhone(), orderInfo.getDriver().getName());
+                    fragmentTransaction.add(R.id.main_activity_frame, chatFragment, ChatFragment.TAG);
+                    fragmentTransaction.addToBackStack(ChatFragment.TAG);
+                    fragmentTransaction.commit();
+                }
             }
         });
     }
@@ -1009,6 +1084,11 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         layoutBottomSheet.setVisibility(View.GONE);
     }
 
+    public void setCancelButton(String orderId){
+        this.orderId = orderId;
+        cancelButton.setVisibility(View.VISIBLE);
+    }
+
     private final BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, android.content.Intent intent) {
@@ -1019,7 +1099,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
                 driverCarMarker.remove();
             }
 
-            if(map!= null) {
+            if(map!= null && orderInfo != null) {
                 driverCarMarker = map.addMarker(
                         new MarkerOptions()
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_taxi))
