@@ -353,8 +353,7 @@
             android:background="@drawable/rounded_green_view"
             android:textSize="@dimen/_15ssp"
             android:textColor="@color/white"
-            android:text="@string/make_order"
-            android:visibility="gone"/>
+            android:text="@string/make_order"/>
 
     </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

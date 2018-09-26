@@ -17,6 +17,19 @@
         android:layout_margin="@dimen/_5sdp"/>
 
     <TextView
+        android:id="@+id/rhi_address_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/line"
+        app:layout_constraintStart_toEndOf="@id/location_icon"
+        android:layout_marginStart="@dimen/_8sdp"
+        app:layout_constraintEnd_toStartOf="@id/rhi_date_text"
+        android:textSize="@dimen/_15ssp"
+        android:text="Abai 28 - Novai 5"
+        android:textColor="@color/black"/>
+
+    <TextView
         android:id="@+id/rhi_price_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -37,6 +50,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/gray"
         android:textSize="@dimen/_11ssp"
+        android:layout_marginEnd="@dimen/_4sdp"
         app:layout_constraintTop_toBottomOf="@id/rhi_price_text"
         app:layout_constraintBottom_toBottomOf="@id/rhi_address_text"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,18 +58,7 @@
         android:maxLines="1"
         android:ellipsize="end"/>
 
-    <TextView
-        android:id="@+id/rhi_address_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/line"
-        app:layout_constraintStart_toEndOf="@id/location_icon"
-        android:layout_marginStart="@dimen/_8sdp"
-        app:layout_constraintEnd_toStartOf="@id/rhi_date_text"
-        android:textSize="@dimen/_15ssp"
-        android:text="Abai 28 - Novai 5"
-        android:textColor="@color/black"/>
+
 
     <View
         android:id="@+id/line"

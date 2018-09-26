@@ -121,7 +121,7 @@ public class ModesDialogFragment extends Fragment {
 
           MainFragment mainFragment = (MainFragment) getFragmentManager().findFragmentByTag(MainFragment.TAG);
           if(mainFragment!= null){
-              mainFragment.setCancelButton(response.getOrder_id());
+              mainFragment.setCancelButton(response.getMessage());
           }
 
           getActivity().onBackPressed();

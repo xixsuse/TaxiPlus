@@ -6,8 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.messaging.RemoteMessage;
 
+import io.fabric.sdk.android.Fabric;
 import java.util.HashMap;
 
 import io.paperdb.Paper;
@@ -21,6 +23,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         Paper.init(SplashActivity.this);
         setContentView(R.layout.activity_splash);
 

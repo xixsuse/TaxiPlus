@@ -150,7 +150,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     }
 
     private void initViews(View view) {
-//        Paper.book().delete(Constants.LASTPLACES);
         subscription = new CompositeSubscription();
         menuIcon = view.findViewById(R.id.mf_menu_icon);
         myLocationIcon = view.findViewById(R.id.mf_my_location);

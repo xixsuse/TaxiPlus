@@ -289,19 +289,19 @@ public class GeneralOrdersFragment extends Fragment {
     private String getAddressFromLatLngStr(LatLng latLng){
         List<Address> addressList;
         Address addresReturn = null;
-        String title;
+        String title = "";
 
         Geocoder geocoder = new Geocoder(getContext(), getResources().getConfiguration().locale);
 
         try {
             addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
             addresReturn = addressList.get(0);
+
+            title = addresReturn.getAddressLine(0).substring(0, addresReturn.getAddressLine(0).indexOf(","));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        assert addresReturn != null;
-        title = addresReturn.getAddressLine(0).substring(0, addresReturn.getAddressLine(0).indexOf(","));
 
         return title;
     }

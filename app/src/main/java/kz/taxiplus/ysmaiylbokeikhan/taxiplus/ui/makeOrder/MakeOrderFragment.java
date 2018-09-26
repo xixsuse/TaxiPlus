@@ -86,7 +86,7 @@ public class MakeOrderFragment extends Fragment implements OnDateSetListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_make_order, container, false);
         initViews(view);
-        setObserver();
+//        setObserver();
         return view;
     }
 
@@ -139,6 +139,11 @@ public class MakeOrderFragment extends Fragment implements OnDateSetListener {
             @Override
             public void onClick(View v) {
                 NewOrder order;
+
+                if(selectedDate == 0){
+                    selectedDate = new Date().getTime();
+                }
+
                 if(mode == 5){
                     order = new NewOrder(toAddress, fromAddress, mode, commentEditText.getText().toString(),
                             selectedDate, modelEditText.getText().toString());

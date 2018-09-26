@@ -61,8 +61,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 subscription = new CompositeSubscription();
                 sendLocation(getLocation(), orderId);
             }
-        }else if(type.equals("601") && Application.isActivityVisible()){//draw drivers current location
-            drawDriverLocation(remoteMessage.getData());
+        }else if(type.equals("601")){//draw drivers current location
+            if(Application.isActivityVisible()) {
+                drawDriverLocation(remoteMessage.getData());
+            }
         }else {//real push notifications
             if(Application.isActivityVisible()){
                 handlePush(remoteMessage.getData());
@@ -201,6 +203,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             case "301":
                 text = getResources().getString(R.string.user_accepted);
+                break;
+
+            case "401":
+                text = getResources().getString(R.string.driver_is_came);
+                break;
+
+            case "501":
+                text = getResources().getString(R.string.rate_driver_text);
                 break;
         }
         return text;

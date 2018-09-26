@@ -144,4 +144,17 @@ public class OrderToDriver {
             dest.writeString(state);
         }
     }
+
+    public static class GetOrders{
+        private String state;
+        private List<OrderToDriver> orders;
+
+        public String getState() {
+            return state;
+        }
+
+        public List<OrderToDriver> getOrders() {
+            return orders;
+        }
+    }
 }

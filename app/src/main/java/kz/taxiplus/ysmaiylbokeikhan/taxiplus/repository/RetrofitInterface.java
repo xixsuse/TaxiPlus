@@ -1,7 +1,10 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository;
 
 import java.util.HashMap;
+
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.DriverBalance;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Facility;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.HistoryItem;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Model;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Order;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.OrderToDriver;
@@ -176,4 +179,15 @@ public interface RetrofitInterface {
     @POST("cancel-order/")
     Observable<Response> cancelOrder(@Field("token")String token,
                                      @Field("order_id")String orderId);
+    @FormUrlEncoded
+    @POST("get-all-orders/")
+    Observable<HistoryItem> getHistory(@Field("token")String token, @Field("date")String date);
+
+    @FormUrlEncoded
+    @POST("get-balance-history/")
+    Observable<DriverBalance> getBalanceHistory(@Field("token")String token, @Field("date")String date);
+
+    @FormUrlEncoded
+    @POST("get-active-orders/")
+    Observable<OrderToDriver.GetOrders> getActiveOrders(@Field("token")String token);
 }

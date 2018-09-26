@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -54,6 +56,7 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.MyBalanceFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.OrderInfoDialogFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.MyPlacesFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.NewOfferDialogFragment;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Application;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.BaseActivity;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
@@ -84,8 +87,8 @@ public class MainActivity extends BaseActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Paper.init(MainActivity.this);
 
+        Paper.init(MainActivity.this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -102,6 +105,12 @@ public class MainActivity extends BaseActivity
         checkRemoteMessage();
         LocalBroadcastManager.getInstance(MainActivity.this).registerReceiver(myBroadcastReceiver,
                 new IntentFilter("thisIsForMyFragment"));
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.clear();
     }
 
     private void initViews() {
@@ -228,7 +237,9 @@ public class MainActivity extends BaseActivity
             } else if (type.equals("301")) {
                 Toast.makeText(MainActivity.this, getResources().getString(R.string.user_accepted), Toast.LENGTH_LONG).show();
                 MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag(MainFragment.TAG);
-                mainFragment.clientIsAccepted(orderId);
+                if(mainFragment != null){
+                    mainFragment.clientIsAccepted(orderId);
+                }
             }else if(type.equals("401")){
                 Toast.makeText(MainActivity.this, getResources().getString(R.string.driver_is_came), Toast.LENGTH_LONG).show();
             }else if(type.equals("501")){
@@ -244,12 +255,17 @@ public class MainActivity extends BaseActivity
             String orderId = intent.getStringExtra(Constants.ORDERID);
 
             if(type.equals("101")) {
-                OrderInfoDialogFragment newOrderDialogFragment = OrderInfoDialogFragment.newInstance(orderId);
-                newOrderDialogFragment.show(getSupportFragmentManager(), OrderInfoDialogFragment.TAG);
+                try {
+                    OrderInfoDialogFragment newOrderDialogFragment = OrderInfoDialogFragment.newInstance(orderId);
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    newOrderDialogFragment.show(fragmentManager, OrderInfoDialogFragment.TAG);
+                }catch (Throwable r){}
             }else if(type.equals("201")){
-                String driverId = intent.getStringExtra(Constants.DRIVERID);
-                NewOfferDialogFragment newOfferDialogFragment = NewOfferDialogFragment.newInstance(driverId, orderId);
-                newOfferDialogFragment.show(getSupportFragmentManager(), NewOfferDialogFragment.TAG);
+                try {
+                    String driverId = intent.getStringExtra(Constants.DRIVERID);
+                    NewOfferDialogFragment newOfferDialogFragment = NewOfferDialogFragment.newInstance(driverId, orderId);
+                    newOfferDialogFragment.show(getSupportFragmentManager(), NewOfferDialogFragment.TAG);
+                }catch (Throwable r){}
             }else if(type.equals("301")){
                 Toast.makeText(MainActivity.this, getResources().getString(R.string.user_accepted), Toast.LENGTH_LONG).show();
                 MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag(MainFragment.TAG);
@@ -390,7 +406,6 @@ public class MainActivity extends BaseActivity
 
     }
 
-
     private void shareApp(){
         progressBar.setVisibility(View.VISIBLE);
         subscription.add(NetworkUtil.getRetrofit()
@@ -480,7 +495,7 @@ public class MainActivity extends BaseActivity
                             break;
 
                         case 1:
-                            ActiveOrdersFragment activeOrdersFragment = new ActiveOrdersFragment();
+                            ActiveOrdersFragment activeOrdersFragment = ActiveOrdersFragment.newInstance(user.getRole_id());
                             fragmentTransaction.replace(R.id.main_activity_frame, activeOrdersFragment, ActiveOrdersFragment.TAG);
                             fragmentTransaction.addToBackStack(ActiveOrdersFragment.TAG);
                             break;
@@ -547,7 +562,7 @@ public class MainActivity extends BaseActivity
                             break;
 
                         case 14:
-                            ActiveOrdersFragment driverActiveOrdersFragment = new ActiveOrdersFragment();
+                            ActiveOrdersFragment driverActiveOrdersFragment = ActiveOrdersFragment.newInstance(user.getRole_id());
                             fragmentTransaction.replace(R.id.main_activity_frame, driverActiveOrdersFragment, ActiveOrdersFragment.TAG);
                             fragmentTransaction.addToBackStack(ActiveOrdersFragment.TAG);
                             break;

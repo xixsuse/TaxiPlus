@@ -3,21 +3,25 @@ package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -25,17 +29,25 @@ import java.util.List;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.MainActivity;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.HistoryItem;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.OrderToDriver;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 
-public class HistoryFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
+public class HistoryFragment extends Fragment{
     public static final String TAG = Constants.HISTORYFRAGMENTTAG;
 
     private int mYear, mMonth, mDay;
 
     private RecyclerView recyclerView;
     private ImageButton menuIcon, calendarIcon;
+    private ProgressBar progressBar;
 
+    private CompositeSubscription subscription;
     private RecyclerHistoryAdapter historyAdapter;
 
     @Override
@@ -44,23 +56,18 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
         View view = inflater.inflate(R.layout.fragment_history, container, false);
         initViews(view);
 
-        List<HistoryItem> historyItems = new ArrayList<>();
-        HistoryItem historyItem = new HistoryItem("Новаи 11","Жандосова 32", "1534737997016", "600");
-        HistoryItem historyItem1 = new HistoryItem("Жандосова 32","Новаи 11", "1534737997016", "900");
-        historyItems.add(historyItem);
-        historyItems.add(historyItem1);
-
-        setRecyclerView(historyItems);
-
         return view;
     }
 
     private void initViews(View view){
+        subscription = new CompositeSubscription();
         recyclerView = view.findViewById(R.id.fh_recyclerview);
         menuIcon = view.findViewById(R.id.fh_back);
         calendarIcon = view.findViewById(R.id.fh_date);
+        progressBar = view.findViewById(R.id.fh_progressbar);
 
         setListeners();
+        getHistory(String.valueOf(System.currentTimeMillis()/1000));
     }
 
     private void setListeners() {
@@ -85,7 +92,14 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
                             @Override
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
-                                Log.d("date",dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+
+                                Calendar c = Calendar.getInstance();
+                                c.set(Calendar.YEAR, year);
+                                c.set(Calendar.MONTH, monthOfYear);
+                                c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                                long date = c.getTimeInMillis()/1000;
+
+                                getHistory(String.valueOf(date));
                             }
                         }, mYear, mMonth, mDay);
                 datePickerDialog.show();
@@ -93,20 +107,33 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
         });
     }
 
-    private void setRecyclerView(List<HistoryItem> historyItemList){
-        historyAdapter = new RecyclerHistoryAdapter(historyItemList, getContext());
+    private void setRecyclerView(List<OrderToDriver> historyList){
+        historyAdapter = new RecyclerHistoryAdapter(historyList, getContext());
         recyclerView.setAdapter(historyAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+    private void getHistory(String date){
+        progressBar.setVisibility(View.VISIBLE);
+        subscription.add(NetworkUtil.getRetrofit()
+                .getHistory(Utility.getToken(getContext()), date)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponse, this::handleError));
+    }
 
+    private void handleResponse(HistoryItem response) {
+        progressBar.setVisibility(View.GONE);
+        setRecyclerView(response.getOrders());
+    }
+
+    private void handleError(Throwable throwable) {
+        progressBar.setVisibility(View.GONE);
     }
 
     public class RecyclerHistoryAdapter extends RecyclerView.Adapter<RecyclerHistoryAdapter.ViewHolder> {
         public Context mContext;
-        public List<HistoryItem> historyList;
+        public List<OrderToDriver> historyList;
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public TextView date, address, price;
@@ -122,7 +149,7 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
             }
         }
 
-        public RecyclerHistoryAdapter(List<HistoryItem> historyList, Context mContext) {
+        public RecyclerHistoryAdapter(List<OrderToDriver> historyList, Context mContext) {
             this.historyList = historyList;
             this.mContext = mContext;
         }
@@ -138,7 +165,14 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
 
         @Override
         public void onBindViewHolder(ViewHolder holder, final int position) {
-            holder.address.setText(historyList.get(position).getAddressFrom() + " - "+ historyList.get(position).getAddressTo());
+
+            LatLng from = new LatLng(Double.valueOf(historyList.get(position).getFrom_latitude()),
+                    Double.valueOf(historyList.get(position).getFrom_longitude()));
+
+            LatLng to = new LatLng(Double.valueOf(historyList.get(position).getTo_latitude()),
+                    Double.valueOf(historyList.get(position).getTo_longitude()));
+
+            holder.address.setText(getAddressFromLatLngStr(from) + " - "+ getAddressFromLatLngStr(to));
             holder.date.setText(getDateToString(historyList.get(position).getDate()));
             holder.price.setText(historyList.get(position).getPrice());
         }
@@ -153,5 +187,25 @@ public class HistoryFragment extends Fragment implements DatePickerDialog.OnDate
         Date d = new Date(Long.valueOf(time));
         SimpleDateFormat sf = new SimpleDateFormat("dd.MM.yyyy");
         return sf.format(d);
+    }
+
+    private String getAddressFromLatLngStr(LatLng latLng){
+        List<Address> addressList;
+        Address addresReturn = null;
+        String title = "";
+
+        Geocoder geocoder = new Geocoder(getContext(), getResources().getConfiguration().locale);
+
+        try {
+            addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+            addresReturn = addressList.get(0);
+
+            title = addresReturn.getAddressLine(0).substring(0, addresReturn.getAddressLine(0).indexOf(","));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        return title;
     }
 }

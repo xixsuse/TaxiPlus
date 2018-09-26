@@ -28,6 +28,7 @@
 
     <string name="logout">Выход</string>
     <string name="main">Главная</string>
+    <string name="null_driver">Заказ еще не принят!</string>
     <string name="trip_history">История поездок</string>
     <string name="current_trips">Действующие заказы</string>
     <string name="add_card">Добавить карту</string>
@@ -150,6 +151,7 @@
     <string name="successfully_added">Успешно добавлено!</string>
     <string name="successfully_opened">Успешно открыта!</string>
     <string name="successfully_closed">Успешна закрыта!</string>
+    <string name="successfully_rejected">Успешна отклонена!</string>
     <string name="not_found">Адрес не найден</string>
     <string name="try_later">Попробуйте позже</string>
 
