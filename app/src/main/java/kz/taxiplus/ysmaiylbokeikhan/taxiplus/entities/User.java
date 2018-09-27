@@ -1,5 +1,7 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities;
 
+import java.util.List;
+
 public class User {
     private String id;
     private String name;
@@ -117,5 +119,33 @@ public class User {
 
     public void setSessionOpened(boolean sessionOpened) {
         isSessionOpened = sessionOpened;
+    }
+
+    public class GetFullInfo{
+        private User user;
+        private String model;
+        private String submodel;
+        private String taxi_park;
+        private List<String> facilities;
+
+        public User getUser() {
+            return user;
+        }
+
+        public String getModel() {
+            return model;
+        }
+
+        public String getSubmodel() {
+            return submodel;
+        }
+
+        public List<String> getFacilities() {
+            return facilities;
+        }
+
+        public String getTaxi_park() {
+            return taxi_park;
+        }
     }
 }

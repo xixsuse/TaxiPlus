@@ -92,7 +92,6 @@ public class HistoryFragment extends Fragment{
                             @Override
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
-
                                 Calendar c = Calendar.getInstance();
                                 c.set(Calendar.YEAR, year);
                                 c.set(Calendar.MONTH, monthOfYear);

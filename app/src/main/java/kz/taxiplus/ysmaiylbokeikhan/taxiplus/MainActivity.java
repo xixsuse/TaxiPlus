@@ -199,7 +199,7 @@ public class MainActivity extends BaseActivity
         RecyclerMenuItem menuItem1 = new RecyclerMenuItem(getResources().getString(R.string.mode_intercity), R.drawable.icon_current_order, 11);
         RecyclerMenuItem menuItem2 = new RecyclerMenuItem(getResources().getString(R.string.mode_cargo), R.drawable.icon_add_card, 12);
         RecyclerMenuItem menuItem3 = new RecyclerMenuItem(getResources().getString(R.string.trip_history), R.drawable.icon_history, 13);
-        RecyclerMenuItem menuItem4 = new RecyclerMenuItem(getResources().getString(R.string.current_trips), R.drawable.icon_current_order, 14);
+//        RecyclerMenuItem menuItem4 = new RecyclerMenuItem(getResources().getString(R.string.current_trips), R.drawable.icon_current_order, 14);
         RecyclerMenuItem menuItem5 = new RecyclerMenuItem(getResources().getString(R.string.mode_coins), R.drawable.icon_faq, 15);
         RecyclerMenuItem menuItem6 = new RecyclerMenuItem(getResources().getString(R.string.settings), R.drawable.icon_settings, 16);
         RecyclerMenuItem menuItem7 = new RecyclerMenuItem(getModeString(), R.drawable.icon_driver, 17);
@@ -210,7 +210,7 @@ public class MainActivity extends BaseActivity
         recyclerMenuItemList.add(menuItem1);
         recyclerMenuItemList.add(menuItem2);
         recyclerMenuItemList.add(menuItem3);
-        recyclerMenuItemList.add(menuItem4);
+//        recyclerMenuItemList.add(menuItem4);
         recyclerMenuItemList.add(menuItem5);
         recyclerMenuItemList.add(menuItem6);
         recyclerMenuItemList.add(menuItem7);
@@ -561,11 +561,11 @@ public class MainActivity extends BaseActivity
                             fragmentTransaction.addToBackStack(HistoryFragment.TAG);
                             break;
 
-                        case 14:
-                            ActiveOrdersFragment driverActiveOrdersFragment = ActiveOrdersFragment.newInstance(user.getRole_id());
-                            fragmentTransaction.replace(R.id.main_activity_frame, driverActiveOrdersFragment, ActiveOrdersFragment.TAG);
-                            fragmentTransaction.addToBackStack(ActiveOrdersFragment.TAG);
-                            break;
+//                        case 14:
+//                            ActiveOrdersFragment driverActiveOrdersFragment = ActiveOrdersFragment.newInstance(user.getRole_id());
+//                            fragmentTransaction.replace(R.id.main_activity_frame, driverActiveOrdersFragment, ActiveOrdersFragment.TAG);
+//                            fragmentTransaction.addToBackStack(ActiveOrdersFragment.TAG);
+//                            break;
 
                         case 15:
                             MyBalanceFragment myBalanceFragment = new MyBalanceFragment();

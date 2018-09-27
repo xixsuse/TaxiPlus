@@ -13,6 +13,7 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Price;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.SessionPrices;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.TaxiPark;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -190,4 +191,8 @@ public interface RetrofitInterface {
     @FormUrlEncoded
     @POST("get-active-orders/")
     Observable<OrderToDriver.GetOrders> getActiveOrders(@Field("token")String token);
+
+    @FormUrlEncoded
+    @POST("get-user/")
+    Observable<User.GetFullInfo> getUser(@Field("token")String token);
 }

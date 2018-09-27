@@ -12,6 +12,7 @@
     <string name="enter_phone">Введите номер телефона</string>
     <string name="enter_email">Введите E-mail</string>
     <string name="enter_desc">Введите описание</string>
+    <string name="email">E-mail:</string>
     <string name="search">Поиск</string>
     <string name="next">Далее</string>
     <string name="user_agreement">Пользовательское соглашение</string>
@@ -61,6 +62,7 @@
     <string name="set_comment">Комментарий, пожелания</string>
     <string name="comment_for_driver">Комментарий к водителю</string>
     <string name="date">Дата</string>
+    <string name="save">Сохранить</string>
 
     <string name="make_order">Заказать</string>
     <string name="cancel">Отмена</string>
@@ -118,6 +120,7 @@
     <string name="additional">Дополнительно</string>
 
     <string name="select_taxipark">Выбрать таксопарк</string>
+    <string name="taxipark">Tаксопарк</string>
     <string name="register">Зарегистрироваться</string>
     <string name="driver_register">Регистрация водителя</string>
 
@@ -154,6 +157,7 @@
     <string name="successfully_rejected">Успешна отклонена!</string>
     <string name="not_found">Адрес не найден</string>
     <string name="try_later">Попробуйте позже</string>
+    <string name="after_moderation_will_change">Ваши данные будут изменены после модерации</string>
 
     <string name="remainder">Остаток:</string>
     <string name="six_hour">6 часов</string>
@@ -187,6 +191,8 @@
 
     <string name="complaint_couse">Причина жалобы</string>
     <string name="order_is_canceled">Заказ отменен</string>
+    <string name="car_model_hint">Марка</string>
+    <string name="car_submodel_hint">Модель</string>
 
     <string name="notifications_admin_channel_name">Name of admin channel</string>
     <string name="notifications_admin_channel_description">Description of admin channel</string>

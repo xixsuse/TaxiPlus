@@ -16,6 +16,9 @@ public class Model implements Parcelable{
         parent_id = in.readString();
     }
 
+    public Model() {
+    }
+
     public static final Creator<Model> CREATOR = new Creator<Model>() {
         @Override
         public Model createFromParcel(Parcel in) {
