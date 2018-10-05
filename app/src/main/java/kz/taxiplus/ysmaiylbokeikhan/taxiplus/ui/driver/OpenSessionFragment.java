@@ -133,6 +133,7 @@ public class OpenSessionFragment extends Fragment {
         if(response.getState().equals("success")){
             user.setBalance(response.getBalance());
             balanceText.setText(response.getBalance());
+            balance = response.getBalance();
             Paper.book().write(Constants.USER, user);
         }
     }

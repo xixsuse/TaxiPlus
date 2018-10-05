@@ -76,7 +76,7 @@ public class MainActivity extends BaseActivity
     private ImageView userLogo;
     private TextView userName, userPhone;
     private RecyclerView menuRecyclerView;
-    private Button logoutButton;
+    private Button logoutButton, sosButton;
     private ProgressBar progressBar;
 
     private RecyclerMenuAdapter menuAdapter;
@@ -120,45 +120,12 @@ public class MainActivity extends BaseActivity
         userPhone = navigationView.findViewById(R.id.manhm_phone);
         menuRecyclerView = navigationView.findViewById(R.id.ma_recyclerView);
         logoutButton = navigationView.findViewById(R.id.ma_logout_button);
+        sosButton = navigationView.findViewById(R.id.manhm_sos_button);
         progressBar = findViewById(R.id.main_progressbar);
         theme = Paper.book().read(getString(R.string.prefs_theme_key), 1);
 
-
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                user.setRole_id("1");
-                Paper.book().write(Constants.USER, user);
-                recreateActivity();
-            }
-        });
-
         setUserData();
-    }
-
-    private void setUserData() {
-        user = Paper.book().read(Constants.USER);
-        userName.setText(user.getName());
-        userPhone.setText(user.getPhone());
-        Glide.with(MainActivity.this)
-                .load("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1qA-_Sk2ctUnAl9RXfBHQ5WYOMh04hnZ9SnkbaNhhgaIxRpn20Q")
-                .apply(RequestOptions.circleCropTransform())
-                .into(userLogo);
-
-        if(user.getRole_id().equals("2")){
-            setDriverMenu();
-        }else {
-            setUserMenu();
-        }
-    }
-
-    private void openMainFragment() {
-        MainFragment mainFragment = new MainFragment();
-
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.main_activity_frame, mainFragment, MainFragment.TAG);
-        fragmentTransaction.addToBackStack(MainFragment.TAG);
-        fragmentTransaction.commit();
+        setListeners();
     }
 
     private void setUserMenu() {
@@ -170,7 +137,6 @@ public class MainActivity extends BaseActivity
         RecyclerMenuItem menuItem3 = new RecyclerMenuItem(getResources().getString(R.string.my_places), R.drawable.icon_fav, 3);
         RecyclerMenuItem menuItem4 = new RecyclerMenuItem(getResources().getString(R.string.settings), R.drawable.icon_settings, 4);
         RecyclerMenuItem menuItem5 = new RecyclerMenuItem(getResources().getString(R.string.faq), R.drawable.icon_faq, 5);
-        RecyclerMenuItem menuItem6 = new RecyclerMenuItem(getResources().getString(R.string.order_driver), R.drawable.icon_driver, 6);
         RecyclerMenuItem menuItem7 = new RecyclerMenuItem(getResources().getString(R.string.my_bonuses), R.drawable.icon_driver, 7);
         RecyclerMenuItem menuItem8 = new RecyclerMenuItem(getResources().getString(R.string.driver_mode), R.drawable.icon_switch, 8);
         RecyclerMenuItem menuItem9 = new RecyclerMenuItem(getResources().getString(R.string.share), R.drawable.icon_share, 18);
@@ -182,7 +148,6 @@ public class MainActivity extends BaseActivity
         recyclerMenuItemList.add(menuItem3);
         recyclerMenuItemList.add(menuItem4);
         recyclerMenuItemList.add(menuItem5);
-        recyclerMenuItemList.add(menuItem6);
         recyclerMenuItemList.add(menuItem7);
         recyclerMenuItemList.add(menuItem8);
         recyclerMenuItemList.add(menuItem9);
@@ -194,13 +159,14 @@ public class MainActivity extends BaseActivity
 
     private void setDriverMenu(){
         List<RecyclerMenuItem>recyclerMenuItemList = new ArrayList<>();
-        RecyclerMenuItem menuItem0 = new RecyclerMenuItem(getResources().getString(R.string.main), R.drawable.icon_main, 100);
+        RecyclerMenuItem menuItem0 = new RecyclerMenuItem(getResources().getString(R.string.open_session), R.drawable.icon_main, 100);
         RecyclerMenuItem menuItem = new RecyclerMenuItem(getResources().getString(R.string.mode_city_), R.drawable.icon_history, 10);
         RecyclerMenuItem menuItem1 = new RecyclerMenuItem(getResources().getString(R.string.mode_intercity), R.drawable.icon_current_order, 11);
         RecyclerMenuItem menuItem2 = new RecyclerMenuItem(getResources().getString(R.string.mode_cargo), R.drawable.icon_add_card, 12);
         RecyclerMenuItem menuItem3 = new RecyclerMenuItem(getResources().getString(R.string.trip_history), R.drawable.icon_history, 13);
 //        RecyclerMenuItem menuItem4 = new RecyclerMenuItem(getResources().getString(R.string.current_trips), R.drawable.icon_current_order, 14);
         RecyclerMenuItem menuItem5 = new RecyclerMenuItem(getResources().getString(R.string.mode_coins), R.drawable.icon_faq, 15);
+        RecyclerMenuItem menuItem9 = new RecyclerMenuItem(getResources().getString(R.string.user_mode), R.drawable.icon_switch, 19);
         RecyclerMenuItem menuItem6 = new RecyclerMenuItem(getResources().getString(R.string.settings), R.drawable.icon_settings, 16);
         RecyclerMenuItem menuItem7 = new RecyclerMenuItem(getModeString(), R.drawable.icon_driver, 17);
         RecyclerMenuItem menuItem8 = new RecyclerMenuItem(getResources().getString(R.string.share), R.drawable.icon_share, 18);
@@ -212,6 +178,7 @@ public class MainActivity extends BaseActivity
         recyclerMenuItemList.add(menuItem3);
 //        recyclerMenuItemList.add(menuItem4);
         recyclerMenuItemList.add(menuItem5);
+        recyclerMenuItemList.add(menuItem9);
         recyclerMenuItemList.add(menuItem6);
         recyclerMenuItemList.add(menuItem7);
         recyclerMenuItemList.add(menuItem8);
@@ -248,38 +215,6 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    private final BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, android.content.Intent intent) {
-            String type = intent.getStringExtra(Constants.TYPE);
-            String orderId = intent.getStringExtra(Constants.ORDERID);
-
-            if(type.equals("101")) {
-                try {
-                    OrderInfoDialogFragment newOrderDialogFragment = OrderInfoDialogFragment.newInstance(orderId);
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    newOrderDialogFragment.show(fragmentManager, OrderInfoDialogFragment.TAG);
-                }catch (Throwable r){}
-            }else if(type.equals("201")){
-                try {
-                    String driverId = intent.getStringExtra(Constants.DRIVERID);
-                    NewOfferDialogFragment newOfferDialogFragment = NewOfferDialogFragment.newInstance(driverId, orderId);
-                    newOfferDialogFragment.show(getSupportFragmentManager(), NewOfferDialogFragment.TAG);
-                }catch (Throwable r){}
-            }else if(type.equals("301")){
-                Toast.makeText(MainActivity.this, getResources().getString(R.string.user_accepted), Toast.LENGTH_LONG).show();
-                MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag(MainFragment.TAG);
-                if(mainFragment != null) {
-                    mainFragment.clientIsAccepted(orderId);
-                }
-            }else if(type.equals("401")){
-                openInfoDialogView(getResources().getString(R.string.driver_is_came), R.drawable.icon_big_clock);
-            }else if(type.equals("501")){
-                openRateDialogView(orderId);
-            }
-        }
-    };
-
     @Override
     public void onBackPressed() {
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -301,6 +236,74 @@ public class MainActivity extends BaseActivity
         }else {
             drawer.openDrawer(Gravity.START);
         }
+    }
+
+    //requests
+    private void rateDriver(String orderId, String value){
+        subscription.add(NetworkUtil.getRetrofit()
+                .rateDriver(Utility.getToken(MainActivity.this), orderId, value)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponseRate, this::handleErrorRate));
+    }
+
+    private void handleResponseRate(Response response) {
+        if(response.getState().equals("success")){
+            Toast.makeText(this, getResources().getString(R.string.successfully_rated), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void handleErrorRate(Throwable throwable) {
+
+    }
+
+
+    private void shareApp(){
+        progressBar.setVisibility(View.VISIBLE);
+        subscription.add(NetworkUtil.getRetrofit()
+                .getReferalLink(Utility.getToken(MainActivity.this))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponseShare, this::handleErrorShare));
+    }
+
+    private void handleResponseShare(Response response) {
+        progressBar.setVisibility(View.GONE);
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, response.getLink());
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, getResources().getString(R.string.share_via)));
+    }
+
+    private void handleErrorShare(Throwable throwable) {
+        progressBar.setVisibility(View.GONE);
+    }
+
+
+    private void setUserData() {
+        user = Paper.book().read(Constants.USER);
+        userName.setText(user.getName());
+        userPhone.setText(user.getPhone());
+        Glide.with(MainActivity.this)
+                .load("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1qA-_Sk2ctUnAl9RXfBHQ5WYOMh04hnZ9SnkbaNhhgaIxRpn20Q")
+                .apply(RequestOptions.circleCropTransform())
+                .into(userLogo);
+
+        if(user.getRole_id().equals("2")){
+            setDriverMenu();
+        }else {
+            setUserMenu();
+        }
+    }
+
+    private void openMainFragment() {
+        MainFragment mainFragment = new MainFragment();
+
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.main_activity_frame, mainFragment, MainFragment.TAG);
+        fragmentTransaction.addToBackStack(MainFragment.TAG);
+        fragmentTransaction.commit();
     }
 
     public void recreateActivity() {
@@ -387,47 +390,41 @@ public class MainActivity extends BaseActivity
         dialog.show();
     }
 
-    //requests
-    private void rateDriver(String orderId, String value){
-        subscription.add(NetworkUtil.getRetrofit()
-                .rateDriver(Utility.getToken(MainActivity.this), orderId, value)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(this::handleResponseRate, this::handleErrorRate));
-    }
-
-    private void handleResponseRate(Response response) {
-        if(response.getState().equals("success")){
-            Toast.makeText(this, getResources().getString(R.string.successfully_rated), Toast.LENGTH_SHORT).show();
+    private void switchRole(boolean isDriver){
+        if(isDriver) {
+            if (user.getCar() != null && user.getCar_number() != null && user.getCar_year() != null) {
+                user.setRole_id("2");
+                Paper.book().write(Constants.USER, user);
+                recreateActivity();
+            }else {
+                fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                DriverProfileFragment driverProfileFragment = new DriverProfileFragment();
+                fragmentTransaction.replace(R.id.main_activity_frame, driverProfileFragment, DriverProfileFragment.TAG);
+                fragmentTransaction.addToBackStack(DriverProfileFragment.TAG);
+                fragmentTransaction.commit();
+            }
+        }else {
+            user.setRole_id("1");
+            Paper.book().write(Constants.USER, user);
+            recreateActivity();
         }
     }
 
-    private void handleErrorRate(Throwable throwable) {
+    private void setListeners(){
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
+
+        sosButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
-
-    private void shareApp(){
-        progressBar.setVisibility(View.VISIBLE);
-        subscription.add(NetworkUtil.getRetrofit()
-                .getReferalLink(Utility.getToken(MainActivity.this))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(this::handleResponseShare, this::handleErrorShare));
-    }
-
-    private void handleResponseShare(Response response) {
-        progressBar.setVisibility(View.GONE);
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, response.getLink());
-        sendIntent.setType("text/plain");
-        startActivity(Intent.createChooser(sendIntent, getResources().getString(R.string.share_via)));
-    }
-
-    private void handleErrorShare(Throwable throwable) {
-        progressBar.setVisibility(View.GONE);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -435,6 +432,38 @@ public class MainActivity extends BaseActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private final BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, android.content.Intent intent) {
+            String type = intent.getStringExtra(Constants.TYPE);
+            String orderId = intent.getStringExtra(Constants.ORDERID);
+
+            if(type.equals("101")) {
+                try {
+                    OrderInfoDialogFragment newOrderDialogFragment = OrderInfoDialogFragment.newInstance(orderId);
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    newOrderDialogFragment.show(fragmentManager, OrderInfoDialogFragment.TAG);
+                }catch (Throwable r){}
+            }else if(type.equals("201")){
+                try {
+                    String driverId = intent.getStringExtra(Constants.DRIVERID);
+                    NewOfferDialogFragment newOfferDialogFragment = NewOfferDialogFragment.newInstance(driverId, orderId);
+                    newOfferDialogFragment.show(getSupportFragmentManager(), NewOfferDialogFragment.TAG);
+                }catch (Throwable r){}
+            }else if(type.equals("301")){
+                Toast.makeText(MainActivity.this, getResources().getString(R.string.user_accepted), Toast.LENGTH_LONG).show();
+                MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag(MainFragment.TAG);
+                if(mainFragment != null) {
+                    mainFragment.clientIsAccepted(orderId);
+                }
+            }else if(type.equals("401")){
+                openInfoDialogView(getResources().getString(R.string.driver_is_came), R.drawable.icon_big_clock);
+            }else if(type.equals("501")){
+                openRateDialogView(orderId);
+            }
+        }
+    };
 
     public class RecyclerMenuAdapter extends RecyclerView.Adapter<RecyclerMenuAdapter.ViewHolder> {
         public Context mContext;
@@ -522,10 +551,6 @@ public class MainActivity extends BaseActivity
                             fragmentTransaction.addToBackStack(FaqFragment.TAG);
                             break;
 
-                        case 6:
-
-                            break;
-
                         case 7:
                             MyCoinsFragment myCoinsFragment = new MyCoinsFragment();
                             fragmentTransaction.replace(R.id.main_activity_frame, myCoinsFragment, MyCoinsFragment.TAG);
@@ -533,9 +558,7 @@ public class MainActivity extends BaseActivity
                             break;
 
                         case 8:
-                            DriverProfileFragment driverProfileFragment = new DriverProfileFragment();
-                            fragmentTransaction.replace(R.id.main_activity_frame, driverProfileFragment, DriverProfileFragment.TAG);
-                            fragmentTransaction.addToBackStack(DriverProfileFragment.TAG);
+                            switchRole(true);
                             break;
 
                         case 10:
@@ -586,6 +609,10 @@ public class MainActivity extends BaseActivity
 
                         case 18:
                             shareApp();
+                            break;
+
+                        case 19:
+                            switchRole(false);
                             break;
                     }
                     fragmentTransaction.commit();

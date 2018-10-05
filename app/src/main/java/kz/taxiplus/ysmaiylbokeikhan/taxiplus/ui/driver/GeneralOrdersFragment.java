@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -29,8 +32,10 @@ import com.google.android.gms.maps.model.LatLng;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
+import io.paperdb.Paper;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.MainActivity;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.NewOrder;
@@ -170,44 +175,45 @@ public class GeneralOrdersFragment extends Fragment {
         progressBar.setVisibility(View.GONE);
     }
 
-    private void rejectOrder(String order_id) {
+
+    private void acceptOrder(String orderId) {
         progressBar.setVisibility(View.VISIBLE);
         subscription.add(NetworkUtil.getRetrofit()
-                .rejectOrder(Utility.getToken(getContext()), order_id)
+                .acceptOrderDriver(Utility.getToken(getContext()), orderId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(this::handleResponseReject, this::handleErrorReject));
+                .subscribe(this::handleResponseAccept, this::handleErrorAccept));
     }
 
-    private void handleResponseReject(Response response) {
-        progressBar.setVisibility(View.GONE);
-        if(response.getState().equals("success")) {
-        }
-    }
-
-    private void handleErrorReject(Throwable throwable) {
-        progressBar.setVisibility(View.GONE);
-    }
-
-    private void addComplaint(String text, String order_id) {
-        progressBar.setVisibility(View.VISIBLE);
-        subscription.add(NetworkUtil.getRetrofit()
-                .addComplaint(Utility.getToken(getContext()), text, order_id)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(this::handleResponseComplaint, this::handleErrorComplaint));
-    }
-
-    private void handleResponseComplaint(Response response) {
+    private void handleResponseAccept(Response response) {
         progressBar.setVisibility(View.GONE);
         if(response.getState().equals("success")){
-            Toast.makeText(getContext(), getResources().getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getResources().getString(R.string.wait_response), Toast.LENGTH_LONG).show();
         }
     }
 
-    private void handleErrorComplaint(Throwable throwable) {
+    private void handleErrorAccept(Throwable throwable){
         progressBar.setVisibility(View.GONE);
     }
+
+//    private void rejectOrder(String order_id) {
+//        progressBar.setVisibility(View.VISIBLE);
+//        subscription.add(NetworkUtil.getRetrofit()
+//                .rejectOrder(Utility.getToken(getContext()), order_id)
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribeOn(Schedulers.io())
+//                .subscribe(this::handleResponseReject, this::handleErrorReject));
+//    }
+//
+//    private void handleResponseReject(Response response) {
+//        progressBar.setVisibility(View.GONE);
+//        if(response.getState().equals("success")) {
+//        }
+//    }
+//
+//    private void handleErrorReject(Throwable throwable) {
+//        progressBar.setVisibility(View.GONE);
+//    }
 
 
     public class RecyclerOrdersAdapter extends RecyclerView.Adapter<RecyclerOrdersAdapter.ViewHolder> {
@@ -215,8 +221,8 @@ public class GeneralOrdersFragment extends Fragment {
         public List<Order> orderList;
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            public TextView userInfo, fromText, toText, priceText;
-            public LinearLayout view, hideView, complaintView, onMapView;
+            public TextView userInfo, fromText, toText, priceText, distanceText;
+            public LinearLayout view, acceptView, onMapView;
 
             public ViewHolder(View v) {
                 super(v);
@@ -224,9 +230,9 @@ public class GeneralOrdersFragment extends Fragment {
                 fromText = (TextView)v.findViewById(R.id.rcoi_address_from_text);
                 toText = (TextView)v.findViewById(R.id.rcoi_address_to_text);
                 priceText = (TextView)v.findViewById(R.id.rcoi_price_text);
+                distanceText = (TextView)v.findViewById(R.id.rcoi_distance_text);
                 view = (LinearLayout) v.findViewById(R.id.rcoi_info_view);
-                hideView = (LinearLayout) v.findViewById(R.id.rcoi_hide_view);
-                complaintView = (LinearLayout) v.findViewById(R.id.rcoi_complaint_view);
+                acceptView = (LinearLayout) v.findViewById(R.id.rcoi_accept_view);
                 onMapView = (LinearLayout) v.findViewById(R.id.rcoi_onmap_view);
             }
         }
@@ -257,18 +263,17 @@ public class GeneralOrdersFragment extends Fragment {
             holder.fromText.setText(getAddressFromLatLngStr(from));
             holder.toText.setText(getAddressFromLatLngStr(to));
             holder.priceText.setText(orderList.get(position).getPrice()+" тг");
+            holder.distanceText.setText(distanceBetween(from) + " м");
 
-            holder.hideView.setOnClickListener(new View.OnClickListener() {
+
+            if((new Date().getTime()/1000 - orderList.get(position).getCreated()) > 15*60){
+                blinkingView(holder.view);
+            }
+
+            holder.acceptView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    rejectOrder(orderList.get(position));
-                }
-            });
-
-            holder.complaintView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    openComplaintView(orderList.get(position));
+                    acceptOrder(orderList.get(position).getId());
                 }
             });
 
@@ -306,37 +311,37 @@ public class GeneralOrdersFragment extends Fragment {
         return title;
     }
 
-    private void openComplaintView(Order order){
-        final Dialog dialog = new Dialog(getContext());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.custom_complaint_view);
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    private String distanceBetween(LatLng latLng){
+        String result = "0";
+        float[] results = new float[1];
+        LatLng currentLatLng = Paper.book().read(Constants.MYLOCATION);
 
-        Button sendButton = (Button) dialog.findViewById(R.id.ccv_send_button);
-        EditText causeEditText = (EditText) dialog.findViewById(R.id.ccv_cause_view);
-
-
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!causeEditText.getText().toString().isEmpty()){
-                  addComplaint(causeEditText.getText().toString(), order.getId());
-                }
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-    }
-
-    private void rejectOrder(Order order){
-        if(lastFragment.equals("sharedOrders")){
-            this.sharedOrders.remove(order);
-            ordersAdapter.notifyDataSetChanged();
-        }else if(lastFragment.equals("ownOrders")){
-            this.myOrders.remove(order);
-            ordersAdapter.notifyDataSetChanged();
+        if(currentLatLng != null) {
+            Location.distanceBetween(currentLatLng.latitude, currentLatLng.longitude,
+                    latLng.latitude, latLng.longitude, results);
+            result = String.valueOf(Math.round(results[0]));
         }
-        rejectOrder(order.getId());
+
+        return result;
     }
+
+    private void blinkingView(LinearLayout view){
+        Animation anim = new AlphaAnimation(0.0f, 1.0f);
+        anim.setDuration(1500); //You can manage the blinking time with this parameter
+        anim.setStartOffset(20);
+        anim.setRepeatMode(Animation.REVERSE);
+        anim.setRepeatCount(Animation.INFINITE);
+        view.startAnimation(anim);
+    }
+
+//    private void rejectOrder(Order order){
+//        if(lastFragment.equals("sharedOrders")){
+//            this.sharedOrders.remove(order);
+//            ordersAdapter.notifyDataSetChanged();
+//        }else if(lastFragment.equals("ownOrders")){
+//            this.myOrders.remove(order);
+//            ordersAdapter.notifyDataSetChanged();
+//        }
+//        rejectOrder(order.getId());
+//    }
 }

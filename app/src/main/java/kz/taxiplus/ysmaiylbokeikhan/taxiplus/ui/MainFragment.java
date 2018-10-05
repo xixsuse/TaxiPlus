@@ -1,7 +1,10 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui;
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -15,6 +18,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
@@ -24,6 +28,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -349,7 +354,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
             @Override
             public void onClick(View v) {
                 if(orderId != null){
-                    cancelOrder(orderId);
+                    openInfoDialogView(getResources().getString(R.string.are_you_sure_to_cancel_order), R.drawable.icon_error, orderId);
                 }
             }
         });
@@ -786,8 +791,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
                     newOrderView.setVisibility(View.GONE);
                     openSessionView.setVisibility(View.GONE);
                     cameButton.setVisibility(View.GONE);
-                    cancelButton.setVisibility(View.VISIBLE);
-
+                    new Handler().postDelayed(() -> cancelButton.setVisibility(View.VISIBLE), 10000);
                     getOrderInfo(orderId);
                 }
                 break;
@@ -971,9 +975,11 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         LatLng currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
         myLocation = new LatLng(location.getLatitude(), location.getLongitude());
         writeLocation(myLocation);
+
         if (drawerCounter == 0) {
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(currentPosition, 16);
             map.animateCamera(cameraUpdate);
+            setCurrentLocation(myLocation);
         }
 
         if (mPositionMarker != null) {
@@ -1013,11 +1019,11 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
                 break;
 
             case "2":
-                typeString = getResources().getString(R.string.comfort_mode);
+                typeString = getResources().getString(R.string.business_mode);
                 break;
 
             case "3":
-                typeString = getResources().getString(R.string.business_mode);
+                typeString = getResources().getString(R.string.corp_mode);
                 break;
 
             case "4":
@@ -1085,7 +1091,50 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
 
     public void setCancelButton(String orderId){
         this.orderId = orderId;
-        cancelButton.setVisibility(View.VISIBLE);
+
+        Toast.makeText(getContext(), getResources().getText(R.string.wait_drivers), Toast.LENGTH_LONG).show();
+        new Handler().postDelayed(() -> cancelButton.setVisibility(View.VISIBLE), 10000);
+    }
+
+    public void openInfoDialogView(String message, int image, String oder){
+        final Dialog dialog = new Dialog(getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.custom_answer_view);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        Button noButton = (Button) dialog.findViewById(R.id.cdv_no_button);
+        Button yesButton = (Button) dialog.findViewById(R.id.cdv_yes_button);
+        TextView textView = (TextView) dialog.findViewById(R.id.cdv_title_text);
+        ImageView imageView = (ImageView) dialog.findViewById(R.id.cdv_image);
+
+        textView.setText(message);
+        imageView.setBackground(getResources().getDrawable(image));
+
+        noButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        yesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cancelOrder(orderId);
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void setCurrentLocation(LatLng latLng){
+        Address address = getAddressFromLatLng(latLng);
+        try {
+            String title = address.getAddressLine(0).substring(0, address.getAddressLine(0).indexOf(","));
+            fromAddress = new Place(title, address.getLatitude(), address.getLongitude());
+            fromButton.setText(title);
+        }catch (Throwable throwable){}
     }
 
     private final BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {

@@ -44,6 +44,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.NewOrder;
@@ -342,7 +343,7 @@ public class OrderInfoDialogFragment extends DialogFragment implements OnMapRead
     }
 
     private Bitmap setIcon(int src){
-        Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(), src);
+        Bitmap icon = BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), src);
         return Bitmap.createScaledBitmap(icon, 125, 100, false);
     }
 

@@ -148,11 +148,11 @@ public class CheckoutOrderDialogFragment extends DialogFragment {
                 break;
 
             case "2":
-                typeString = getResources().getString(R.string.comfort_mode);
+                typeString = getResources().getString(R.string.business_mode);
                 break;
 
             case "3":
-                typeString = getResources().getString(R.string.business_mode);
+                typeString = getResources().getString(R.string.corp_mode);
                 break;
 
             case "4":

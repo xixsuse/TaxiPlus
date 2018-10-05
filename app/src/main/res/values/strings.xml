@@ -42,6 +42,7 @@
     <string name="order_driver">Трезвый водитель</string>
     <string name="my_bonuses">Мои монеты</string>
     <string name="driver_mode">Режим водителя</string>
+    <string name="user_mode">Режим клиента</string>
     <string name="prefs_theme_key">theme</string>
 
     <string name="select_mode">Выбрать режим</string>
@@ -54,7 +55,7 @@
     <string name="modeCargoTaxi">Грузоперевозка</string>
     <string name="modeEvo">Эвакуатор</string>
 
-    <string name="save_place">Сохраненное место</string>
+    <string name="save_place">Сохраненные адреса</string>
     <string name="set_on_map">Указать местоположение на карте</string>
     <string name="set_addresses">Укажите обе точки</string>
     <string name="set_price">Укажите цену</string>
@@ -80,7 +81,8 @@
     <string name="set_volume">указать объем [м<sup>3</sup>]</string>
     <string name="econom_mode">Эконом</string>
     <string name="comfort_mode">Стандарт</string>
-    <string name="business_mode">VIP</string>
+    <string name="business_mode">Комфорт</string>
+    <string name="corp_mode">Корпоративный клиент</string>
 
     <string name="by_hand">Оплата наличными</string>
     <string name="by_card">Оплата картой</string>
@@ -193,6 +195,12 @@
     <string name="order_is_canceled">Заказ отменен</string>
     <string name="car_model_hint">Марка</string>
     <string name="car_submodel_hint">Модель</string>
+    <string name="are_you_sure_to_cancel_order">Вы хотите отменить заказ?</string>
+    <string name="wait_drivers">Заявка принята, ожидайте водителей</string>
+
+    <string name="male">Мужской</string>
+    <string name="female">Женский</string>
+    <string name="sos">SOS</string>
 
     <string name="notifications_admin_channel_name">Name of admin channel</string>
     <string name="notifications_admin_channel_description">Description of admin channel</string>

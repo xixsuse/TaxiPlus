@@ -78,6 +78,7 @@ public class ChatFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
         user = Paper.book().read(Constants.USER);
+
         if(user.getRole_id().equals("2")){
             chatUrl = user.getPhone() + recipientPhone;
         }else {

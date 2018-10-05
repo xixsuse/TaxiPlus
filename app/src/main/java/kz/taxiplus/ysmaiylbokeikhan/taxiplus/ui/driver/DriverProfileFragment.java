@@ -54,10 +54,10 @@ public class DriverProfileFragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
+    private int male = 0;
     private User user;
     private Model selectedModel;
     private Model selectedSubmodel;
-    private TaxiPark selectedTaxipark;
     private List<Facility> selectedFacilities = new ArrayList<>();
 
     private EditText nameEditText, phoneEditText, emailEditText, gosNumberEditText, yearEditText;
@@ -67,7 +67,7 @@ public class DriverProfileFragment extends Fragment {
     private RecyclerView facilitiesRecyclerView;
     private ImageView logo;
     private ProgressBar progressBar;
-    private Button selectTaxiParkButton, registerButton;
+    private Button registerButton, maleButton, femaleButton;
 
     private CompositeSubscription subscription;
     private FragmentTransaction fragmentTransaction;
@@ -118,7 +118,9 @@ public class DriverProfileFragment extends Fragment {
         carSubmodelText = view.findViewById(R.id.fdp_car_submodel_text);
 
         registerButton = view.findViewById(R.id.fdp_register_button);
-        selectTaxiParkButton = view.findViewById(R.id.fdp_select_taxipark);
+        maleButton = view.findViewById(R.id.fdp_male_button);
+        femaleButton = view.findViewById(R.id.fdp_female_button);
+
         menuIcon = view.findViewById(R.id.fdp_menu_view);
         progressBar = view.findViewById(R.id.fdp_progressbar);
         facilitiesRecyclerView = view.findViewById(R.id.fdp_facilities_recyclerview);
@@ -186,27 +188,13 @@ public class DriverProfileFragment extends Fragment {
             }
         });
 
-        selectTaxiParkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fragmentTransaction = getFragmentManager().beginTransaction();
-                TaxiParksFragment taxiParksFragment = new TaxiParksFragment();
-                taxiParksFragment.setTargetFragment(DriverProfileFragment.this, Constants.DRIVERPROFILEFRAGMENTCODETAXIPARK);
-
-                fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
-                fragmentTransaction.add(R.id.main_activity_frame, taxiParksFragment, TaxiParksFragment.TAG);
-                fragmentTransaction.addToBackStack(TaxiParksFragment.TAG);
-                fragmentTransaction.commit();
-            }
-        });
-
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                if(checkFields()){
                    HashMap<String, Object> objectHashMap = new HashMap<>();
                    objectHashMap.put("token", Utility.getToken(getContext()));
-                   objectHashMap.put("gender", 1);
+                   objectHashMap.put("gender", male);
                    objectHashMap.put("car_number", gosNumberEditText.getText().toString());
                    objectHashMap.put("car_model", selectedSubmodel.getId());
                    objectHashMap.put("year_of_birth", "1900");
@@ -218,6 +206,30 @@ public class DriverProfileFragment extends Fragment {
                }else {
                    Toast.makeText(getContext(), getResources().getString(R.string.fill_fields), Toast.LENGTH_LONG).show();
                }
+            }
+        });
+
+        maleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                male = 2;
+                maleButton.setBackground(getResources().getDrawable(R.drawable.rounded_green_view));
+                maleButton.setTextColor(getResources().getColor(R.color.white));
+
+                femaleButton.setBackground(getResources().getDrawable(R.drawable.border_for_view));
+                femaleButton.setTextColor(getResources().getColor(R.color.colorAccent));
+            }
+        });
+
+        femaleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                male = 1;
+                maleButton.setBackground(getResources().getDrawable(R.drawable.border_for_view));
+                maleButton.setTextColor(getResources().getColor(R.color.colorAccent));
+
+                femaleButton.setBackground(getResources().getDrawable(R.drawable.rounded_green_view));
+                femaleButton.setTextColor(getResources().getColor(R.color.white));
             }
         });
     }
@@ -279,12 +291,9 @@ public class DriverProfileFragment extends Fragment {
                 }
                 selectedModel = data.getParcelableExtra(Constants.SELECTEDMODEL);
                 carModelText.setText(selectedModel.getModel());
-            }else if(requestCode == Constants.DRIVERPROFILEFRAGMENTCODESUBMODEL){
+            }else if(requestCode == Constants.DRIVERPROFILEFRAGMENTCODESUBMODEL) {
                 selectedSubmodel = data.getParcelableExtra(Constants.SELECTEDMODEL);
                 carSubmodelText.setText(selectedSubmodel.getModel());
-            }else if(requestCode == Constants.DRIVERPROFILEFRAGMENTCODETAXIPARK){
-                selectedTaxipark = data.getParcelableExtra(Constants.SELECTEDTAXIPARK);
-                selectTaxiParkButton.setText(selectedTaxipark.getName());
             }
         }
     }
@@ -354,7 +363,7 @@ public class DriverProfileFragment extends Fragment {
     private boolean checkFields(){
         boolean isCorrect = false;
         if(selectedModel!=null && selectedSubmodel!=null && !gosNumberEditText.getText().toString().isEmpty() &&
-                !yearEditText.getText().toString().isEmpty()){
+                !yearEditText.getText().toString().isEmpty() && male != 0){
             isCorrect = true;
         }
 
