@@ -14,12 +14,17 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.SessionPrices;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.TaxiPark;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
 import rx.Observable;
 
@@ -195,4 +200,15 @@ public interface RetrofitInterface {
     @FormUrlEncoded
     @POST("get-user/")
     Observable<User.GetFullInfo> getUser(@Field("token")String token);
+
+    @FormUrlEncoded
+    @POST("add-recomendation/")
+    Observable<Response> addRecomendation(@Field("token")String token,
+                                                  @Field("text") String text,
+                                                  @Field("rating") String rating);
+
+    @Multipart
+    @POST("upload-avatar/")
+    Call<Response> uploadAva(@Part MultipartBody.Part file, @Part("token") RequestBody token);
+
 }

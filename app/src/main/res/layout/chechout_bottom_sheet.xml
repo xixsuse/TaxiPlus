@@ -59,13 +59,18 @@
         android:textSize="@dimen/_13ssp"/>
     <TextView
         android:id="@+id/mf_confirm_from_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textColor="?attr/colorPrimary"
-        android:text="@string/from"
+        app:layout_constraintStart_toEndOf="@id/from"
         app:layout_constraintTop_toTopOf="@id/from"
         app:layout_constraintBottom_toBottomOf="@id/from"
         app:layout_constraintEnd_toEndOf="parent"
+        android:paddingStart="@dimen/_3sdp"
+        android:textColor="?attr/colorPrimary"
+        android:text="@string/from"
+        android:textAlignment="textEnd"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:textSize="@dimen/_13ssp"/>
 
     <ImageView
@@ -89,10 +94,14 @@
         android:textSize="@dimen/_13ssp"/>
     <TextView
         android:id="@+id/mf_confirm_to_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="?attr/colorPrimary"
         android:text="@string/to"
+        android:textAlignment="textEnd"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintStart_toEndOf="@id/to"
         app:layout_constraintTop_toTopOf="@id/to"
         app:layout_constraintBottom_toBottomOf="@id/to"
         app:layout_constraintEnd_toEndOf="parent"
@@ -120,10 +129,14 @@
         android:textSize="@dimen/_13ssp"/>
     <TextView
         android:id="@+id/mf_confirm_name_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="?attr/colorPrimary"
         android:text="@string/offer_name"
+        android:textAlignment="textEnd"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintStart_toEndOf="@id/confirm_name"
         app:layout_constraintTop_toTopOf="@id/confirm_name"
         app:layout_constraintBottom_toBottomOf="@id/confirm_name"
         app:layout_constraintEnd_toEndOf="parent"
@@ -151,10 +164,14 @@
         android:textSize="@dimen/_13ssp"/>
     <TextView
         android:id="@+id/mf_confirm_phone_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="?attr/colorPrimary"
         android:text="@string/offer_phone"
+        android:textAlignment="textEnd"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintStart_toEndOf="@id/phone_name"
         app:layout_constraintTop_toTopOf="@id/phone_name"
         app:layout_constraintBottom_toBottomOf="@id/phone_name"
         app:layout_constraintEnd_toEndOf="parent"
@@ -181,10 +198,14 @@
         android:textSize="@dimen/_13ssp"/>
     <TextView
         android:id="@+id/mf_confirm_model_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="?attr/colorPrimary"
         android:text="@string/offer_car_model"
+        android:textAlignment="textEnd"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintStart_toEndOf="@id/model_name"
         app:layout_constraintTop_toTopOf="@id/model_name"
         app:layout_constraintBottom_toBottomOf="@id/model_name"
         app:layout_constraintEnd_toEndOf="parent"
@@ -211,10 +232,14 @@
         android:textSize="@dimen/_13ssp"/>
     <TextView
         android:id="@+id/mf_confirm_number_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="?attr/colorPrimary"
         android:text="@string/offer_car_number"
+        android:textAlignment="textEnd"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintStart_toEndOf="@id/number_name"
         app:layout_constraintTop_toTopOf="@id/number_name"
         app:layout_constraintBottom_toBottomOf="@id/number_name"
         app:layout_constraintEnd_toEndOf="parent"
@@ -242,10 +267,14 @@
         android:textSize="@dimen/_13ssp"/>
     <TextView
         android:id="@+id/mf_confirm_date_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="?attr/colorPrimary"
         android:text="@string/date"
+        android:textAlignment="textEnd"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintStart_toEndOf="@id/date_name"
         app:layout_constraintTop_toTopOf="@id/date_name"
         app:layout_constraintBottom_toBottomOf="@id/date_name"
         app:layout_constraintEnd_toEndOf="parent"
@@ -272,10 +301,14 @@
         android:textSize="@dimen/_13ssp"/>
     <TextView
         android:id="@+id/mf_confirm_mode_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="?attr/colorPrimary"
         android:text="@string/date"
+        android:textAlignment="textEnd"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintStart_toEndOf="@id/mode_name"
         app:layout_constraintTop_toTopOf="@id/mode_name"
         app:layout_constraintBottom_toBottomOf="@id/mode_name"
         app:layout_constraintEnd_toEndOf="parent"

@@ -1,12 +1,16 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -33,8 +37,11 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.model.Image;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import io.paperdb.Paper;
@@ -43,6 +50,7 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.RecyclerMenuItem;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.RetrofitInterface;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user.ActiveOrdersFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user.FaqFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user.HistoryFragment;
@@ -60,12 +68,19 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Application;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.BaseActivity;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private static final int RESULT_LOAD_IMAGE = 11;
+
     private User user;
     private int theme;
     private float rating = 0;
@@ -280,20 +295,18 @@ public class MainActivity extends BaseActivity
         progressBar.setVisibility(View.GONE);
     }
 
-
     private void setUserData() {
         user = Paper.book().read(Constants.USER);
         userName.setText(user.getName());
         userPhone.setText(user.getPhone());
-        Glide.with(MainActivity.this)
-                .load("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1qA-_Sk2ctUnAl9RXfBHQ5WYOMh04hnZ9SnkbaNhhgaIxRpn20Q")
-                .apply(RequestOptions.circleCropTransform())
-                .into(userLogo);
+        setLogo(user);
 
         if(user.getRole_id().equals("2")){
             setDriverMenu();
+            sosButton.setVisibility(View.VISIBLE);
         }else {
             setUserMenu();
+            sosButton.setVisibility(View.GONE);
         }
     }
 
@@ -424,7 +437,31 @@ public class MainActivity extends BaseActivity
 
             }
         });
+
+        userLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImagePicker.create(MainActivity.this)
+                        .single()
+                        .start(RESULT_LOAD_IMAGE);
+            }
+        });
     }
+
+    private void setLogo(User user){
+        String logo;
+        if(user.getAvatar_path() != null){
+            logo = user.getAvatar_path();
+        }else {
+            logo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1qA-_Sk2ctUnAl9RXfBHQ5WYOMh04hnZ9SnkbaNhhgaIxRpn20Q";
+        }
+
+        Glide.with(MainActivity.this)
+                .load(logo)
+                .apply(RequestOptions.circleCropTransform())
+                .into(userLogo);
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -433,37 +470,11 @@ public class MainActivity extends BaseActivity
         return true;
     }
 
-    private final BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, android.content.Intent intent) {
-            String type = intent.getStringExtra(Constants.TYPE);
-            String orderId = intent.getStringExtra(Constants.ORDERID);
-
-            if(type.equals("101")) {
-                try {
-                    OrderInfoDialogFragment newOrderDialogFragment = OrderInfoDialogFragment.newInstance(orderId);
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    newOrderDialogFragment.show(fragmentManager, OrderInfoDialogFragment.TAG);
-                }catch (Throwable r){}
-            }else if(type.equals("201")){
-                try {
-                    String driverId = intent.getStringExtra(Constants.DRIVERID);
-                    NewOfferDialogFragment newOfferDialogFragment = NewOfferDialogFragment.newInstance(driverId, orderId);
-                    newOfferDialogFragment.show(getSupportFragmentManager(), NewOfferDialogFragment.TAG);
-                }catch (Throwable r){}
-            }else if(type.equals("301")){
-                Toast.makeText(MainActivity.this, getResources().getString(R.string.user_accepted), Toast.LENGTH_LONG).show();
-                MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag(MainFragment.TAG);
-                if(mainFragment != null) {
-                    mainFragment.clientIsAccepted(orderId);
-                }
-            }else if(type.equals("401")){
-                openInfoDialogView(getResources().getString(R.string.driver_is_came), R.drawable.icon_big_clock);
-            }else if(type.equals("501")){
-                openRateDialogView(orderId);
-            }
-        }
-    };
+    private boolean checkPermissionReadImage() {
+        String permission = Manifest.permission.READ_EXTERNAL_STORAGE;
+        int res = checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
+    }
 
     public class RecyclerMenuAdapter extends RecyclerView.Adapter<RecyclerMenuAdapter.ViewHolder> {
         public Context mContext;
@@ -625,4 +636,69 @@ public class MainActivity extends BaseActivity
             return menuList.size();
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == Activity.RESULT_OK &&requestCode == RESULT_LOAD_IMAGE) {
+            if(checkPermissionReadImage()){
+                Image image = ImagePicker.getFirstImageOrNull(data);
+                File file = new File(image.getPath());
+
+                RetrofitInterface retrofitInterface = NetworkUtil.getRetrofit();
+                RequestBody token = RequestBody.create(MediaType.parse("text/plain"), Utility.getToken(this));
+                MultipartBody.Part filePart = MultipartBody.Part.createFormData("myfile", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
+
+                Call<Response> call = retrofitInterface.uploadAva(filePart, token);
+                call.enqueue(new Callback<Response>() {
+                    @Override
+                    public void onResponse(Call<Response> call, @NonNull retrofit2.Response<Response> response){
+                        if(response.body().getState().equals("success")  && response.body().getPath() != null) {
+                            user.setAvatar_path(response.body().getPath());
+                            Glide.with(MainActivity.this)
+                                    .load(response.body().getPath())
+                                    .apply(RequestOptions.circleCropTransform())
+                                    .into(userLogo);
+                            Paper.book().write(Constants.USER, user);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Response> call, Throwable t) {
+                    }
+                });
+            }
+        }
+    }
+
+    private final BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, android.content.Intent intent) {
+            String type = intent.getStringExtra(Constants.TYPE);
+            String orderId = intent.getStringExtra(Constants.ORDERID);
+            if(type.equals("101")) {
+                try {
+                    OrderInfoDialogFragment newOrderDialogFragment = OrderInfoDialogFragment.newInstance(orderId);
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    newOrderDialogFragment.show(fragmentManager, OrderInfoDialogFragment.TAG);
+                }catch (Throwable r){}
+            }else if(type.equals("201")){
+                try {
+                    String driverId = intent.getStringExtra(Constants.DRIVERID);
+                    NewOfferDialogFragment newOfferDialogFragment = NewOfferDialogFragment.newInstance(driverId, orderId);
+                    newOfferDialogFragment.show(getSupportFragmentManager(), NewOfferDialogFragment.TAG);
+                }catch (Throwable r){}
+            }else if(type.equals("301")){
+                Toast.makeText(MainActivity.this, getResources().getString(R.string.user_accepted), Toast.LENGTH_LONG).show();
+                MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag(MainFragment.TAG);
+                if(mainFragment != null) {
+                    mainFragment.clientIsAccepted(orderId);
+                }
+            }else if(type.equals("401")){
+                openInfoDialogView(getResources().getString(R.string.driver_is_came), R.drawable.icon_big_clock);
+            }else if(type.equals("501")){
+                openRateDialogView(orderId);
+            }
+        }
+    };
 }

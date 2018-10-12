@@ -9,6 +9,7 @@ public class Response {
     private String link;
     private String status;
     private String order_id;
+    private String path;
     private User user;
     private int code;
     private int is_active;
@@ -60,5 +61,9 @@ public class Response {
 
     public String getOrder_id() {
         return order_id;
+    }
+
+    public String getPath() {
+        return path;
     }
 }

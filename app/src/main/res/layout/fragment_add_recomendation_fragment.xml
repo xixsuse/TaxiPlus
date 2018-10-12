@@ -108,6 +108,16 @@
                 android:textSize="@dimen/_15ssp"
                 android:text="@string/send"
                 android:textAllCaps="false"/>
+            <ProgressBar
+                android:id="@+id/far_progressbar"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:indeterminate="true"
+                android:visibility="gone"/>
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

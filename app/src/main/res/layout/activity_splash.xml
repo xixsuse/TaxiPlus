@@ -29,15 +29,15 @@
             android:id="@+id/first"
             android:layout_width="@dimen/_22sdp"
             android:layout_height="@dimen/_22sdp"
-            android:layout_marginTop="@dimen/_10sdp"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/second"
             app:layout_constraintStart_toStartOf="parent"
             android:background="@color/yellow"/>
         <View
             android:id="@+id/second"
             android:layout_width="@dimen/_22sdp"
             android:layout_height="@dimen/_22sdp"
-            app:layout_constraintTop_toBottomOf="@id/first"
+            android:layout_marginTop="@dimen/_10sdp"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/first"
             android:background="@color/yellow"/>
 
@@ -52,7 +52,7 @@
             android:id="@+id/forth"
             android:layout_width="@dimen/_22sdp"
             android:layout_height="@dimen/_22sdp"
-            app:layout_constraintTop_toBottomOf="@id/third"
+            app:layout_constraintTop_toTopOf="@id/second"
             app:layout_constraintStart_toEndOf="@id/third"
             android:background="@color/yellow"/>
         <View
@@ -66,7 +66,7 @@
             android:id="@+id/sixth"
             android:layout_width="@dimen/_22sdp"
             android:layout_height="@dimen/_22sdp"
-            app:layout_constraintTop_toBottomOf="@id/fifth"
+            app:layout_constraintTop_toTopOf="@id/second"
             app:layout_constraintStart_toEndOf="@id/fifth"
             android:background="@color/yellow"/>
 

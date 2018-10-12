@@ -766,6 +766,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         progressBar.setVisibility(View.GONE);
     }
 
+
     // helper functions
     private void setState(Response response) {
         mainState = response.getStatus();
@@ -926,8 +927,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
 
     private void setInfo(OrderToDriver.GetOrderInfo orderInfo) {
         this.orderInfo = orderInfo;
-        confirmFromText.setText(getAddressFromLatLngStr(new LatLng(orderInfo.getOrder().getFrom_latitude(), orderInfo.getOrder().getFrom_longitude())));
-        confirmToText.setText(getAddressFromLatLngStr(new LatLng(orderInfo.getOrder().getTo_latitude(), orderInfo.getOrder().getTo_longitude())));
 
         confNameText.setText(orderInfo.getDriver().getName());
         confPhoneText.setText(orderInfo.getDriver().getPhone());
@@ -935,6 +934,9 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         confModelText.setText(orderInfo.getCar());
         confModeText.setText(setOrder(orderInfo.getOrder().getOrder_type()));
         confDateText.setText(setDataString(orderInfo.getOrder().getDate()));
+
+        confirmFromText.setText(getAddressFromLatLngStr(new LatLng(orderInfo.getOrder().getFrom_latitude(), orderInfo.getOrder().getFrom_longitude())));
+        confirmToText.setText(getAddressFromLatLngStr(new LatLng(orderInfo.getOrder().getTo_latitude(), orderInfo.getOrder().getTo_longitude())));
     }
 
     private void openModeFragment(NewOrder order) {
