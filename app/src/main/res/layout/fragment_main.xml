@@ -78,7 +78,7 @@
                 android:id="@+id/mf_to_button"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_35sdp"
-                app:layout_constraintBottom_toTopOf="@id/mf_select_mode_button"
+                app:layout_constraintBottom_toTopOf="@id/mf_make_order"
                 android:layout_marginBottom="@dimen/_8sdp"
                 android:background="@drawable/rounded_white_view"
                 android:layout_marginStart="@dimen/_15sdp"
@@ -90,7 +90,7 @@
                 android:maxLines="1"
                 android:ellipsize="end"/>
             <Button
-                android:id="@+id/mf_select_mode_button"
+                android:id="@+id/mf_make_order"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_35sdp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -100,7 +100,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/_15ssp"
                 android:textAllCaps="false"
-                android:text="@string/select_mode" />
+                android:text="@string/make_order" />
         </android.support.constraint.ConstraintLayout>
 
         <!--open session view-->
@@ -176,6 +176,21 @@
             android:ellipsize="end"
             android:visibility="gone"/>
 
+        <ImageButton
+            android:id="@+id/mf_complaint_button"
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="@dimen/_35sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/mf_came_button"
+            android:layout_margin="@dimen/_15sdp"
+            android:padding="@dimen/_7sdp"
+            android:background="@drawable/circle_green_view"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:src="@drawable/icon_error"
+            android:tint="@color/white"
+            android:scaleType="centerCrop"
+            android:visibility="gone"/>
+
         <Button
             android:id="@+id/mf_cancel_button"
             android:layout_width="@dimen/_26sdp"
@@ -186,6 +201,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:background="@drawable/icon_close_rounded"
             android:visibility="gone"/>
+
         <ProgressBar
             android:id="@+id/mf_progressbar"
             android:layout_width="@dimen/_40sdp"
@@ -196,6 +212,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:indeterminate="true"
             android:visibility="gone"/>
+        <include
+            layout="@layout/custom_waiting_view"
+            app:layout_constraintTop_toTopOf="parent"/>
     </android.support.constraint.ConstraintLayout>
     <include layout="@layout/chechout_bottom_sheet"/>
 </android.support.design.widget.CoordinatorLayout>

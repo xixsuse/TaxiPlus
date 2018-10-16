@@ -145,7 +145,12 @@ public class MainActivity extends BaseActivity
 
     private void setUserMenu() {
         List<RecyclerMenuItem>recyclerMenuItemList = new ArrayList<>();
-        RecyclerMenuItem menuItem0 = new RecyclerMenuItem(getResources().getString(R.string.main), R.drawable.icon_main, 100);
+
+        RecyclerMenuItem taxi = new RecyclerMenuItem(getResources().getString(R.string.modeTaxi),R.drawable.icon_taxi, 100);
+        RecyclerMenuItem ladyTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeLadyTaxi),R.drawable.icon_taxi, 200);
+        RecyclerMenuItem invaTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeInvaTaxi),R.drawable.icon_inva, 300);
+
+//        RecyclerMenuItem menuItem0 = new RecyclerMenuItem(getResources().getString(R.string.main), R.drawable.icon_main, 100);
         RecyclerMenuItem menuItem = new RecyclerMenuItem(getResources().getString(R.string.trip_history), R.drawable.icon_history, 0);
         RecyclerMenuItem menuItem1 = new RecyclerMenuItem(getResources().getString(R.string.current_trips), R.drawable.icon_current_order, 1);
         RecyclerMenuItem menuItem2 = new RecyclerMenuItem(getResources().getString(R.string.add_card), R.drawable.icon_add_card, 2);
@@ -156,7 +161,9 @@ public class MainActivity extends BaseActivity
         RecyclerMenuItem menuItem8 = new RecyclerMenuItem(getResources().getString(R.string.driver_mode), R.drawable.icon_switch, 8);
         RecyclerMenuItem menuItem9 = new RecyclerMenuItem(getResources().getString(R.string.share), R.drawable.icon_share, 18);
 
-        recyclerMenuItemList.add(menuItem0);
+        recyclerMenuItemList.add(taxi);
+        recyclerMenuItemList.add(ladyTaxi);
+        recyclerMenuItemList.add(invaTaxi);
         recyclerMenuItemList.add(menuItem);
         recyclerMenuItemList.add(menuItem1);
         recyclerMenuItemList.add(menuItem2);
@@ -523,8 +530,20 @@ public class MainActivity extends BaseActivity
                     FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                     switch (menuList.get(position).getIndex()){
                         case 100:
-                            MainFragment mainFragment = new MainFragment();
-                            fragmentTransaction.replace(R.id.main_activity_frame, mainFragment, MainFragment.TAG);
+                            MainFragment taxiFragment = MainFragment.newInstance(1);
+                            fragmentTransaction.replace(R.id.main_activity_frame, taxiFragment, MainFragment.TAG);
+                            fragmentTransaction.addToBackStack(MainFragment.TAG);
+                            break;
+
+                        case 200:
+                            MainFragment ladyFragment = MainFragment.newInstance(2);
+                            fragmentTransaction.replace(R.id.main_activity_frame, ladyFragment, MainFragment.TAG);
+                            fragmentTransaction.addToBackStack(MainFragment.TAG);
+                            break;
+
+                        case 300:
+                            MainFragment invaFragment = MainFragment.newInstance(3);
+                            fragmentTransaction.replace(R.id.main_activity_frame, invaFragment, MainFragment.TAG);
                             fragmentTransaction.addToBackStack(MainFragment.TAG);
                             break;
 
@@ -683,13 +702,16 @@ public class MainActivity extends BaseActivity
                     newOrderDialogFragment.show(fragmentManager, OrderInfoDialogFragment.TAG);
                 }catch (Throwable r){}
             }else if(type.equals("201")){
-                try {
-                    String driverId = intent.getStringExtra(Constants.DRIVERID);
-                    NewOfferDialogFragment newOfferDialogFragment = NewOfferDialogFragment.newInstance(driverId, orderId);
-                    newOfferDialogFragment.show(getSupportFragmentManager(), NewOfferDialogFragment.TAG);
-                }catch (Throwable r){}
+//                try {
+//                    String driverId = intent.getStringExtra(Constants.DRIVERID);
+//                    NewOfferDialogFragment newOfferDialogFragment = NewOfferDialogFragment.newInstance(driverId, orderId);
+//                    newOfferDialogFragment.show(getSupportFragmentManager(), NewOfferDialogFragment.TAG);
+//                }catch (Throwable r){}
+                MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag(MainFragment.TAG);
+                if(mainFragment != null) {
+                    mainFragment.getOrderInfo(orderId);
+                }
             }else if(type.equals("301")){
-                Toast.makeText(MainActivity.this, getResources().getString(R.string.user_accepted), Toast.LENGTH_LONG).show();
                 MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentByTag(MainFragment.TAG);
                 if(mainFragment != null) {
                     mainFragment.clientIsAccepted(orderId);

@@ -1,12 +1,15 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.authorization;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -76,6 +79,7 @@ public class AuthFirstStepFragment extends Fragment {
         setListeners();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setListeners() {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,14 +97,33 @@ public class AuthFirstStepFragment extends Fragment {
             public void onFocusChange(View view, boolean b) {
                 if(b && phoneEditText.getText().length() == 0){
                     phoneEditText.getText().insert(phoneEditText.getSelectionStart(), "+7");
+                    phoneEditText.setSelection(phoneEditText.getText().length());
+                }else {
                 }
+            }
+        });
+
+        phoneEditText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                phoneEditText.setSelection(phoneEditText.getText().length());
+                return false;
+            }
+        });
+
+        phoneEditText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                phoneEditText.onTouchEvent(event);
+                phoneEditText.setSelection(phoneEditText.getText().length());
+                return true;
             }
         });
 
         phoneEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                phoneEditText.setSelection(phoneEditText.getText().length());
             }
 
             @Override
@@ -123,6 +146,7 @@ public class AuthFirstStepFragment extends Fragment {
                         phoneEditText.setSelection(phoneEditText.getText().length());
                     }
                 }
+                phoneEditText.setSelection(phoneEditText.getText().length());
             }
 
             @Override

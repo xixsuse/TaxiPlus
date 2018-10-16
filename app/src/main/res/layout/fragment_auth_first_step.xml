@@ -33,9 +33,10 @@
         app:layout_constraintTop_toBottomOf="@id/enter_phone"
         android:background="@drawable/border_for_view"
         android:hint="+7 (_ _ _) _ _ _  _ _  _ _"
-        android:textAlignment="center"
+        android:padding="@dimen/_3sdp"
         android:textSize="@dimen/_14ssp"
         android:maxLength="17"
+        android:gravity="center"
         android:inputType="phone"
         android:textColor="@color/gray"/>
     <Button

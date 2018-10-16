@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/trans"
+    android:clickable="false"
+    android:id="@+id/waiting_view"
+    android:visibility="gone">
+
+    <ImageView
+        android:id="@+id/fw_logo"
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="@dimen/_80sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/_40sdp"/>
+    <TextView
+        android:id="@+id/fw_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/fw_logo"
+        android:layout_margin="@dimen/_15sdp"
+        android:text="@string/wait_drivers"
+        android:textAlignment="center"
+        android:textSize="@dimen/_16ssp"
+        android:textStyle="bold" />
+
+</android.support.constraint.ConstraintLayout>

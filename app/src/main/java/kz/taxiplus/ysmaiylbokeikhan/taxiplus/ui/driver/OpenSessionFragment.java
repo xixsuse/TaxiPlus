@@ -4,6 +4,8 @@ package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +42,8 @@ public class OpenSessionFragment extends Fragment {
     private int time = 0;
     private String sixHourPrice, unlimPrice, balance, selectedPrice;
     private User user;
+
+    private FragmentTransaction fragmentTransaction;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -181,7 +185,6 @@ public class OpenSessionFragment extends Fragment {
         if(response.getState().equals("success")){
             saveUserSession(true);
             Toast.makeText(getContext(), getResources().getString(R.string.successfully_opened), Toast.LENGTH_SHORT).show();
-            getActivity().onBackPressed();
         }
         progressBar.setVisibility(View.GONE);
     }
@@ -204,7 +207,6 @@ public class OpenSessionFragment extends Fragment {
         if(response.getState().equals("success")){
             saveUserSession(true);
             Toast.makeText(getContext(), getResources().getString(R.string.successfully_opened), Toast.LENGTH_SHORT).show();
-            getActivity().onBackPressed();
         }
         progressBar.setVisibility(View.GONE);
     }
@@ -219,5 +221,18 @@ public class OpenSessionFragment extends Fragment {
         user.setSessionOpened(sessionState);
         user.setBalance(balance);
         Paper.book().write(Constants.USER, user);
+
+        openOrdersView();
+    }
+
+    private void openOrdersView(){
+        getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+        fragmentTransaction = getFragmentManager().beginTransaction();
+
+        CityFragment cityFragment = new CityFragment();
+        fragmentTransaction.replace(R.id.main_activity_frame, cityFragment, CityFragment.TAG);
+        fragmentTransaction.addToBackStack(CityFragment.TAG);
+        fragmentTransaction.commit();
     }
 }

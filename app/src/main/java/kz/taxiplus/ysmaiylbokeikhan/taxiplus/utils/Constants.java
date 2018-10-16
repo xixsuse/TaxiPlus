@@ -32,6 +32,7 @@ public class Constants {
     public static final String CHECKOUTFRAGMENTFRAGMENTTAG = "CheckoutOrderDialogFragment";
     public static final String OPENSESSIONFRAGMENTTAG = "OpenSessionFragment";
     public static final String NEWORDERDIALOGFRAGMENTTAG = "NewOrderDialogFragment";
+    public static final String WAITINGFRAGMENTTAG = "WaitingFragment";
 
 
     public static final int MAINFRAGMENTCODEFROM = 121;

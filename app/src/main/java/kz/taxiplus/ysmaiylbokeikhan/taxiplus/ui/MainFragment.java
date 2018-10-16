@@ -1,10 +1,8 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui;
 import android.Manifest;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -30,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,6 +42,8 @@ import com.akexorcist.googledirection.constant.TransportMode;
 import com.akexorcist.googledirection.model.Direction;
 import com.akexorcist.googledirection.model.Route;
 import com.akexorcist.googledirection.util.DirectionConverter;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -72,8 +73,8 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.OpenSessionFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.FromAndToFragment;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.MakeOrderFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.ModesDialogFragment;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.SelectModeFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user.ChatFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
@@ -90,6 +91,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     public static final int REQUEST_GPS_PERMISSION = 123;
     private static final int REQUEST_CALL_PERMISSION = 103;
     private static final String NULLTAG = "NullPointerException";
+    private static final String TAXIMODE = "taxiMode";
 
     private LatLng myLocation;
     private int drawerCounter = 0;
@@ -104,16 +106,17 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     private OrderToDriver.GetOrderInfo orderInfo;
     private String orderId;
     private String mainState;
+    private int taxiMode;
 
     private Marker mPositionMarker, markerTo, markerFrom, driverCarMarker;
     public MapView mapView;
     private GoogleMap map;
     private View view;
 
-    private ImageView myLocationIcon;
+    private ImageView myLocationIcon, userLogo;
     private LinearLayout menuIcon, openSessionView, connectView;
-    private ConstraintLayout newOrderView;
-    private Button fromButton, toButton, modeButton;
+    private ConstraintLayout newOrderView, waitingView;
+    private Button fromButton, toButton, makeOrderButton;
     private TextView sessionText;
     private ProgressBar progressBar;
     private BottomSheetBehavior sheetBehavior;
@@ -122,15 +125,24 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     private TextView confPhoneText, confModelText, confNumberText;
     private TextView confDateText, confModeText;
     private Button cameButton, cancelButton;
-    private ImageButton confCallButton, chatButton, driverCall, driverChat;
+    private ImageButton confCallButton, chatButton, driverCall, driverChat, addComplaintButton;
 
     private FragmentTransaction fragmentTransaction;
     private CompositeSubscription subscription;
+
+    public static MainFragment newInstance(int taxiMode) {
+        MainFragment fragment = new MainFragment();
+        Bundle args = new Bundle();
+        args.putInt(TAXIMODE, taxiMode);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            taxiMode = getArguments().getInt(TAXIMODE);
             order = getArguments().getParcelable(Constants.NEWORDER);
         }
     }
@@ -161,16 +173,19 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         newOrderView = view.findViewById(R.id.mf_new_order_view);
         toButton = view.findViewById(R.id.mf_to_button);
         fromButton = view.findViewById(R.id.mf_from_button);
-        modeButton = view.findViewById(R.id.mf_select_mode_button);
+        makeOrderButton = view.findViewById(R.id.mf_make_order);
         openSessionView = view.findViewById(R.id.mf_open_session_view);
         sessionText = view.findViewById(R.id.mf_open_session_text);
         progressBar = view.findViewById(R.id.mf_progressbar);
         cameButton = view.findViewById(R.id.mf_came_button);
+        addComplaintButton = view.findViewById(R.id.mf_complaint_button);
         layoutBottomSheet = view.findViewById(R.id.bottom_sheet);
         connectView = view.findViewById(R.id.mf_connect_view);
         driverCall = view.findViewById(R.id.mf_call_button);
         driverChat = view.findViewById(R.id.mf_chat_button);
         cancelButton = view.findViewById(R.id.mf_cancel_button);
+        waitingView = view.findViewById(R.id.waiting_view);
+        userLogo = view.findViewById(R.id.fw_logo);
 
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(myBroadcastReceiver,
                 new IntentFilter("thisIsForMainFragment"));
@@ -225,22 +240,36 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
             }
         });
 
-        modeButton.setOnClickListener(new View.OnClickListener() {
+        makeOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (fromAddress != null && toAddress != null) {
                     fragmentTransaction = getFragmentManager().beginTransaction();
-                    Bundle b = new Bundle();
-                    b.putParcelable(Constants.TOADDRESS, toAddress);
-                    b.putParcelable(Constants.FROMADDRESS, fromAddress);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(Constants.MODE, taxiMode);
+                    bundle.putParcelable(Constants.TOADDRESS, toAddress);
+                    bundle.putParcelable(Constants.FROMADDRESS, fromAddress);
 
-                    SelectModeFragment selectModeFragment = new SelectModeFragment();
-                    selectModeFragment.setArguments(b);
+                    MakeOrderFragment makeOrderFragment = new MakeOrderFragment();
+                    makeOrderFragment.setArguments(bundle);
 
                     fragmentTransaction.setCustomAnimations(R.anim.enter_from_bottom, R.anim.enter_from_top, R.anim.exit_to_bottom, R.anim.exit_to_top);
-                    fragmentTransaction.add(R.id.main_activity_frame, selectModeFragment, SelectModeFragment.TAG);
-                    fragmentTransaction.addToBackStack(SelectModeFragment.TAG);
+                    fragmentTransaction.add(R.id.main_activity_frame, makeOrderFragment, MakeOrderFragment.TAG);
+                    fragmentTransaction.addToBackStack(MakeOrderFragment.TAG);
                     fragmentTransaction.commit();
+
+//                    fragmentTransaction = getFragmentManager().beginTransaction();
+//                    Bundle b = new Bundle();
+//                    b.putParcelable(Constants.TOADDRESS, toAddress);
+//                    b.putParcelable(Constants.FROMADDRESS, fromAddress);
+//
+//                    SelectModeFragment selectModeFragment = new SelectModeFragment();
+//                    selectModeFragment.setArguments(b);
+//
+//                    fragmentTransaction.setCustomAnimations(R.anim.enter_from_bottom, R.anim.enter_from_top, R.anim.exit_to_bottom, R.anim.exit_to_top);
+//                    fragmentTransaction.add(R.id.main_activity_frame, selectModeFragment, SelectModeFragment.TAG);
+//                    fragmentTransaction.addToBackStack(SelectModeFragment.TAG);
+//                    fragmentTransaction.commit();
                 } else {
                     Toast.makeText(getContext(), getResources().getText(R.string.set_addresses), Toast.LENGTH_SHORT).show();
                 }
@@ -355,6 +384,15 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
             public void onClick(View v) {
                 if(orderId != null){
                     openInfoDialogView(getResources().getString(R.string.are_you_sure_to_cancel_order), R.drawable.icon_error, orderId);
+                }
+            }
+        });
+
+        addComplaintButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(orderInfo != null) {
+                    openComplaintDialogView(orderInfo.getOrder().getId());
                 }
             }
         });
@@ -696,6 +734,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
             driverButtonType = 0;
             cameButton.setText(getResources().getString(R.string.came_button));
             cameButton.setVisibility(View.GONE);
+            addComplaintButton.setVisibility(View.GONE);
             connectView.setVisibility(View.GONE);
             map.clear();
             openSessionView.setVisibility(View.VISIBLE);
@@ -709,7 +748,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     }
 
 
-    private void getOrderInfo(String order_id){
+    public void getOrderInfo(String order_id){
         progressBar.setVisibility(View.VISIBLE);
         subscription.add(NetworkUtil.getRetrofit()
                 .getOrderInfo(order_id)
@@ -756,6 +795,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     private void handleResponseCancelOrder(Response response) {
         progressBar.setVisibility(View.GONE);
         if(response.getState().equals("success")){
+            waitingView.setVisibility(View.GONE);
             cancelButton.setVisibility(View.GONE);
             clearMap();
             Toast.makeText(getContext(), getResources().getText(R.string.order_is_canceled), Toast.LENGTH_SHORT).show();
@@ -778,11 +818,13 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
                     newOrderView.setVisibility(View.VISIBLE);
                     openSessionView.setVisibility(View.GONE);
                     cameButton.setVisibility(View.GONE);
+                    addComplaintButton.setVisibility(View.GONE);
                     layoutBottomSheet.setVisibility(View.GONE);
                 }else {
                     newOrderView.setVisibility(View.GONE);
                     openSessionView.setVisibility(View.VISIBLE);
                     cameButton.setVisibility(View.GONE);
+                    addComplaintButton.setVisibility(View.GONE);
                     layoutBottomSheet.setVisibility(View.GONE);
                 }
                 break;
@@ -792,6 +834,13 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
                     newOrderView.setVisibility(View.GONE);
                     openSessionView.setVisibility(View.GONE);
                     cameButton.setVisibility(View.GONE);
+                    addComplaintButton.setVisibility(View.GONE);
+
+
+                    setWaitingView(true);
+                    //                    waitingFragment = new WaitingFragment();
+//                    waitingFragment.show(getFragmentManager(), WaitingFragment.TAG);
+
                     new Handler().postDelayed(() -> cancelButton.setVisibility(View.VISIBLE), 10000);
                     getOrderInfo(orderId);
                 }
@@ -803,10 +852,12 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
                     newOrderView.setVisibility(View.GONE);
                     openSessionView.setVisibility(View.GONE);
                     cameButton.setVisibility(View.GONE);
+                    addComplaintButton.setVisibility(View.GONE);
                 }else {
                     newOrderView.setVisibility(View.GONE);
                     openSessionView.setVisibility(View.GONE);
                     cameButton.setVisibility(View.VISIBLE);
+                    addComplaintButton.setVisibility(View.VISIBLE);
                     layoutBottomSheet.setVisibility(View.GONE);
 
                     cameButton.setText(getResources().getString(R.string.came_button));
@@ -820,10 +871,12 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
                     newOrderView.setVisibility(View.GONE);
                     openSessionView.setVisibility(View.GONE);
                     cameButton.setVisibility(View.GONE);
+                    addComplaintButton.setVisibility(View.GONE);
                 }else {
                     newOrderView.setVisibility(View.GONE);
                     openSessionView.setVisibility(View.GONE);
                     cameButton.setVisibility(View.VISIBLE);
+                    addComplaintButton.setVisibility(View.VISIBLE);
                     layoutBottomSheet.setVisibility(View.GONE);
 
                     cameButton.setText(getResources().getString(R.string.start_trip));
@@ -837,10 +890,12 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
                     newOrderView.setVisibility(View.GONE);
                     openSessionView.setVisibility(View.GONE);
                     cameButton.setVisibility(View.GONE);
+                    addComplaintButton.setVisibility(View.GONE);
                 }else {
                     newOrderView.setVisibility(View.GONE);
                     openSessionView.setVisibility(View.GONE);
                     cameButton.setVisibility(View.VISIBLE);
+                    addComplaintButton.setVisibility(View.VISIBLE);
                     layoutBottomSheet.setVisibility(View.GONE);
 
                     cameButton.setText(getResources().getString(R.string.end_trip));
@@ -853,11 +908,13 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
                     newOrderView.setVisibility(View.VISIBLE);
                     openSessionView.setVisibility(View.GONE);
                     cameButton.setVisibility(View.GONE);
+                    addComplaintButton.setVisibility(View.GONE);
                     layoutBottomSheet.setVisibility(View.GONE);
                 }else {
                     newOrderView.setVisibility(View.GONE);
                     openSessionView.setVisibility(View.VISIBLE);
                     cameButton.setVisibility(View.GONE);
+                    addComplaintButton.setVisibility(View.GONE);
                     layoutBottomSheet.setVisibility(View.GONE);
                     driverButtonType = 0;
                 }
@@ -869,6 +926,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         this.orderId = orderId;
         getOrderInfo(orderId);
         cameButton.setVisibility(View.VISIBLE);
+        addComplaintButton.setVisibility(View.VISIBLE);
     }
 
     public void setCheckoutView(OrderToDriver.GetOrderInfo orderInfo){
@@ -898,6 +956,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
         layoutBottomSheet.setVisibility(View.VISIBLE);
+        waitingView.setVisibility(View.GONE);
         confCallButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1094,6 +1153,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
     public void setCancelButton(String orderId){
         this.orderId = orderId;
 
+        setWaitingView(true);
         Toast.makeText(getContext(), getResources().getText(R.string.wait_drivers), Toast.LENGTH_LONG).show();
         new Handler().postDelayed(() -> cancelButton.setVisibility(View.VISIBLE), 10000);
     }
@@ -1130,6 +1190,28 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
         dialog.show();
     }
 
+    private void openComplaintDialogView(String orderId){
+        final Dialog dialog = new Dialog(getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.custom_complaint_view);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        Button sendButton = (Button) dialog.findViewById(R.id.ccv_send_button);
+        EditText causeEditText = (EditText) dialog.findViewById(R.id.ccv_cause_view);
+
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(orderId != null && !causeEditText.getText().toString().isEmpty()){
+
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        dialog.show();
+    }
+
     private void setCurrentLocation(LatLng latLng){
         Address address = getAddressFromLatLng(latLng);
         try {
@@ -1137,6 +1219,19 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Direct
             fromAddress = new Place(title, address.getLatitude(), address.getLongitude());
             fromButton.setText(title);
         }catch (Throwable throwable){}
+    }
+
+    private void setWaitingView(boolean isVisible){
+        if (isVisible){
+            waitingView.setVisibility(View.VISIBLE);
+
+            Glide.with(getContext())
+                    .load(user.getAvatar_path())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(userLogo);
+        }else{
+            waitingView.setVisibility(View.GONE);
+        }
     }
 
     private final BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {

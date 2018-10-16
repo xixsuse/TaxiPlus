@@ -300,9 +300,11 @@ public class GeneralOrdersFragment extends Fragment {
 
         try {
             addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
-            addresReturn = addressList.get(0);
 
-            title = addresReturn.getAddressLine(0).substring(0, addresReturn.getAddressLine(0).indexOf(","));
+            if(addressList.size() > 0){
+                addresReturn = addressList.get(0);
+                title = addresReturn.getAddressLine(0).substring(0, addresReturn.getAddressLine(0).indexOf(","));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
