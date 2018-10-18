@@ -40,13 +40,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <EditText
+        android:id="@+id/crv_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/_50sdp"
+        android:hint="@string/comment_for_order"
+        android:textSize="@dimen/_13ssp"
+        android:padding="@dimen/_4sdp"
+        app:layout_constraintTop_toBottomOf="@id/crv_ratingbar"
+        android:background="@drawable/rounded_gray_view"/>
+
     <Button
         android:id="@+id/crv_rate_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/crv_ratingbar"
+        android:layout_marginTop="@dimen/_10sdp"
+        app:layout_constraintTop_toBottomOf="@id/crv_text_view"
         android:text="@string/rate"
         android:minHeight="0dp"
         android:minWidth="0dp"

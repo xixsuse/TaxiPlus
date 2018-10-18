@@ -5,6 +5,8 @@ public class Constants {
     public static final String AUTHSECONDEPFRAGMENTTAG = "AuthSecondStepFragment";
     public static final String AUTHTHIRDEPFRAGMENTTAG = "AuthThirdStepFragment";
     public static final String MAINFRAGMENTTAG = "MainFragment";
+    public static final String USERMAINFRAGMENTTAG = "UserMainFragment";
+    public static final String DRIVERMAINFRAGMENTTAG = "DriverMainFragment";
     public static final String SELECTMODEFRAGMENTTAG = "SelectModeFragment";
     public static final String FROMFRAGMENTTAG = "FromAndToFragment";
     public static final String MYPLACESFRAGMENTTAG = "MyPlacesFragment";
@@ -15,6 +17,7 @@ public class Constants {
     public static final String HISTORYFRAGMENTTAG = "HistoryFragment";
     public static final String ACTIVEORDERSFRAGMENTTAG = "ActiveOrdersFragment";
     public static final String ADDPLACEFRAGMENTTAG = "AddPlaceFragment";
+    public static final String USERPROFILEFRAGMENTTAG = "UserProfileFragment";
     public static final String SETTINGSFRAGMENTTAG = "SettingsFragment";
     public static final String FAQFRAGMENTTAG = "FaqFragment";
     public static final String ADDRECOMFRAGMENTTAG = "AddRecomendationFragment";
@@ -33,6 +36,10 @@ public class Constants {
     public static final String OPENSESSIONFRAGMENTTAG = "OpenSessionFragment";
     public static final String NEWORDERDIALOGFRAGMENTTAG = "NewOrderDialogFragment";
     public static final String WAITINGFRAGMENTTAG = "WaitingFragment";
+    public static final String DRIVERCOMPLAINTDIALOGVIEW = "DRIVERCOMPLAINTDIALOGVIEW";
+    public static final String CANCELORDERDIALOGVIEW = "CANCELORDERDIALOGVIEW";
+    public static final String RATEDIALOGVIEW = "RateDialogFragment";
+    public static final String INFODIALOGVIEW = "InfoDialogFragment";
 
 
     public static final int MAINFRAGMENTCODEFROM = 121;

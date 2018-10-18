@@ -25,10 +25,10 @@
             android:gravity="center_vertical">
             <ImageButton
                 android:id="@+id/ff_back"
-                android:layout_width="@dimen/_25sdp"
-                android:layout_height="@dimen/_25sdp"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
                 android:layout_marginStart="@dimen/_10sdp"
-                android:background="@drawable/icon_menu_white" />
+                android:background="@drawable/icon_back" />
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"

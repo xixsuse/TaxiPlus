@@ -44,7 +44,6 @@ import java.util.Locale;
 import io.paperdb.Paper;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Place;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.MainFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.PlaceArrayAdapter;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;

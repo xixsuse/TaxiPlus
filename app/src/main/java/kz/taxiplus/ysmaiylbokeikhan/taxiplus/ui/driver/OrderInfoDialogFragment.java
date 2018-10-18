@@ -211,7 +211,6 @@ public class OrderInfoDialogFragment extends DialogFragment implements OnMapRead
     private void handleResponseAccept(Response response) {
         progressBar.setVisibility(View.GONE);
         if(response.getState().equals("success")){
-            Toast.makeText(getContext(), getResources().getString(R.string.wait_response), Toast.LENGTH_LONG).show();
             getDialog().dismiss();
         }
     }

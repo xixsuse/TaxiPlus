@@ -92,6 +92,10 @@ public interface RetrofitInterface {
     Observable<Response> closeSession(@Field("token")String token);
 
     @FormUrlEncoded
+    @POST("close-session/")
+    Call<Response> closeSessionCall(@Field("token")String token);
+
+    @FormUrlEncoded
     @POST("get-session-price/")
     Observable<SessionPrices> getSessionPrices(@Field("token")String token);
 
@@ -109,6 +113,7 @@ public interface RetrofitInterface {
     @POST("rate-driver/")
     Observable<Response> rateDriver(@Field("token")String token,
                                     @Field("order_id")String order_id,
+                                    @Field("text")String text,
                                     @Field("value") String value);
 
     @FormUrlEncoded
@@ -120,6 +125,10 @@ public interface RetrofitInterface {
     @FormUrlEncoded
     @POST("get-order-info/")
     Observable<OrderToDriver.GetOrderInfo> getOrderInfo(@Field("order_id")String order_id);
+
+    @FormUrlEncoded
+    @POST("get-order-info/")
+    Call<OrderToDriver.GetOrderInfo> getOrderInfoCall(@Field("order_id")String order_id);
 
     @FormUrlEncoded
     @POST("get-driver-info/")
@@ -134,8 +143,20 @@ public interface RetrofitInterface {
                                     @Field("platform") String platform);
 
     @FormUrlEncoded
+    @POST("set-push-id/")
+    Call<Response> getState(@Field("token")String token,
+                                    @Field("push_id")String push_id,
+                                    @Field("lat")double lat,
+                                    @Field("long")double longi,
+                                    @Field("platform") String platform);
+
+    @FormUrlEncoded
     @POST("driver-came/")
     Observable<Response> driverCame(@Field("token")String token, @Field("order_id") String order_id);
+
+    @FormUrlEncoded
+    @POST("driver-came/")
+    Call<Response> driverCameCall(@Field("token")String token, @Field("order_id") String order_id);
 
 
     @FormUrlEncoded
@@ -143,8 +164,16 @@ public interface RetrofitInterface {
     Observable<Response> driverGo(@Field("token")String token, @Field("order_id") String order_id);
 
     @FormUrlEncoded
+    @POST("go/")
+    Call<Response> driverGoCall(@Field("token")String token, @Field("order_id") String order_id);
+
+    @FormUrlEncoded
     @POST("finish-order/")
     Observable<Response> driverFinisg(@Field("token")String token, @Field("order_id") String order_id);
+
+    @FormUrlEncoded
+    @POST("finish-order/")
+    Call<Response> driverFinisCall(@Field("token")String token, @Field("order_id") String order_id);
 
     @FormUrlEncoded
     @POST("make-order/")
@@ -166,6 +195,7 @@ public interface RetrofitInterface {
     @FormUrlEncoded
     @POST("get-own-orders/")
     Observable<Order.GetOrders> getOwnOrders(@Field("token")String token);
+
 
     @FormUrlEncoded
     @POST("get-shared-orders/")

@@ -27,7 +27,7 @@ import java.util.Date;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.NewOrder;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Place;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.MainFragment;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user.UserMain.UserMainFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.OnSwipeTouchListener;
 import rx.functions.Action1;
@@ -95,26 +95,22 @@ public class MakeOrderFragment extends Fragment implements OnDateSetListener {
         fromText = view.findViewById(R.id.fmo_from_edittext);
         makeOrderButton = view.findViewById(R.id.fmo_make_order_button);
 
-//        priceText = view.findViewById(R.id.fmo_price_text);
         commentText = view.findViewById(R.id.fmo_comment_text);
         dateText = view.findViewById(R.id.fmo_date_text);
         weightText = view.findViewById(R.id.fmo_weight_text);
         modelText = view.findViewById(R.id.fmo_model_text);
 
-//        priceEditText = view.findViewById(R.id.fmo_price_edittext);
         commentEditText = view.findViewById(R.id.fmo_comment_edittext);
         weightEditText = view.findViewById(R.id.fmo_weight_edittext);
         volumeEditText = view.findViewById(R.id.fmo_volume_edittext);
         modelEditText = view.findViewById(R.id.fmo_model_edittext);
 
-//        priceView = view.findViewById(R.id.fmo_price_view);
         commentView = view.findViewById(R.id.fmo_comment_view);
         mainWeightView = view.findViewById(R.id.fmo_main_weight_view);
         mainModelView = view.findViewById(R.id.fmo_main_model_view);
         weightView = view.findViewById(R.id.fmo_weight_view);
         modelView = view.findViewById(R.id.fmo_model_view);
 
-//        priceSwipeView = view.findViewById(R.id.fmo_price_swipe_view);
         commentSwipeView = view.findViewById(R.id.fmo_comment_swipe_view);
         weightSwipeView = view.findViewById(R.id.fmo_weight_swipe_view);
         modelSwipeView = view.findViewById(R.id.fmo_model_swipe_view);
@@ -161,12 +157,12 @@ public class MakeOrderFragment extends Fragment implements OnDateSetListener {
                 getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 fragmentTransaction = getFragmentManager().beginTransaction();
 
-                MainFragment mainFragment = new MainFragment();
+                UserMainFragment mainFragment = new UserMainFragment();
                 mainFragment.setArguments(bundle);
 
                 fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
-                fragmentTransaction.replace(R.id.main_activity_frame, mainFragment, MainFragment.TAG);
-                fragmentTransaction.addToBackStack(MainFragment.TAG);
+                fragmentTransaction.replace(R.id.main_activity_frame, mainFragment, UserMainFragment.TAG);
+                fragmentTransaction.addToBackStack(UserMainFragment.TAG);
                 fragmentTransaction.commit();
             }
         });

@@ -85,7 +85,7 @@ public class FaqFragment extends Fragment {
         menuIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).drawerAction();
+                getActivity().onBackPressed();
             }
         });
 

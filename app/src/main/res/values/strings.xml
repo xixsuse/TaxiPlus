@@ -37,6 +37,7 @@
     <string name="my_places">Мои места</string>
     <string name="my_coins">Мои монеты</string>
     <string name="settings">Настройки</string>
+    <string name="profile_settings">Настройки аккаунта</string>
     <string name="faq">FAQ</string>
     <string name="faq_all">Часто задаваемые вопросы</string>
     <string name="order_driver">Трезвый водитель</string>
@@ -62,6 +63,7 @@
     <string name="price">Цена</string>
     <string name="set_comment">Комментарий, пожелания</string>
     <string name="comment_for_driver">Комментарий к водителю</string>
+    <string name="comment_for_order">Комментарий к поездке</string>
     <string name="date">Дата</string>
     <string name="save">Сохранить</string>
 

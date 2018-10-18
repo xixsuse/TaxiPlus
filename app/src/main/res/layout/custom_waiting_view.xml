@@ -29,4 +29,15 @@
         android:textSize="@dimen/_16ssp"
         android:textStyle="bold" />
 
+    <Button
+        android:id="@+id/fw_cancel_button"
+        android:layout_width="@dimen/_26sdp"
+        android:layout_height="@dimen/_26sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/icon_close_rounded"
+        android:visibility="visible"/>
+
 </android.support.constraint.ConstraintLayout>

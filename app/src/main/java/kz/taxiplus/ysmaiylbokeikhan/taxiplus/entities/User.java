@@ -1,8 +1,11 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
-public class User {
+public class User implements Parcelable{
     private String id;
     private String name;
     private String role_id;
@@ -16,6 +19,37 @@ public class User {
     private String city_id;
     private String car_year;
     private boolean isSessionOpened;
+
+    public User() {
+    }
+
+    protected User(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        role_id = in.readString();
+        phone = in.readString();
+        token = in.readString();
+        balance = in.readString();
+        car = in.readString();
+        avatar_path = in.readString();
+        car_number = in.readString();
+        push_id = in.readString();
+        city_id = in.readString();
+        car_year = in.readString();
+        isSessionOpened = in.readByte() != 0;
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public String getId() {
         return id;
@@ -119,6 +153,28 @@ public class User {
 
     public void setSessionOpened(boolean sessionOpened) {
         isSessionOpened = sessionOpened;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(role_id);
+        dest.writeString(phone);
+        dest.writeString(token);
+        dest.writeString(balance);
+        dest.writeString(car);
+        dest.writeString(avatar_path);
+        dest.writeString(car_number);
+        dest.writeString(push_id);
+        dest.writeString(city_id);
+        dest.writeString(car_year);
+        dest.writeByte((byte) (isSessionOpened ? 1 : 0));
     }
 
     public class GetFullInfo{

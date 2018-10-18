@@ -24,7 +24,6 @@ import java.util.List;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Place;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.RecyclerMenuItem;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.MainFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 
 public class SelectModeFragment extends Fragment {

@@ -77,7 +77,7 @@ public class OpenSessionFragment extends Fragment {
         }else {
             openButton.setText(getResources().getString(R.string.open_session_event));
         }
-        checkSession(Paper.book().read(Constants.MYLOCATION), Paper.book().read(Constants.FIREBASE_TOKEN));
+        checkSession(Paper.book().read(Constants.MYLOCATION), Paper.book().read(Constants.FIREBASE_TOKEN, ""));
         setListeners();
     }
 

@@ -178,7 +178,7 @@ public class HistoryFragment extends Fragment{
 
         @Override
         public int getItemCount() {
-            return historyList.size();
+            return historyList == null ? 0 : historyList.size();
         }
     }
 

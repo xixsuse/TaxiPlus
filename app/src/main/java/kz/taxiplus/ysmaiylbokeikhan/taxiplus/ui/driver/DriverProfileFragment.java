@@ -40,6 +40,7 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.TaxiPark;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.DialogFragments.CancelOrderDialogFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
 import rx.android.schedulers.AndroidSchedulers;
@@ -47,7 +48,7 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 import static android.app.Activity.RESULT_OK;
-public class DriverProfileFragment extends Fragment {
+public class DriverProfileFragment extends Fragment{
     public static final String TAG = Constants.DRIVERPROFILEFRAGMENTTAG;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -297,6 +298,7 @@ public class DriverProfileFragment extends Fragment {
             }
         }
     }
+
 
     public class RecyclerFacilitiesAdapter extends RecyclerView.Adapter<RecyclerFacilitiesAdapter.ViewHolder> {
         public Context mContext;

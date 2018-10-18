@@ -16,7 +16,6 @@ import android.widget.TextView;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.OrderToDriver;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.MainFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -137,9 +136,9 @@ public class NewOfferDialogFragment extends DialogFragment {
     private void handleResponseAccept(OrderToDriver.GetOrderInfo response) {
         progressBar.setVisibility(View.GONE);
         if(response.getState().equals("success")){
-            MainFragment mainFragment = (MainFragment) getFragmentManager().findFragmentByTag(MainFragment.TAG);
-            getDialog().dismiss();
-            mainFragment.setCheckoutView(response);
+//            MainFragment mainFragment = (MainFragment) getFragmentManager().findFragmentByTag(MainFragment.TAG);
+//            getDialog().dismiss();
+//            mainFragment.setCheckoutView(response);
         }
     }
 

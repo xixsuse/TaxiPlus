@@ -43,7 +43,6 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Order;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.OrderToDriver;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.MainFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
 import rx.android.schedulers.AndroidSchedulers;
