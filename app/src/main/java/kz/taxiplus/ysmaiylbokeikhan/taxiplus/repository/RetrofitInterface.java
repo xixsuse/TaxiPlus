@@ -2,14 +2,17 @@ package kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository;
 
 import java.util.HashMap;
 
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.DirectionResponse;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.DriverBalance;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Facility;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.HistoryItem;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.IntercityOrder;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Model;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Order;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.OrderToDriver;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Place;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Price;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.CitiesResponse;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.SessionPrices;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.TaxiPark;
@@ -32,6 +35,9 @@ public interface RetrofitInterface {
     @GET("get-car-models/")
     Observable<Model.GetModels> getModels();
 
+    @GET("get-regions/")
+    Observable<CitiesResponse> getCities();
+
     @GET("get-car-submodels/")
     Observable<Model.GetModels> getSubmodels(@Query("id") String model_id);
 
@@ -51,7 +57,9 @@ public interface RetrofitInterface {
 
     @FormUrlEncoded
     @POST("sign-up/")
-    Observable<Response> authThirdStep(@Field("phone") String phone, @Field("name")String name);
+    Observable<Response> authThirdStep(@Field("phone") String phone,
+                                       @Field("name")String name,
+                                       @Field("city_id") String city_id);
 
     @FormUrlEncoded
     @POST("get-addresses/")
@@ -86,6 +94,10 @@ public interface RetrofitInterface {
     @FormUrlEncoded
     @POST("start-session/")
     Observable<Response> startSession(@Field("token")String token);
+
+    @FormUrlEncoded
+    @POST("get-user/")
+    Observable<User.GetFullInfo> getUser(@Field("token")String token);
 
     @FormUrlEncoded
     @POST("close-session/")
@@ -228,14 +240,38 @@ public interface RetrofitInterface {
     Observable<OrderToDriver.GetOrders> getActiveOrders(@Field("token")String token);
 
     @FormUrlEncoded
-    @POST("get-user/")
-    Observable<User.GetFullInfo> getUser(@Field("token")String token);
+    @POST("get-specific-chats/")
+    Observable<DirectionResponse> getDirections(@Field("token")String token, @Field("type")String type);
+
+    @FormUrlEncoded
+    @POST("get-mejdugorodniy-chat/")
+    Observable<IntercityOrder.InterCityOrdersResponse> getIntercityOrders(@Field("token")String token,
+                                                                          @Field("start_id")String start_id,
+                                                                          @Field("end_id")String end_id);
 
     @FormUrlEncoded
     @POST("add-recomendation/")
     Observable<Response> addRecomendation(@Field("token")String token,
-                                                  @Field("text") String text,
-                                                  @Field("rating") String rating);
+                                          @Field("text") String text,
+                                          @Field("rating") String rating);
+
+    @FormUrlEncoded
+    @POST("buy-access/")
+    Observable<Response> buyAccess(@Field("token")String token,
+                                                  @Field("type") String type,
+                                                  @Field("publish") String publish);
+
+    @FormUrlEncoded
+    @POST("add-specific-order/")
+    Observable<Response> addIntercityOrder(@Field("token")String token,
+                                                  @Field("type") String type,
+                                                  @Field("seats_number") String seats_number,
+                                                  @Field("start_id") String start_id,
+                                                  @Field("end_id") String end_id,
+                                                  @Field("price") String price,
+                                                  @Field("date") long date,
+                                                  @Field("comment") String comment
+                                           );
 
     @Multipart
     @POST("upload-avatar/")

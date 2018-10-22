@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -36,6 +37,7 @@ public class Utility {
     public static String getToken(Context context) {
         Paper.init(context);
         User user = Paper.book().read(Constants.USER);
+        Log.d("currentToken", user.getToken());
 
         return user.getToken();
     }

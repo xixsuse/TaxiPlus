@@ -1,13 +1,11 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.FragmentManager;
@@ -25,11 +23,9 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
@@ -37,7 +33,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.google.firebase.messaging.RemoteMessage;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,13 +45,13 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.RetrofitInterface;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.DialogFragments.InfoDialogView;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.DialogFragments.RateDialogFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.SettingsFragment;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.UserProfileFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.DriverMainFragment;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.OpenSessionFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user.HistoryFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user.MyCoinsFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.CityFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.DriverProfileFragment;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.IntercityFragment;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.IntercityFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.MyBalanceFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.OrderInfoDialogFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user.UserMain.UserMainFragment;
@@ -72,8 +67,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final int RESULT_LOAD_IMAGE = 11;
 
     private User user;
@@ -85,7 +79,7 @@ public class MainActivity extends BaseActivity
     private ImageView userLogo;
     private TextView userName, userPhone;
     private RecyclerView menuRecyclerView;
-    private Button logoutButton, sosButton;
+    private Button logoutButton;
     private ProgressBar progressBar;
 
     private RecyclerMenuAdapter menuAdapter;
@@ -123,7 +117,6 @@ public class MainActivity extends BaseActivity
         userPhone = navigationView.findViewById(R.id.manhm_phone);
         menuRecyclerView = navigationView.findViewById(R.id.ma_recyclerView);
         logoutButton = navigationView.findViewById(R.id.ma_logout_button);
-        sosButton = navigationView.findViewById(R.id.manhm_sos_button);
         progressBar = findViewById(R.id.main_progressbar);
         theme = Paper.book().read(getString(R.string.prefs_theme_key), 1);
 
@@ -133,13 +126,6 @@ public class MainActivity extends BaseActivity
 
     private void setListeners(){
         logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        sosButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -162,6 +148,7 @@ public class MainActivity extends BaseActivity
         RecyclerMenuItem taxi = new RecyclerMenuItem(getResources().getString(R.string.modeTaxi),R.drawable.icon_taxi, 100);
         RecyclerMenuItem ladyTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeLadyTaxi),R.drawable.icon_taxi, 200);
         RecyclerMenuItem invaTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeInvaTaxi),R.drawable.icon_inva, 300);
+        RecyclerMenuItem interCityTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeCitiesTaxi),R.drawable.icon_cities_taxi, 400);
 
         RecyclerMenuItem menuItem = new RecyclerMenuItem(getResources().getString(R.string.trip_history), R.drawable.icon_history, 0);
         RecyclerMenuItem menuItem2 = new RecyclerMenuItem(getResources().getString(R.string.add_card), R.drawable.icon_add_card, 2);
@@ -172,6 +159,7 @@ public class MainActivity extends BaseActivity
 
         recyclerMenuItemList.add(taxi);
         recyclerMenuItemList.add(ladyTaxi);
+        recyclerMenuItemList.add(interCityTaxi);
         recyclerMenuItemList.add(invaTaxi);
         recyclerMenuItemList.add(menuItem);
         recyclerMenuItemList.add(menuItem2);
@@ -187,7 +175,8 @@ public class MainActivity extends BaseActivity
 
     private void setDriverMenu(){
         List<RecyclerMenuItem>recyclerMenuItemList = new ArrayList<>();
-        RecyclerMenuItem menuItem0 = new RecyclerMenuItem(getResources().getString(R.string.open_session), R.drawable.icon_main, 101);
+        RecyclerMenuItem menuItem11 = new RecyclerMenuItem(getResources().getString(R.string.navigation), R.drawable.icon_main, 101);
+        RecyclerMenuItem menuItem0 = new RecyclerMenuItem(getResources().getString(R.string.open_session), R.drawable.icon_clock, 102);
         RecyclerMenuItem menuItem = new RecyclerMenuItem(getResources().getString(R.string.mode_city_), R.drawable.icon_history, 10);
         RecyclerMenuItem menuItem1 = new RecyclerMenuItem(getResources().getString(R.string.mode_intercity), R.drawable.icon_current_order, 11);
         RecyclerMenuItem menuItem2 = new RecyclerMenuItem(getResources().getString(R.string.mode_cargo), R.drawable.icon_add_card, 12);
@@ -199,6 +188,7 @@ public class MainActivity extends BaseActivity
         RecyclerMenuItem menuItem8 = new RecyclerMenuItem(getResources().getString(R.string.share), R.drawable.icon_share, 18);
 
         recyclerMenuItemList.add(menuItem0);
+        recyclerMenuItemList.add(menuItem11);
         recyclerMenuItemList.add(menuItem);
         recyclerMenuItemList.add(menuItem1);
         recyclerMenuItemList.add(menuItem2);
@@ -248,10 +238,8 @@ public class MainActivity extends BaseActivity
 
         if(user.getRole_id().equals("2")){
             setDriverMenu();
-            sosButton.setVisibility(View.VISIBLE);
         }else {
             setUserMenu();
-            sosButton.setVisibility(View.GONE);
         }
     }
 
@@ -324,9 +312,9 @@ public class MainActivity extends BaseActivity
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
         if(user.getRole_id().equals("2")){
-            DriverMainFragment driverMainFragment = DriverMainFragment.newInstance(1);
-            fragmentTransaction.add(R.id.main_activity_frame, driverMainFragment, DriverMainFragment.TAG);
-            fragmentTransaction.addToBackStack(DriverMainFragment.TAG);
+            CityFragment cityFragment = new CityFragment();
+            fragmentTransaction.add(R.id.main_activity_frame, cityFragment, CityFragment.TAG);
+            fragmentTransaction.addToBackStack(CityFragment.TAG);
         }else {
             UserMainFragment userMainFragment = UserMainFragment.newInstance(1);
             fragmentTransaction.add(R.id.main_activity_frame, userMainFragment, UserMainFragment.TAG);
@@ -346,6 +334,11 @@ public class MainActivity extends BaseActivity
 
             if(count != 1){
                 super.onBackPressed();
+            }else {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
         }
     }
@@ -465,6 +458,12 @@ public class MainActivity extends BaseActivity
                             fragmentTransaction.addToBackStack(UserMainFragment.TAG);
                             break;
 
+                        case 400:
+                            IntercityFragment intercityFragment = new IntercityFragment();
+                            fragmentTransaction.replace(R.id.main_activity_frame, intercityFragment, IntercityFragment.TAG);
+                            fragmentTransaction.addToBackStack(IntercityFragment.TAG);
+                            break;
+
                         case 0:
                             HistoryFragment historyFragment = new HistoryFragment();
                             fragmentTransaction.replace(R.id.main_activity_frame, historyFragment, HistoryFragment.TAG);
@@ -494,9 +493,15 @@ public class MainActivity extends BaseActivity
                             break;
 
                         case 101:
-                            DriverMainFragment driverMainFragment = DriverMainFragment.newInstance(1);
+                            DriverMainFragment driverMainFragment = new DriverMainFragment();
                             fragmentTransaction.replace(R.id.main_activity_frame, driverMainFragment, DriverMainFragment.TAG);
                             fragmentTransaction.addToBackStack(DriverMainFragment.TAG);
+                            break;
+
+                        case 102:
+                            OpenSessionFragment openSessionFragment = new OpenSessionFragment();
+                            fragmentTransaction.replace(R.id.main_activity_frame, openSessionFragment, OpenSessionFragment.TAG);
+                            fragmentTransaction.addToBackStack(OpenSessionFragment.TAG);
                             break;
 
                         case 10:
@@ -505,13 +510,13 @@ public class MainActivity extends BaseActivity
                             fragmentTransaction.addToBackStack(CityFragment.TAG);
                             break;
                         case 11:
-                            IntercityFragment intercityFragment = IntercityFragment.newInstance("intercity");
-                            fragmentTransaction.replace(R.id.main_activity_frame, intercityFragment, IntercityFragment.TAG);
+                            IntercityFragment driverIntercityFragment = new IntercityFragment();
+                            fragmentTransaction.replace(R.id.main_activity_frame, driverIntercityFragment, IntercityFragment.TAG);
                             fragmentTransaction.addToBackStack(IntercityFragment.TAG);
                             break;
 
                         case 12:
-                            IntercityFragment cargoFragment = IntercityFragment.newInstance("cargo");
+                            IntercityFragment cargoFragment = new IntercityFragment();
                             fragmentTransaction.replace(R.id.main_activity_frame, cargoFragment, IntercityFragment.TAG);
                             fragmentTransaction.addToBackStack(IntercityFragment.TAG);
                             break;

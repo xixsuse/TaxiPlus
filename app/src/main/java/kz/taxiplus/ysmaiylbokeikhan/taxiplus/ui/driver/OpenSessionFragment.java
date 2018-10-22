@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 
 import io.paperdb.Paper;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.MainActivity;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.SessionPrices;
@@ -37,10 +39,12 @@ public class OpenSessionFragment extends Fragment {
     private Button openButton;
     private RadioGroup radioGroup;
     private ProgressBar progressBar;
+    private ImageButton menuIcon;
 
     private CompositeSubscription subscription;
     private int time = 0;
-    private String sixHourPrice, unlimPrice, balance, selectedPrice;
+    private String sixHourPrice, unlimPrice, balance;
+    private String selectedPrice = "0";
     private User user;
 
     private FragmentTransaction fragmentTransaction;
@@ -66,6 +70,7 @@ public class OpenSessionFragment extends Fragment {
         remainderText = view.findViewById(R.id.fos_remainder_text);
         radioGroup = view.findViewById(R.id.fos_prices_radio_buttons);
         openButton = view.findViewById(R.id.fos_open_button);
+        menuIcon = view.findViewById(R.id.fos_back);
         user = Paper.book().read(Constants.USER);
 
         balance = user.getBalance();
@@ -74,19 +79,27 @@ public class OpenSessionFragment extends Fragment {
 
         if(user.isSessionOpened()){
             openButton.setText(getResources().getString(R.string.close_session_event));
+            Toast.makeText(getContext(), getResources().getText(R.string.opened_session), Toast.LENGTH_SHORT).show();
         }else {
             openButton.setText(getResources().getString(R.string.open_session_event));
+            Toast.makeText(getContext(), getResources().getText(R.string.closed_session), Toast.LENGTH_SHORT).show();
         }
-        checkSession(Paper.book().read(Constants.MYLOCATION), Paper.book().read(Constants.FIREBASE_TOKEN, ""));
+        checkSession(Paper.book().read(Constants.MYLOCATION, new LatLng(0,0)), Paper.book().read(Constants.FIREBASE_TOKEN, ""));
         setListeners();
     }
 
     private void setListeners() {
+        menuIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity)getActivity()).drawerAction();
+            }
+        });
         openButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(user.isSessionOpened()){
-
+                    closeSession();
                 }else {
                     if(time != 0){
                         if(time == 12){
@@ -215,6 +228,26 @@ public class OpenSessionFragment extends Fragment {
         progressBar.setVisibility(View.GONE);
     }
 
+    private void closeSession(){
+        progressBar.setVisibility(View.VISIBLE);
+        subscription.add(NetworkUtil.getRetrofit()
+                .closeSession(Utility.getToken(getContext()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponseClose, this::handleErrorClose));
+    }
+
+    private void handleResponseClose(Response response) {
+        if(response.getState().equals("success")){
+            saveUserSession(false);
+            Toast.makeText(getContext(), getResources().getString(R.string.successfully_closed), Toast.LENGTH_SHORT).show();
+        }
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private void handleErrorClose(Throwable throwable) {
+        progressBar.setVisibility(View.GONE);
+    }
 
     private void saveUserSession(boolean sessionState){
         balance = String.valueOf(Integer.valueOf(balance) - Integer.valueOf(selectedPrice));

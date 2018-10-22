@@ -14,6 +14,8 @@ public class Response {
     private int code;
     private int is_active;
     private int is_session_opened;
+    private AccessPrice price;
+    private CitiesResponse.City city;
 
     public String getState() {
         return state;
@@ -65,5 +67,13 @@ public class Response {
 
     public String getPath() {
         return path;
+    }
+
+    public AccessPrice getPrice() {
+        return price;
+    }
+
+    public CitiesResponse.City getCity() {
+        return city;
     }
 }

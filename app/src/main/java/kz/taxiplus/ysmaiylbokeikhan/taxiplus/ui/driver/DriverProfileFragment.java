@@ -195,7 +195,7 @@ public class DriverProfileFragment extends Fragment{
                if(checkFields()){
                    HashMap<String, Object> objectHashMap = new HashMap<>();
                    objectHashMap.put("token", Utility.getToken(getContext()));
-                   objectHashMap.put("gender", male);
+                   objectHashMap.put("gender", 2);
                    objectHashMap.put("car_number", gosNumberEditText.getText().toString());
                    objectHashMap.put("car_model", selectedSubmodel.getId());
                    objectHashMap.put("year_of_birth", "1900");
@@ -365,7 +365,7 @@ public class DriverProfileFragment extends Fragment{
     private boolean checkFields(){
         boolean isCorrect = false;
         if(selectedModel!=null && selectedSubmodel!=null && !gosNumberEditText.getText().toString().isEmpty() &&
-                !yearEditText.getText().toString().isEmpty() && male != 0){
+                !yearEditText.getText().toString().isEmpty() ){
             isCorrect = true;
         }
 

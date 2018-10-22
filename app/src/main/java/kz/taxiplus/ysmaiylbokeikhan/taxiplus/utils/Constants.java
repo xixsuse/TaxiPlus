@@ -25,7 +25,7 @@ public class Constants {
     public static final String DRIVERPROFILEFRAGMENTTAG = "DriverProfileFragment";
     public static final String MODELSFRAGMENTTAG = "ModelsFragment";
     public static final String TAXIPARKSFRAGMENTTAG = "TaxiParksFragment";
-    public static final String CITYFRAGMENTTAG = "CityFragment";
+    public static final String CITYFRAGMENTTAG = "SelectCityFragment";
     public static final String INTERCITYFRAGMENTTAG = "IntercityFragment";
     public static final String MYORDERSFRAGMENTTAG = "MyOrdersFragment";
     public static final String GENERALORDERSFRAGMENTTAG = "GeneralOrdersFragment";
@@ -40,6 +40,9 @@ public class Constants {
     public static final String CANCELORDERDIALOGVIEW = "CANCELORDERDIALOGVIEW";
     public static final String RATEDIALOGVIEW = "RateDialogFragment";
     public static final String INFODIALOGVIEW = "InfoDialogFragment";
+    public static final String SELECTCITYFRAGMENT = "SelectCityFragment";
+    public static final String INTERCITYMAKEORDERFRAGMENT = "IntercityMakeOrderFragment";
+    public static final String INTERCITYORDERSFRAGMENT = "IntercityOrdersFragment";
 
 
     public static final int MAINFRAGMENTCODEFROM = 121;
@@ -50,6 +53,9 @@ public class Constants {
     public static final int DRIVERPROFILEFRAGMENTCODEMODEL = 124;
     public static final int DRIVERPROFILEFRAGMENTCODETAXIPARK = 125;
     public static final int FROMANDTOFRAGMENTCODESAVED = 111;
+    public static final int SELECTCITYFROMREGISTER = 1;
+    public static final int TOCITY = 11;
+    public static final int FROMCITY = 12;
 
     public static final String GOOGLE_API_KEY = "AIzaSyBQacFtBBzmXw9NHkRht8-LH9rJxJ482kk";
     public static final String FROMMAP = "fromMap";
@@ -64,6 +70,7 @@ public class Constants {
     public static final String URL = "http://185.236.130.126/profile/account/";
     public static final String NEWORDER = "newOrder";
     public static final String SELECTEDMODEL = "selectedModel";
+    public static final String SELECTEDCITY = "selectedCity";
     public static final String SELECTEDTAXIPARK = "selectedTaxipark";
 
     public static final String MODELMODE = "modelMode";

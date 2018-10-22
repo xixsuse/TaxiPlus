@@ -1,4 +1,4 @@
-package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder;
+package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user;
 
 
 import android.content.Context;
@@ -22,7 +22,6 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.MainActivity;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Place;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user.AddPlaceFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
 import rx.android.schedulers.AndroidSchedulers;

@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
+        android:foreground="?attr/selectableItemBackground"
         android:textSize="@dimen/_13ssp"
         android:textColor="@color/black"
         android:text="Question #1"

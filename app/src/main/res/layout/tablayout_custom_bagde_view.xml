@@ -11,7 +11,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
-        android:textSize="@dimen/_13ssp"
+        android:textSize="@dimen/_11ssp"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:padding="@dimen/_5sdp"/>
     <TextView
         android:id="@+id/tcbv_text"

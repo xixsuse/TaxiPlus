@@ -19,6 +19,7 @@ public class User implements Parcelable{
     private String city_id;
     private String car_year;
     private boolean isSessionOpened;
+    private CitiesResponse.City selectedCity;
 
     public User() {
     }
@@ -37,6 +38,7 @@ public class User implements Parcelable{
         city_id = in.readString();
         car_year = in.readString();
         isSessionOpened = in.readByte() != 0;
+        selectedCity = in.readParcelable(CitiesResponse.City.class.getClassLoader());
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -155,6 +157,14 @@ public class User implements Parcelable{
         isSessionOpened = sessionOpened;
     }
 
+    public CitiesResponse.City getSelectedCity() {
+        return selectedCity;
+    }
+
+    public void setSelectedCity(CitiesResponse.City selectedCity) {
+        this.selectedCity = selectedCity;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -175,10 +185,12 @@ public class User implements Parcelable{
         dest.writeString(city_id);
         dest.writeString(car_year);
         dest.writeByte((byte) (isSessionOpened ? 1 : 0));
+        dest.writeParcelable(selectedCity, flags);
     }
 
     public class GetFullInfo{
         private User user;
+        private CitiesResponse.City city;
         private String model;
         private String submodel;
         private String taxi_park;
@@ -186,6 +198,10 @@ public class User implements Parcelable{
 
         public User getUser() {
             return user;
+        }
+
+        public CitiesResponse.City getCity() {
+            return city;
         }
 
         public String getModel() {

@@ -4,6 +4,7 @@ package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver;
 import android.Manifest;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -76,9 +77,7 @@ public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
     private ImageView myLocationIcon;
     private LinearLayout menuIcon;
     private ConstraintLayout optionsView;
-    private LinearLayout sessionView;
     private ProgressBar progressBar;
-    private TextView sessionText;
     private ImageButton chatButton, callButton, complaintButton;
     private Button driverStateButton;
 
@@ -183,6 +182,7 @@ public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
             UserMainViewModel.MyViewModelFactory viewModelFactory = new UserMainViewModel.MyViewModelFactory(getActivity().getApplication(), getContext());
             viewModel = ViewModelProviders.of(this, viewModelFactory).get(UserMainViewModel.class);
             observeResponseViewModel(viewModel);
+            progressBar.setVisibility(View.VISIBLE);
         }else {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_GPS_PERMISSION);
         }
@@ -201,9 +201,6 @@ public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
         chatButton = view.findViewById(R.id.mf_chat_button);
         driverStateButton = view.findViewById(R.id.mf_came_button);
         complaintButton = view.findViewById(R.id.mf_complaint_button);
-
-        sessionView = view.findViewById(R.id.mf_open_session_view);
-        sessionText = view.findViewById(R.id.mf_open_session_text);
 
         setListeners();
     }
@@ -226,28 +223,11 @@ public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
             }
         });
 
-        sessionView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!user.isSessionOpened()) {
-                    fragmentTransaction = getFragmentManager().beginTransaction();
-                    OpenSessionFragment openSessionFragment = new OpenSessionFragment();
-
-                    fragmentTransaction.setCustomAnimations(R.anim.enter_from_bottom, R.anim.enter_from_top, R.anim.exit_to_bottom, R.anim.exit_to_top);
-                    fragmentTransaction.replace(R.id.main_activity_frame, openSessionFragment, OpenSessionFragment.TAG);
-                    fragmentTransaction.addToBackStack(OpenSessionFragment.TAG);
-                    fragmentTransaction.commit();
-                }else {
-                    viewModel.closeSession();
-                    observeResponseSessionViewModel(viewModel);
-                }
-            }
-        });
-
         driverStateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
+                    progressBar.setVisibility(View.VISIBLE);
                     switch (driverOptionType){
                         case 0:
                             viewModel.driverCame(orderId);
@@ -311,6 +291,7 @@ public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
     private void observeResponseViewModel(UserMainViewModel viewModel){
         viewModel.getResponseLiveData().observe(this, response -> {
             if(response != null && response.getState().equals("success")){
+                progressBar.setVisibility(View.GONE);
                 mainResponse = response;
                 setDriverState(response);
             }
@@ -332,17 +313,10 @@ public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
         });
     }
 
-    private void observeResponseSessionViewModel(UserMainViewModel viewModel){
-        viewModel.getCloseSessionResponse().observe(this, response -> {
-            if(response != null && response.getState().equals("success")){
-                setSessionState(response);
-            }
-        });
-    }
-
     private void observeResponseCameViewModel(UserMainViewModel viewModel){
         viewModel.getDriderCameResponse().observe(this, response -> {
             if(response != null && response.getState().equals("success")){
+                progressBar.setVisibility(View.GONE);
                 setDriverStateButton(1);
                 Toast.makeText(getContext(), getResources().getString(R.string.came_button_response), Toast.LENGTH_LONG).show();
             }
@@ -351,6 +325,7 @@ public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
 
     private void observeResponseGoViewModel(UserMainViewModel viewModel){
         viewModel.getDriderGoResponse().observe(this, response -> {
+            progressBar.setVisibility(View.GONE);
             if(response != null && response.getState().equals("success")){
                 setDriverStateButton(2);
                 Toast.makeText(getContext(), getResources().getString(R.string.trip_is_started), Toast.LENGTH_LONG).show();
@@ -361,6 +336,7 @@ public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
     private void observeResponseFinishViewModel(UserMainViewModel viewModel){
         viewModel.getDriderFinishResponse().observe(this, response -> {
             if(response != null && response.getState().equals("success")){
+                progressBar.setVisibility(View.GONE);
                 setDriverStateButton(0);
                 clearMap();
                 Toast.makeText(getContext(), getResources().getString(R.string.trip_is_ended), Toast.LENGTH_LONG).show();
@@ -369,6 +345,7 @@ public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
     }
 
     private void observeDirectionsViewModel(UserMainViewModel viewModel){
+        progressBar.setVisibility(View.GONE);
         viewModel.getDirection().observe(this, direction -> {
             if (direction != null && direction.isOK()){
                 map.addMarker(new MarkerOptions()
@@ -414,19 +391,17 @@ public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
     }
 
     private void setCancelledState(){
-        sessionView.setVisibility(View.VISIBLE);
         optionsView.setVisibility(View.GONE);
     }
 
     private void setWithOrderState(String orderId, int optionType){
         this.orderId = orderId;
         setDriverStateButton(optionType);
-
-        sessionView.setVisibility(View.GONE);
         //option view visible after get orderInfo
 
         viewModel.sentRequestToOrderInfo(orderId);
         observeOrderInfoViewModel(viewModel);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     private void setDriverStateButton(int driverOptionType){
@@ -447,14 +422,6 @@ public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
     }
 
     private void setSessionState(Response response) {
-        if(response.getIs_session_opened() == 1){
-            user.setSessionOpened(true);
-            sessionText.setText(getResources().getString(R.string.close_session_event));
-        }else {
-            user.setSessionOpened(false);
-            sessionText.setText(getResources().getString(R.string.open_session_event));
-        }
-
         if(response.getIs_active() != 1){
             InfoDialogView infoDialogView = InfoDialogView.newInstance(getResources().getString(R.string.on_moderation),R.drawable.icon_error);
             assert getFragmentManager() != null;
@@ -500,5 +467,33 @@ public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
     public void clearMap(){
         map.clear();
         setCancelledState();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_GPS_PERMISSION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mapView.getMapAsync(this);
+                } else {
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_GPS_PERMISSION);
+                }
+                return;
+            }
+
+            case REQUEST_CALL_PERMISSION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:+" + orderInfo.getDriver().getPhone()));
+                    startActivity(intent);
+                } else {
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL_PERMISSION);
+                }
+                return;
+            }
+            default:
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_GPS_PERMISSION);
+                break;
+        }
     }
 }

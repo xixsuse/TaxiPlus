@@ -48,31 +48,6 @@
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
-    <!-- Open session view-->
-    <LinearLayout
-        android:id="@+id/mf_open_session_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="@dimen/_12sdp"
-        android:gravity="center"
-        android:visibility="gone">
-        <ImageView
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_25sdp"
-            android:background="@drawable/icon_clock"/>
-        <TextView
-            android:id="@+id/mf_open_session_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_10sdp"
-            android:textSize="@dimen/_15ssp"
-            android:textColor="?attr/colorPrimary"
-            android:text="@string/open_session_event"
-            android:textAlignment="center" />
-    </LinearLayout>
-
     <!--Options view for driver-->
     <android.support.constraint.ConstraintLayout
         android:id="@+id/mf_options_view"

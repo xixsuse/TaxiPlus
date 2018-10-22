@@ -212,6 +212,11 @@ public class ModesDialogFragment extends Fragment {
                 holder.left.setVisibility(View.GONE);
             }
 
+            if(priceList.get(position).getService_id().equals("1")){
+                lastPressedPosition = position;
+                selectedModeType = Integer.valueOf(priceList.get(position).getService_id());
+            }
+
             if(position == lastPressedPosition){
                 holder.price.setTextColor(getResources().getColor(R.color.colorPrimary));
                 holder.title.setTextColor(getResources().getColor(R.color.colorPrimary));
@@ -284,6 +289,11 @@ public class ModesDialogFragment extends Fragment {
         public void onBindViewHolder(ViewHolder holder, final int position) {
             if(position == 0){
                 holder.left.setVisibility(View.GONE);
+            }
+
+            if(payTypes.get(position).getId() == 1){
+                lastPressedPosition = position;
+                selectedPayType = payTypes.get(position).getId();
             }
 
             if(position == lastPressedPosition){

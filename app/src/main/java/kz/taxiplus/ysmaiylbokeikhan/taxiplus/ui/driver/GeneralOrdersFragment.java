@@ -195,24 +195,6 @@ public class GeneralOrdersFragment extends Fragment {
         progressBar.setVisibility(View.GONE);
     }
 
-//    private void rejectOrder(String order_id) {
-//        progressBar.setVisibility(View.VISIBLE);
-//        subscription.add(NetworkUtil.getRetrofit()
-//                .rejectOrder(Utility.getToken(getContext()), order_id)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribeOn(Schedulers.io())
-//                .subscribe(this::handleResponseReject, this::handleErrorReject));
-//    }
-//
-//    private void handleResponseReject(Response response) {
-//        progressBar.setVisibility(View.GONE);
-//        if(response.getState().equals("success")) {
-//        }
-//    }
-//
-//    private void handleErrorReject(Throwable throwable) {
-//        progressBar.setVisibility(View.GONE);
-//    }
 
 
     public class RecyclerOrdersAdapter extends RecyclerView.Adapter<RecyclerOrdersAdapter.ViewHolder> {
@@ -258,7 +240,7 @@ public class GeneralOrdersFragment extends Fragment {
             LatLng to = new LatLng(Double.valueOf(orderList.get(position).getTo_latitude()),
                                    Double.valueOf(orderList.get(position).getTo_longitude()));
 
-            holder.userInfo.setText(orderList.get(position).getName() + " ( " + orderList.get(position).getPhone() + " )");
+            holder.userInfo.setText(orderList.get(position).getName());
             holder.fromText.setText(getAddressFromLatLngStr(from));
             holder.toText.setText(getAddressFromLatLngStr(to));
             holder.priceText.setText(orderList.get(position).getPrice()+" тг");
@@ -334,15 +316,4 @@ public class GeneralOrdersFragment extends Fragment {
         anim.setRepeatCount(Animation.INFINITE);
         view.startAnimation(anim);
     }
-
-//    private void rejectOrder(Order order){
-//        if(lastFragment.equals("sharedOrders")){
-//            this.sharedOrders.remove(order);
-//            ordersAdapter.notifyDataSetChanged();
-//        }else if(lastFragment.equals("ownOrders")){
-//            this.myOrders.remove(order);
-//            ordersAdapter.notifyDataSetChanged();
-//        }
-//        rejectOrder(order.getId());
-//    }
 }

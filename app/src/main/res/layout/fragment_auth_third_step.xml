@@ -36,13 +36,28 @@
         android:textSize="@dimen/_14ssp"
         android:inputType="textCapWords"
         android:textColor="@color/gray"/>
+
+    <TextView
+        android:id="@+id/fats_city_text"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
+        app:layout_constraintTop_toBottomOf="@id/fats_name_edittext"
+        android:background="@drawable/border_for_view"
+        android:hint="@string/city"
+        android:gravity="center"
+        android:text=""
+        android:textSize="@dimen/_14ssp"/>
+
     <Button
         android:id="@+id/fats_next_button"
         android:layout_width="@dimen/_200sdp"
         android:layout_height="@dimen/_35sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fats_name_edittext"
+        app:layout_constraintTop_toBottomOf="@id/fats_city_text"
         android:layout_marginStart="@dimen/_20sdp"
         android:layout_marginEnd="@dimen/_20sdp"
         android:layout_marginTop="@dimen/_20sdp"

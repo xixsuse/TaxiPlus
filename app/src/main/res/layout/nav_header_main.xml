@@ -46,19 +46,4 @@
         android:textSize="@dimen/_14sdp"
         android:textColor="@color/white"/>
 
-    <Button
-        android:id="@+id/manhm_sos_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_10sdp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:minHeight="0dp"
-        android:minWidth="0dp"
-        android:text="@string/sos"
-        android:textSize="@dimen/_10sdp"
-        android:background="@drawable/rounded_carrot_view"
-        android:padding="@dimen/_3sdp"
-        android:visibility="gone"/>
-
 </android.support.constraint.ConstraintLayout>
