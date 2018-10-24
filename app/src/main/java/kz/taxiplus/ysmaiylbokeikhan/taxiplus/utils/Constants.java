@@ -43,6 +43,9 @@ public class Constants {
     public static final String SELECTCITYFRAGMENT = "SelectCityFragment";
     public static final String INTERCITYMAKEORDERFRAGMENT = "IntercityMakeOrderFragment";
     public static final String INTERCITYORDERSFRAGMENT = "IntercityOrdersFragment";
+    public static final String CARGOFRAGMENT = "CargoFragment";
+    public static final String ADDCARFRAGMENT = "AddCarFragment";
+    public static final String ADDCARGOFRAGMENT = "AddCargoFragment";
 
 
     public static final int MAINFRAGMENTCODEFROM = 121;

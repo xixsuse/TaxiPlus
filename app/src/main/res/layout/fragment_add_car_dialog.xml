@@ -6,16 +6,17 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:clickable="true"
-    android:background="@color/white">
-
+    android:background="@color/white"
+    tools:context=".ui.driver.AddCarFragment">
     <android.support.v7.widget.Toolbar
-        android:id="@+id/fdp_toolbar"
+        android:id="@+id/facf_toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_42sdp"
         app:contentInsetLeft="0dp"
         app:contentInsetStart="0dp"
         app:contentInsetRight="0dp"
         app:contentInsetEnd="0dp"
+        app:layout_constraintTop_toTopOf="parent"
         android:background="?attr/colorPrimary">
 
         <LinearLayout
@@ -24,152 +25,53 @@
             android:requiresFadingEdge="horizontal"
             android:gravity="center_vertical">
             <ImageButton
-                android:id="@+id/fdp_menu_view"
-                android:layout_width="@dimen/_25sdp"
-                android:layout_height="@dimen/_25sdp"
+                android:id="@+id/facf_back"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
                 android:layout_marginStart="@dimen/_10sdp"
-                android:background="@drawable/icon_menu_white" />
+                android:background="@drawable/icon_back" />
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/_30sdp"
-                android:text="@string/driver_register"
+                android:layout_height="wrap_content"
+                android:text="@string/add_car_text"
                 android:textAlignment="center"
                 android:textSize="@dimen/_16ssp"
                 android:textColor="@color/white"/>
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
-
-    <android.support.v4.widget.NestedScrollView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/fdp_toolbar"
+        app:layout_constraintTop_toBottomOf="@id/facf_toolbar"
         app:layout_constraintBottom_toBottomOf="parent">
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/_15sdp"
-            app:layout_constraintBottom_toBottomOf="parent">
-            <ImageView
-                android:id="@+id/fdp_logo"
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_100sdp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_margin="@dimen/_15sdp"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-            <EditText
-                android:id="@+id/fdp_name_edittext"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_40sdp"
-                app:layout_constraintTop_toBottomOf="@id/fdp_logo"
-                android:layout_marginStart="@dimen/_20sdp"
-                android:layout_marginEnd="@dimen/_20sdp"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:background="@drawable/border_for_view"
-                android:hint="@string/auth_name"
-                android:textColor="@color/gray"
-                android:textColorHint="@color/gray"
-                android:inputType="textCapWords"
-                android:textSize="@dimen/_14ssp"
-                android:padding="@dimen/_5sdp"
-                android:clickable="false"
-                android:cursorVisible="false"
-                android:focusable="false"
-                android:focusableInTouchMode="false"/>
-
-            <LinearLayout
-                android:id="@+id/fdp_sex_view"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_20sdp"
-                android:layout_marginEnd="@dimen/_20sdp"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/fdp_name_edittext">
-                <Button
-                    android:id="@+id/fdp_male_button"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/border_for_view"
-                    android:layout_marginEnd="@dimen/_5sdp"
-                    android:textColor="?attr/colorPrimary"
-                    android:text="@string/male"
-                    android:textAllCaps="false"
-                    android:textSize="@dimen/_14ssp"
-                    android:minHeight="0dp"
-                    android:paddingTop="@dimen/_8sdp"
-                    android:paddingBottom="@dimen/_8sdp"/>
-                <Button
-                    android:id="@+id/fdp_female_button"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/border_for_view"
-                    android:layout_marginStart="@dimen/_5sdp"
-                    android:textColor="?attr/colorPrimary"
-                    android:text="@string/female"
-                    android:textAllCaps="false"
-                    android:textSize="@dimen/_14ssp"
-                    android:minHeight="0dp"
-                    android:paddingTop="@dimen/_8sdp"
-                    android:paddingBottom="@dimen/_8sdp"/>
-            </LinearLayout>
-
-            <EditText
-                android:id="@+id/fdp_phone_edittext"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_40sdp"
-                app:layout_constraintTop_toBottomOf="@id/fdp_sex_view"
-                android:layout_marginStart="@dimen/_20sdp"
-                android:layout_marginEnd="@dimen/_20sdp"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:background="@drawable/border_for_view"
-                android:hint="@string/enter_phone"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="@dimen/_5sdp"
                 android:textColor="@color/gray"
-                android:textColorHint="@color/gray"
-                android:inputType="phone"
-                android:maxLength="17"
-                android:textSize="@dimen/_14ssp"
-                android:padding="@dimen/_5sdp"
-                android:clickable="false"
-                android:cursorVisible="false"
-                android:focusable="false"
-                android:focusableInTouchMode="false"/>
-
-            <EditText
-                android:id="@+id/fdp_email_edittext"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_40sdp"
-                app:layout_constraintTop_toBottomOf="@id/fdp_phone_edittext"
-                android:layout_marginStart="@dimen/_20sdp"
-                android:layout_marginEnd="@dimen/_20sdp"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:background="@drawable/border_for_view"
-                android:hint="@string/enter_email"
-                android:textColor="@color/gray"
-                android:textColorHint="@color/gray"
-                android:textSize="@dimen/_14ssp"
-                android:inputType="textEmailAddress"
-                android:padding="@dimen/_5sdp" />
-
+                android:textSize="@dimen/_11sdp"
+                android:textAlignment="center"
+                android:text="@string/add_car_desc"/>
             <LinearLayout
-                android:id="@+id/fdp_car_model_view"
+                android:id="@+id/facf_car_model_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginEnd="@dimen/_20sdp"
                 android:layout_marginStart="@dimen/_20sdp"
-                app:layout_constraintTop_toBottomOf="@id/fdp_email_edittext"
+                app:layout_constraintTop_toBottomOf="@id/desc"
                 android:background="@drawable/border_for_view"
                 android:orientation="horizontal"
                 android:gravity="center">
                 <TextView
-                    android:id="@+id/fdp_car_model_text"
+                    android:id="@+id/facf_car_model_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -186,18 +88,18 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/fdp_car_submodel_view"
+                android:id="@+id/facf_car_submodel_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginEnd="@dimen/_20sdp"
                 android:layout_marginStart="@dimen/_20sdp"
-                app:layout_constraintTop_toBottomOf="@id/fdp_car_model_view"
+                app:layout_constraintTop_toBottomOf="@id/facf_car_model_view"
                 android:background="@drawable/border_for_view"
                 android:orientation="horizontal"
                 android:gravity="center">
                 <TextView
-                    android:id="@+id/fdp_car_submodel_text"
+                    android:id="@+id/facf_car_submodel_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -212,33 +114,30 @@
                     android:layout_marginEnd="@dimen/_5sdp"
                     android:background="@drawable/icon_bottom_arrow"/>
             </LinearLayout>
-
             <TextView
                 android:id="@+id/types"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/fdp_car_submodel_view"
+                app:layout_constraintTop_toBottomOf="@id/facf_car_submodel_view"
                 android:textColor="@color/gray"
                 android:textSize="@dimen/_14ssp"
                 android:text="@string/car_type_rec"
                 android:layout_marginStart="@dimen/_20sdp"
                 android:layout_marginEnd="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_18sdp"/>
-
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/fdp_types_recyclerview"
+                android:id="@+id/facf_types_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_20sdp"
                 android:layout_marginEnd="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 app:layout_constraintTop_toBottomOf="@id/types"/>
-
             <EditText
-                android:id="@+id/fdp_seats_edittext"
+                android:id="@+id/facf_seats_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
-                app:layout_constraintTop_toBottomOf="@id/fdp_types_recyclerview"
+                app:layout_constraintTop_toBottomOf="@id/facf_types_recyclerview"
                 android:layout_marginStart="@dimen/_20sdp"
                 android:layout_marginEnd="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_15sdp"
@@ -251,10 +150,10 @@
                 android:padding="@dimen/_5sdp" />
 
             <EditText
-                android:id="@+id/fdp_gos_number_edittext"
+                android:id="@+id/facf_gos_number_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
-                app:layout_constraintTop_toBottomOf="@id/fdp_seats_edittext"
+                app:layout_constraintTop_toBottomOf="@id/facf_seats_edittext"
                 android:layout_marginStart="@dimen/_20sdp"
                 android:layout_marginEnd="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_15sdp"
@@ -267,10 +166,10 @@
                 android:padding="@dimen/_5sdp" />
 
             <EditText
-                android:id="@+id/fdp_year_edittext"
+                android:id="@+id/facf_year_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
-                app:layout_constraintTop_toBottomOf="@id/fdp_gos_number_edittext"
+                app:layout_constraintTop_toBottomOf="@id/facf_gos_number_edittext"
                 android:layout_marginStart="@dimen/_20sdp"
                 android:layout_marginEnd="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_15sdp"
@@ -287,15 +186,16 @@
                 android:id="@+id/additional"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/fdp_year_edittext"
+                app:layout_constraintTop_toBottomOf="@id/facf_year_edittext"
                 android:textColor="@color/gray"
                 android:textSize="@dimen/_14ssp"
                 android:text="@string/additional"
                 android:layout_marginStart="@dimen/_20sdp"
                 android:layout_marginEnd="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_18sdp"/>
+
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/fdp_facilities_recyclerview"
+                android:id="@+id/facf_facilities_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_20sdp"
@@ -304,26 +204,28 @@
                 android:layout_marginTop="@dimen/_10sdp"/>
 
             <Button
-                android:id="@+id/fdp_register_button"
+                android:id="@+id/facf_add_button"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_35sdp"
-                app:layout_constraintTop_toBottomOf="@id/fdp_facilities_recyclerview"
+                app:layout_constraintTop_toBottomOf="@id/facf_facilities_recyclerview"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_margin="@dimen/_20sdp"
                 android:background="@drawable/rounded_green_view"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_15ssp"
                 android:textAllCaps="false"
                 android:text="@string/register"/>
+
+            <ProgressBar
+                android:id="@+id/facf_progressbar"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:indeterminate="true"
+                android:visibility="gone"/>
         </android.support.constraint.ConstraintLayout>
-    </android.support.v4.widget.NestedScrollView>
-    <ProgressBar
-        android:id="@+id/fdp_progressbar"
-        android:layout_width="@dimen/_40sdp"
-        android:layout_height="@dimen/_40sdp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:indeterminate="true"
-        android:visibility="gone"/>
+    </ScrollView>
 </android.support.constraint.ConstraintLayout>

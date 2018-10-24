@@ -5,6 +5,7 @@ import java.util.HashMap;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.DirectionResponse;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.DriverBalance;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Facility;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.FreightItem;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.HistoryItem;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.IntercityOrder;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Model;
@@ -60,6 +61,10 @@ public interface RetrofitInterface {
     Observable<Response> authThirdStep(@Field("phone") String phone,
                                        @Field("name")String name,
                                        @Field("city_id") String city_id);
+
+    @FormUrlEncoded
+    @POST("change-role/")
+    Observable<Response> changeRole(@Field("token") String token, @Field("role_id")String role_id);
 
     @FormUrlEncoded
     @POST("get-addresses/")
@@ -248,6 +253,10 @@ public interface RetrofitInterface {
     Observable<IntercityOrder.InterCityOrdersResponse> getIntercityOrders(@Field("token")String token,
                                                                           @Field("start_id")String start_id,
                                                                           @Field("end_id")String end_id);
+    @FormUrlEncoded
+    @POST("get-specific-chats/")
+    Observable<FreightItem.CargoResponse> getFreights(@Field("token")String token,
+                                                      @Field("type")String type);
 
     @FormUrlEncoded
     @POST("add-recomendation/")
@@ -272,6 +281,17 @@ public interface RetrofitInterface {
                                                   @Field("date") long date,
                                                   @Field("comment") String comment
                                            );
+
+    @FormUrlEncoded
+    @POST("add-specific-order/")
+    Observable<Response> addCargo(@Field("token")String token,
+                                           @Field("type") String type,
+                                           @Field("price") String price,
+                                           @Field("date") long date,
+                                           @Field("start_string") String start_string,
+                                           @Field("end_string") String end_string,
+                                           @Field("comment") String comment
+                                    );
 
     @Multipart
     @POST("upload-avatar/")

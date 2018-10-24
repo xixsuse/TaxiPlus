@@ -118,6 +118,7 @@ public class AuthSecondStepFragment extends Fragment {
                 User user = response.getUser();
                 user.setSessionOpened(false);
                 user.setSelectedCity(response.getCity());
+                user.setCars(response.getCars());
 
                 changeFireBaseToken(user.getToken(), Paper.book().read(Constants.FIREBASE_TOKEN, ""));
                 Paper.book().write(Constants.USER, user);

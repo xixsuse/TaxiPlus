@@ -202,6 +202,7 @@
     <string name="car_submodel_hint">Модель</string>
     <string name="are_you_sure_to_cancel_order">Вы хотите отменить заказ?</string>
     <string name="wait_drivers">Заявка принята, ожидайте водителей</string>
+    <string name="order_added">Заявка принята</string>
 
     <string name="male">Мужской</string>
     <string name="female">Женский</string>
@@ -216,7 +217,13 @@
     <string name="price_per_one">Цена за одного пассажира</string>
     <string name="pay">Оплатить</string>
     <string name="no_access_message">Для просмотра необходимо оплатить</string>
+    <string name="no_access_message_publish">Для публикаций необходимо оплатить</string>
     <string name="not_enought_balance">Ваш баланс недостаточен</string>
+    <string name="add_car_text">Добавление машины</string>
+
+    <string name="car_type_rec">Тип машины</string>
+    <string name="add_car_desc">Для просмотра заказов необходимо добавить необходимую машину</string>
+    <string name="cargo_decs_hint">Описание груза</string>
 
     <string name="notifications_admin_channel_name">Name of admin channel</string>
     <string name="notifications_admin_channel_description">Description of admin channel</string>

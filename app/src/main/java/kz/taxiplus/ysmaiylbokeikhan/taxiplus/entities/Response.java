@@ -1,5 +1,7 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities;
 
+import java.util.List;
+
 public class Response {
     private String state;
     private String token;
@@ -16,6 +18,7 @@ public class Response {
     private int is_session_opened;
     private AccessPrice price;
     private CitiesResponse.City city;
+    private List<Car> cars;
 
     public String getState() {
         return state;
@@ -49,6 +52,10 @@ public class Response {
         return balance;
     }
 
+    public void setBalance(String balance) {
+        this.balance = balance;
+    }
+
     public int getIs_session_opened() {
         return is_session_opened;
     }
@@ -75,5 +82,9 @@ public class Response {
 
     public CitiesResponse.City getCity() {
         return city;
+    }
+
+    public List<Car> getCars() {
+        return cars;
     }
 }

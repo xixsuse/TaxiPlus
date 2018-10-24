@@ -1,28 +1,18 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder;
 
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
-import android.database.DataSetObserver;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,53 +24,37 @@ import com.jzxiang.pickerview.listener.OnDateSetListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
-import io.paperdb.Paper;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.AccessPrice;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.CitiesResponse;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.DirectionResponse;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.UserProfileFragment;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user.SelectCityFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-import static android.app.Activity.RESULT_OK;
+public class AddCargoFragment extends Fragment implements OnDateSetListener {
+    public static final String TAG = Constants.ADDCARGOFRAGMENT;
 
-public class IntercityMakeOrderFragment extends Fragment implements OnDateSetListener {
-    public static final String TAG = Constants.INTERCITYMAKEORDERFRAGMENT;
-
-    private User user;
     private long tenYears = 10L * 365 * 1000 * 60 * 60 * 24L;
     private long selectedDate = 0;
 
+    private EditText fromText, toText,priceText, commentText;
+    private TextView dateText;
+    private Button addButton;
+    private ImageButton backIcon;
     private ProgressBar progressBar;
-    private ImageButton backView;
-    private TextView fromTextView, toTextView, dateText;
-    private CompositeSubscription subscription;
-    private EditText seatNumber, comment, price;
-    private Button makeOrderButton;
 
     private Calendar mCalendar;
     private TimePickerDialog datePickerDialog;
-
-
-    private CitiesResponse.City fromCity, toCity;
-    private FragmentTransaction fragmentTransaction;
+    private CompositeSubscription subscription;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_intercity_make_order, container, false);
-        Paper.init(getContext());
-
+        View view = inflater.inflate(R.layout.fragment_add_cargo, container, false);
         initViews(view);
 
         return view;
@@ -88,63 +62,32 @@ public class IntercityMakeOrderFragment extends Fragment implements OnDateSetLis
 
     private void initViews(View view) {
         subscription = new CompositeSubscription();
-        fromTextView = view.findViewById(R.id.fimo_from_edittext);
-        toTextView = view.findViewById(R.id.fimo_to_edittext);
-        progressBar = view.findViewById(R.id.fi_progressbar);
-        backView = view.findViewById(R.id.fs_back);
-        seatNumber = view.findViewById(R.id.fiko_seats_text);
-        price = view.findViewById(R.id.fiko_price_text);
-        comment = view.findViewById(R.id.fiko_comment_text);
-        dateText = view.findViewById(R.id.fiko_date_text);
-        makeOrderButton = view.findViewById(R.id.fiko_make_order_button);
+        backIcon = view.findViewById(R.id.fac_back);
+        fromText = view.findViewById(R.id.fac_from_edittext);
+        toText = view.findViewById(R.id.fac_to_edittext);
+        priceText = view.findViewById(R.id.fac_price_text);
+        commentText = view.findViewById(R.id.fac_comment_text);
+        dateText = view.findViewById(R.id.fac_date_text);
+        addButton = view.findViewById(R.id.fac_make_order_button);
+        progressBar = view.findViewById(R.id.fac_progressbar);
 
-        user = Paper.book().read(Constants.USER);
-
-        setCity();
         setListeners();
     }
 
     private void setListeners() {
-        backView.setOnClickListener(new View.OnClickListener() {
+        backIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
             }
         });
-        fromTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fragmentTransaction = getFragmentManager().beginTransaction();
 
-                SelectCityFragment selectCityFragment = new SelectCityFragment();
-                selectCityFragment.setTargetFragment(IntercityMakeOrderFragment.this, Constants.FROMCITY);
-
-                fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
-                fragmentTransaction.add(R.id.main_activity_frame, selectCityFragment, SelectCityFragment.TAG);
-                fragmentTransaction.addToBackStack(SelectCityFragment.TAG);
-                fragmentTransaction.commit();
-            }
-        });
-        toTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fragmentTransaction = getFragmentManager().beginTransaction();
-
-                SelectCityFragment selectCityFragment = new SelectCityFragment();
-                selectCityFragment.setTargetFragment(IntercityMakeOrderFragment.this, Constants.TOCITY);
-
-                fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
-                fragmentTransaction.add(R.id.main_activity_frame, selectCityFragment, SelectCityFragment.TAG);
-                fragmentTransaction.addToBackStack(SelectCityFragment.TAG);
-                fragmentTransaction.commit();
-            }
-        });
         dateText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mCalendar = Calendar.getInstance();
                 datePickerDialog = new TimePickerDialog.Builder()
-                        .setCallBack(IntercityMakeOrderFragment.this)
+                        .setCallBack(AddCargoFragment.this)
                         .setCancelStringId(getString(R.string.cancel))
                         .setSureStringId(getString(R.string.select))
                         .setTitleStringId(getString(R.string.date))
@@ -168,12 +111,14 @@ public class IntercityMakeOrderFragment extends Fragment implements OnDateSetLis
                 datePickerDialog.show(getFragmentManager(), "month_day_hour_minute");
             }
         });
-        makeOrderButton.setOnClickListener(new View.OnClickListener() {
+
+        addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(fromCity != null && toCity!= null && !seatNumber.getText().toString().isEmpty() &&
-                        !price.getText().toString().isEmpty() && selectedDate != 0){
-                    addIntercityOrder(seatNumber.getText().toString(), price.getText().toString(), selectedDate, comment.getText().toString());
+                if(!fromText.getText().toString().isEmpty() && !toText.getText().toString().isEmpty() &&
+                        !priceText.getText().toString().isEmpty() && selectedDate != 0 && !commentText.getText().toString().isEmpty()){
+                    addCargo(fromText.getText().toString(), toText.getText().toString(), priceText.getText().toString(),
+                            selectedDate, commentText.getText().toString());
                 }else {
                     Toast.makeText(getContext(), getResources().getText(R.string.fill_fields), Toast.LENGTH_SHORT).show();
                 }
@@ -181,17 +126,10 @@ public class IntercityMakeOrderFragment extends Fragment implements OnDateSetLis
         });
     }
 
-    private void setCity() {
-        try {
-            fromCity = user.getSelectedCity();
-            fromTextView.setText(fromCity.getCname());
-        }catch (Exception e){}
-    }
-
-    private void addIntercityOrder(String seats, String price, long date, String comment){
+    private void addCargo(String start, String end, String price, long date, String comment){
         progressBar.setVisibility(View.VISIBLE);
         subscription.add(NetworkUtil.getRetrofit()
-                .addIntercityOrder(Utility.getToken(getContext()), "1", seats, fromCity.getId(), toCity.getId(), price, date, comment)
+                .addCargo(Utility.getToken(getContext()), "2", price, date, start, end,comment)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(this::handleResponseAdd, this::handleErrorAdd));
@@ -223,9 +161,10 @@ public class IntercityMakeOrderFragment extends Fragment implements OnDateSetLis
     private void handleResponseBuy(Response response) {
         progressBar.setVisibility(View.GONE);
         if(response.getState().equals("success")){
-            if(fromCity != null && toCity!= null && !seatNumber.getText().toString().isEmpty() &&
-                    !price.getText().toString().isEmpty() && selectedDate != 0){
-                addIntercityOrder(seatNumber.getText().toString(), price.getText().toString(), selectedDate, comment.getText().toString());
+            if(!fromText.getText().toString().isEmpty() && !toText.getText().toString().isEmpty() &&
+                    !priceText.getText().toString().isEmpty() && selectedDate != 0 && !commentText.getText().toString().isEmpty()){
+                addCargo(fromText.getText().toString(), toText.getText().toString(), priceText.getText().toString(),
+                        selectedDate, commentText.getText().toString());
             }else {
                 Toast.makeText(getContext(), getResources().getText(R.string.fill_fields), Toast.LENGTH_SHORT).show();
             }
@@ -255,26 +194,12 @@ public class IntercityMakeOrderFragment extends Fragment implements OnDateSetLis
         payButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buyAccess("1", "1");
+                buyAccess("2", "1");
                 dialog.dismiss();
             }
         });
 
         dialog.show();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == Constants.FROMCITY) {
-                fromCity = data.getParcelableExtra(Constants.SELECTEDCITY);
-                fromTextView.setText(fromCity.getCname());
-            }else if(requestCode == Constants.TOCITY){
-                toCity = data.getParcelableExtra(Constants.SELECTEDCITY);
-                toTextView.setText(toCity.getCname());
-            }
-        }
     }
 
     @Override

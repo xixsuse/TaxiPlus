@@ -35,13 +35,19 @@ import com.esafirm.imagepicker.model.Image;
 import com.google.firebase.messaging.RemoteMessage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import io.paperdb.Paper;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Car;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.RecyclerMenuItem;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.RetrofitInterface;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.CargoFragment;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.AddCarFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.DialogFragments.InfoDialogView;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.DialogFragments.RateDialogFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.SettingsFragment;
@@ -72,6 +78,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private User user;
     private int theme;
+    private String role;
 
     private DrawerLayout drawer;
     private NavigationView navigationView;
@@ -149,6 +156,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         RecyclerMenuItem ladyTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeLadyTaxi),R.drawable.icon_taxi, 200);
         RecyclerMenuItem invaTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeInvaTaxi),R.drawable.icon_inva, 300);
         RecyclerMenuItem interCityTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeCitiesTaxi),R.drawable.icon_cities_taxi, 400);
+        RecyclerMenuItem cargoTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeCargoTaxi),R.drawable.icon_cargo, 500);
 
         RecyclerMenuItem menuItem = new RecyclerMenuItem(getResources().getString(R.string.trip_history), R.drawable.icon_history, 0);
         RecyclerMenuItem menuItem2 = new RecyclerMenuItem(getResources().getString(R.string.add_card), R.drawable.icon_add_card, 2);
@@ -160,6 +168,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         recyclerMenuItemList.add(taxi);
         recyclerMenuItemList.add(ladyTaxi);
         recyclerMenuItemList.add(interCityTaxi);
+        recyclerMenuItemList.add(cargoTaxi);
         recyclerMenuItemList.add(invaTaxi);
         recyclerMenuItemList.add(menuItem);
         recyclerMenuItemList.add(menuItem2);
@@ -204,6 +213,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         menuRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
     }
 
+    public void getUser(){
+        user = Paper.book().read(Constants.USER);
+    }
 
     //requests
     private void shareApp(){
@@ -229,9 +241,48 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
 
+    public void switchRole(String role){
+        this.role = role;
+        progressBar.setVisibility(View.VISIBLE);
+        subscription.add(NetworkUtil.getRetrofit()
+                .changeRole(Utility.getToken(MainActivity.this), role)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponseRole, this::handleErrorRole));
+    }
+
+    private void handleResponseRole(Response response) {
+        progressBar.setVisibility(View.GONE);
+        if(response.getState().equals("success")){
+            if(role.equals("2")) {
+                if(response.getCars() != null && response.getCars().size()>0){
+                    user.setRole_id("2");
+                    user.setCars(response.getCars());
+                    Paper.book().write(Constants.USER, user);
+                    recreateActivity();
+                }else {
+                    fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    DriverProfileFragment driverProfileFragment = new DriverProfileFragment();
+                    fragmentTransaction.replace(R.id.main_activity_frame, driverProfileFragment, DriverProfileFragment.TAG);
+                    fragmentTransaction.addToBackStack(DriverProfileFragment.TAG);
+                    fragmentTransaction.commit();
+                }
+            }else {
+                user.setRole_id("1");
+                Paper.book().write(Constants.USER, user);
+                recreateActivity();
+            }
+        }
+    }
+
+    private void handleErrorRole(Throwable throwable) {
+        progressBar.setVisibility(View.GONE);
+    }
+
+
     //helper functions
     private void setUserData() {
-        user = Paper.book().read(Constants.USER);
+        getUser();
         userName.setText(user.getName());
         userPhone.setText(user.getPhone());
         setLogo(user);
@@ -272,26 +323,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return mode;
     }
 
-    private void switchRole(boolean isDriver){
-        if(isDriver) {
-            if (user.getCar() != null && user.getCar_number() != null && user.getCar_year() != null) {
-                user.setRole_id("2");
-                Paper.book().write(Constants.USER, user);
-                recreateActivity();
-            }else {
-                fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                DriverProfileFragment driverProfileFragment = new DriverProfileFragment();
-                fragmentTransaction.replace(R.id.main_activity_frame, driverProfileFragment, DriverProfileFragment.TAG);
-                fragmentTransaction.addToBackStack(DriverProfileFragment.TAG);
-                fragmentTransaction.commit();
-            }
-        }else {
-            user.setRole_id("1");
-            Paper.book().write(Constants.USER, user);
-            recreateActivity();
-        }
-    }
-
     private void setLogo(User user){
         String logo;
         if(user.getAvatar_path() != null){
@@ -306,21 +337,54 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 .into(userLogo);
     }
 
+    private boolean checkCar(String type){
+        boolean have = false;
+        for(int i = 0; i < user.getCars().size();i++){
+            if(user.getCars().get(i).getType().equals(type)){
+                have = true;
+                break;
+            }
+        }
+        return have;
+    }
 
     //navigation
     private void openMainFragment(User user) {
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
         if(user.getRole_id().equals("2")){
-            CityFragment cityFragment = new CityFragment();
-            fragmentTransaction.add(R.id.main_activity_frame, cityFragment, CityFragment.TAG);
-            fragmentTransaction.addToBackStack(CityFragment.TAG);
+            Set<String> types = new HashSet<>();
+            for (Car car:user.getCars()) {
+                types.add(car.getType());
+            }
+            if(types.contains("1")){
+                CityFragment cityFragment = new CityFragment();
+                fragmentTransaction.add(R.id.main_activity_frame, cityFragment, CityFragment.TAG);
+                fragmentTransaction.addToBackStack(CityFragment.TAG);
+            }else if(types.contains("2")){
+                CargoFragment cargoFragment = new CargoFragment();
+                fragmentTransaction.add(R.id.main_activity_frame, cargoFragment, CargoFragment.TAG);
+                fragmentTransaction.addToBackStack(CargoFragment.TAG);
+            }
+//            for(int i = 0;i<user.getCars().size();i++){
+//                Car car = user.getCars().get(i);
+//
+//                if(car.getType().equals("1")){
+//                    CityFragment cityFragment = new CityFragment();
+//                    fragmentTransaction.add(R.id.main_activity_frame, cityFragment, CityFragment.TAG);
+//                    fragmentTransaction.addToBackStack(CityFragment.TAG);
+//                    break;
+//                }else if(car.getType().equals("2")){
+//                    CargoFragment cargoFragment = new CargoFragment();
+//                    fragmentTransaction.add(R.id.main_activity_frame, cargoFragment, CargoFragment.TAG);
+//                    fragmentTransaction.addToBackStack(CargoFragment.TAG);
+//                    break;
+//                }
+//            }
         }else {
             UserMainFragment userMainFragment = UserMainFragment.newInstance(1);
             fragmentTransaction.add(R.id.main_activity_frame, userMainFragment, UserMainFragment.TAG);
             fragmentTransaction.addToBackStack(UserMainFragment.TAG);
         }
-
         fragmentTransaction.commit();
     }
 
@@ -464,6 +528,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                             fragmentTransaction.addToBackStack(IntercityFragment.TAG);
                             break;
 
+                        case 500:
+                            CargoFragment cargoFragmentUser = new CargoFragment();
+                            fragmentTransaction.replace(R.id.main_activity_frame, cargoFragmentUser, CargoFragment.TAG);
+                            fragmentTransaction.addToBackStack(CargoFragment.TAG);
+                            break;
+
                         case 0:
                             HistoryFragment historyFragment = new HistoryFragment();
                             fragmentTransaction.replace(R.id.main_activity_frame, historyFragment, HistoryFragment.TAG);
@@ -489,7 +559,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                             break;
 
                         case 8:
-                            switchRole(true);
+                            switchRole("2");
                             break;
 
                         case 101:
@@ -505,20 +575,38 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                             break;
 
                         case 10:
-                            CityFragment cityFragment = new CityFragment();
-                            fragmentTransaction.replace(R.id.main_activity_frame, cityFragment, CityFragment.TAG);
-                            fragmentTransaction.addToBackStack(CityFragment.TAG);
+                            if(checkCar("1")) {
+                                CityFragment cityFragment = new CityFragment();
+                                fragmentTransaction.replace(R.id.main_activity_frame, cityFragment, CityFragment.TAG);
+                                fragmentTransaction.addToBackStack(CityFragment.TAG);
+                            }else {
+                                AddCarFragment addCarFragment = new AddCarFragment();
+                                fragmentTransaction.replace(R.id.main_activity_frame, addCarFragment, AddCarFragment.TAG);
+                                fragmentTransaction.addToBackStack(AddCarFragment.TAG);
+                            }
                             break;
                         case 11:
-                            IntercityFragment driverIntercityFragment = new IntercityFragment();
-                            fragmentTransaction.replace(R.id.main_activity_frame, driverIntercityFragment, IntercityFragment.TAG);
-                            fragmentTransaction.addToBackStack(IntercityFragment.TAG);
+                            if(checkCar("1")) {
+                                IntercityFragment driverIntercityFragment = new IntercityFragment();
+                                fragmentTransaction.replace(R.id.main_activity_frame, driverIntercityFragment, IntercityFragment.TAG);
+                                fragmentTransaction.addToBackStack(IntercityFragment.TAG);
+                            }else {
+                                AddCarFragment addCarFragment = new AddCarFragment();
+                                fragmentTransaction.replace(R.id.main_activity_frame, addCarFragment, AddCarFragment.TAG);
+                                fragmentTransaction.addToBackStack(AddCarFragment.TAG);
+                            }
                             break;
 
                         case 12:
-                            IntercityFragment cargoFragment = new IntercityFragment();
-                            fragmentTransaction.replace(R.id.main_activity_frame, cargoFragment, IntercityFragment.TAG);
-                            fragmentTransaction.addToBackStack(IntercityFragment.TAG);
+                            if(checkCar("2")) {
+                                CargoFragment cargoFragment = new CargoFragment();
+                                fragmentTransaction.replace(R.id.main_activity_frame, cargoFragment, CargoFragment.TAG);
+                                fragmentTransaction.addToBackStack(CargoFragment.TAG);
+                            }else {
+                                AddCarFragment addCarFragment = new AddCarFragment();
+                                fragmentTransaction.replace(R.id.main_activity_frame, addCarFragment, AddCarFragment.TAG);
+                                fragmentTransaction.addToBackStack(AddCarFragment.TAG);
+                            }
                             break;
 
                         case 13:
@@ -549,7 +637,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                             break;
 
                         case 19:
-                            switchRole(false);
+                            switchRole("1");
                             break;
                     }
                     fragmentTransaction.commit();

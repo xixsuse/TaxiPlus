@@ -1,10 +1,11 @@
-package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user;
+package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui;
 
 
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,72 +26,76 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.MainActivity;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.AccessPrice;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Car;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.DirectionResponse;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.FreightItem;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.IntercityOrder;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.AddCargoFragment;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.IntercityMakeOrderFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class IntercityOrdersFragment extends Fragment {
-    public static final String TAG = Constants.INTERCITYORDERSFRAGMENT;
-    private static final String DIRECTION = "direction";
+public class CargoFragment extends Fragment {
+    public static final String TAG = Constants.CARGOFRAGMENT;
 
-    private DirectionResponse.Direction direction;
 
-    private ImageButton backButton;
+    private ImageButton menuIcon, addIcon;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
 
     private CompositeSubscription subscription;
-
-    public static IntercityOrdersFragment newInstance(DirectionResponse.Direction direction) {
-        IntercityOrdersFragment fragment = new IntercityOrdersFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(DIRECTION, direction);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            direction = getArguments().getParcelable(DIRECTION);
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_intercity_orders, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_cargo, container, false);
         initViews(view);
 
-        getOrder(direction);
+        getOrder();
         return view;
     }
 
     private void initViews(View view) {
         subscription = new CompositeSubscription();
+        menuIcon = view.findViewById(R.id.fc_menu);
+        addIcon = view.findViewById(R.id.fc_add);
+        recyclerView = view.findViewById(R.id.fc_recyclerview);
+        progressBar = view.findViewById(R.id.fc_progressbar);
 
-        backButton = view.findViewById(R.id.fio_back);
-        recyclerView = view.findViewById(R.id.fio_recyclerview);
-        progressBar = view.findViewById(R.id.fio_progressbar);
+        setListeners();
+    }
 
-        backButton.setOnClickListener(new View.OnClickListener() {
+    private void setListeners() {
+        menuIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                ((MainActivity)getActivity()).drawerAction();
+            }
+        });
+
+        addIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+                AddCargoFragment addCargoFragment = new AddCargoFragment();
+                fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
+                fragmentTransaction.replace(R.id.main_activity_frame, addCargoFragment, AddCargoFragment.TAG);
+                fragmentTransaction.addToBackStack(AddCargoFragment.TAG);
+                fragmentTransaction.commit();
             }
         });
     }
 
-    private void setOrders(List<IntercityOrder> orders){
+    private void setOrders(List<FreightItem> orders){
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(new RecyclerOrdersAdapter(orders, getContext()));
     }
@@ -107,13 +112,13 @@ public class IntercityOrdersFragment extends Fragment {
 
 
         payButton.setText(getResources().getText(R.string.pay));
-        message.setText(getResources().getText(R.string.no_access_message) + " "+accessPrice.getHour_price() + " тг.");
+        message.setText(getResources().getText(R.string.no_access_message) + " "+ accessPrice.getHour_price() + " тг.");
         Glide.with(getContext()).load(getResources().getDrawable(R.drawable.icon_error)).into(image);
 
         payButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buyAccess("1", "0");
+                buyAccess("2", "0");
                 dialog.dismiss();
             }
         });
@@ -122,21 +127,21 @@ public class IntercityOrdersFragment extends Fragment {
     }
 
     //requests
-    private void getOrder(DirectionResponse.Direction direction){
+    private void getOrder(){
         progressBar.setVisibility(View.VISIBLE);
         subscription.add(NetworkUtil.getRetrofit()
-                .getIntercityOrders(Utility.getToken(getContext()), direction.getStart_id(), direction.getEnd_id())
+                .getFreights(Utility.getToken(getContext()),"2")
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(this::handleResponseOrders, this::handleErrorOrders));
     }
 
-    private void handleResponseOrders(IntercityOrder.InterCityOrdersResponse response) {
+    private void handleResponseOrders(FreightItem.CargoResponse response) {
         progressBar.setVisibility(View.GONE);
         if(response.getState().equals("success")){
-            setOrders(response.getOrders());
+            setOrders(response.getChats());
         }else if(response.getState().equals("do not have access")){
-            haveNotAccessView(response.getAccessPrice());
+            haveNotAccessView(response.getPrice());
         }
     }
 
@@ -157,7 +162,7 @@ public class IntercityOrdersFragment extends Fragment {
     private void handleResponseBuy(Response response) {
         progressBar.setVisibility(View.GONE);
         if(response.getState().equals("success")){
-            getOrder(direction);
+            getOrder();
         }else {
             Toast.makeText(getContext(), getResources().getText(R.string.not_enought_balance), Toast.LENGTH_LONG).show();
         }
@@ -169,7 +174,7 @@ public class IntercityOrdersFragment extends Fragment {
 
     public class RecyclerOrdersAdapter extends RecyclerView.Adapter<RecyclerOrdersAdapter.ViewHolder> {
         public Context mContext;
-        public List<IntercityOrder> orderList;
+        public List<FreightItem> orderList;
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public TextView infoText, fromText, toText, modelText, seatsText, dateText, priceText;
@@ -188,7 +193,7 @@ public class IntercityOrdersFragment extends Fragment {
             }
         }
 
-        public RecyclerOrdersAdapter(List<IntercityOrder> orderList, Context mContext) {
+        public RecyclerOrdersAdapter(List<FreightItem> orderList, Context mContext) {
             this.orderList = orderList;
             this.mContext = mContext;
         }
@@ -205,17 +210,13 @@ public class IntercityOrdersFragment extends Fragment {
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             holder.infoText.setText(orderList.get(position).getName() + " (" + orderList.get(position).getPhone() + ")");
-            holder.fromText.setText(orderList.get(position).getStart());
-            holder.toText.setText(orderList.get(position).getEnd());
-            holder.seatsText.setText(getResources().getString(R.string.seatnumbers) + orderList.get(position).getSeats_number());
+            holder.fromText.setText(orderList.get(position).getFrom_string());
+            holder.toText.setText(orderList.get(position).getTo_string());
             holder.dateText.setText(setDataString(orderList.get(position).getDate()));
             holder.priceText.setText(orderList.get(position).getPrice() + " тг.");
+            holder.seatsText.setVisibility(View.GONE);
 
-            if(orderList.get(position).getModel() == null){
-                holder.modelText.setVisibility(View.GONE);
-            }else {
-                holder.modelText.setText(orderList.get(position).getModel() + " " + orderList.get(position).getSubmodel());
-            }
+            holder.modelText.setText(orderList.get(position).getComment());
         }
 
         @Override

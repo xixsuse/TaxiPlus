@@ -112,9 +112,9 @@ public class NewOfferDialogFragment extends DialogFragment {
     private void handleResponseLoc(OrderToDriver.GetOrderInfo response) {
         progressBar.setVisibility(View.GONE);
         if(response.getState().equals("success")){
-            offerNameText.setText(response.getDriver().getName());
-            offerCarModelText.setText(response.getCar());
-            offerCarNumberText.setText(response.getDriver().getCar_number());
+//            offerNameText.setText(response.getDriver().getName());
+//            offerCarModelText.setText(response.getCar());
+//            offerCarNumberText.setText(response.getDriver().getCar_number());
         }
     }
 

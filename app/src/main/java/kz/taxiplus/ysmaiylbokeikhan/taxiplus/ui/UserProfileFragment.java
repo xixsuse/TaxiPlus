@@ -238,18 +238,18 @@ public class UserProfileFragment extends Fragment {
         phoneText.setText(user.getUser().getPhone());
         coinsText.setText(user.getUser().getBalance());
         parkText.setText(user.getTaxi_park());
-        modelEditText.setText(user.getModel());
-        subModelEditText.setText(user.getSubmodel());
+//        modelEditText.setText(user.getModel());
+//        subModelEditText.setText(user.getSubmodel());
         cityText.setText(user.getCity().getCname());
-        selectedSubModel.setId(user.getUser().getCar());
+//        selectedSubModel.setId(user.getUser().getCar());
 
         if(user.getUser().getRole_id().equals("2")){
             getFacilities();
             driverInfo.setVisibility(View.VISIBLE);
 //            editIcon.setVisibility(View.VISIBLE);
 
-            yearEditText.setText(user.getUser().getCar_year());
-            numberEditText.setText(user.getUser().getCar_number());
+//            yearEditText.setText(user.getUser().getCar_year());
+//            numberEditText.setText(user.getUser().getCar_number());
         }else {
             driverInfo.setVisibility(View.GONE);
 //            editIcon.setVisibility(View.GONE);

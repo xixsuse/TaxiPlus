@@ -95,7 +95,7 @@ public class OrderToDriver {
         private OrderToDriver order;
         private User client;
         private User driver;
-        private String car;
+        private List<Car> car;
         private String state;
 
         protected GetOrderInfo(Parcel in) {
@@ -130,7 +130,7 @@ public class OrderToDriver {
             return driver;
         }
 
-        public String getCar() {
+        public List<Car> getCar() {
             return car;
         }
 

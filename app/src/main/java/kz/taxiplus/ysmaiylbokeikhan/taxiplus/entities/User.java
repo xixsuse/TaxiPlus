@@ -12,14 +12,12 @@ public class User implements Parcelable{
     private String phone;
     private String token;
     private String balance;
-    private String car;
     private String avatar_path;
-    private String car_number;
     private String push_id;
     private String city_id;
-    private String car_year;
     private boolean isSessionOpened;
     private CitiesResponse.City selectedCity;
+    private List<Car> cars;
 
     public User() {
     }
@@ -31,42 +29,48 @@ public class User implements Parcelable{
         phone = in.readString();
         token = in.readString();
         balance = in.readString();
-        car = in.readString();
         avatar_path = in.readString();
-        car_number = in.readString();
         push_id = in.readString();
         city_id = in.readString();
-        car_year = in.readString();
         isSessionOpened = in.readByte() != 0;
         selectedCity = in.readParcelable(CitiesResponse.City.class.getClassLoader());
-    }
-
-    public static final Creator<User> CREATOR = new Creator<User>() {
-        @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
-        }
-
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
-
-    public String getId() {
-        return id;
+        cars = in.createTypedArrayList(Car.CREATOR);
     }
 
     public void setId(String id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public void setAvatar_path(String avatar_path) {
+        this.avatar_path = avatar_path;
+    }
+
+    public void setPush_id(String push_id) {
+        this.push_id = push_id;
+    }
+
+    public void setCity_id(String city_id) {
+        this.city_id = city_id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getRole_id() {
@@ -81,16 +85,8 @@ public class User implements Parcelable{
         return phone;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public String getToken() {
         return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     public String getBalance() {
@@ -101,52 +97,16 @@ public class User implements Parcelable{
         this.balance = balance;
     }
 
-    public String getCar() {
-        return car;
-    }
-
-    public void setCar(String car) {
-        this.car = car;
-    }
-
     public String getAvatar_path() {
         return avatar_path;
-    }
-
-    public void setAvatar_path(String avatar_path) {
-        this.avatar_path = avatar_path;
-    }
-
-    public String getCar_number() {
-        return car_number;
-    }
-
-    public void setCar_number(String car_number) {
-        this.car_number = car_number;
     }
 
     public String getPush_id() {
         return push_id;
     }
 
-    public void setPush_id(String push_id) {
-        this.push_id = push_id;
-    }
-
     public String getCity_id() {
         return city_id;
-    }
-
-    public void setCity_id(String city_id) {
-        this.city_id = city_id;
-    }
-
-    public String getCar_year() {
-        return car_year;
-    }
-
-    public void setCar_year(String car_year) {
-        this.car_year = car_year;
     }
 
     public boolean isSessionOpened() {
@@ -165,6 +125,30 @@ public class User implements Parcelable{
         this.selectedCity = selectedCity;
     }
 
+    public void setCars(List<Car> cars) {
+        this.cars = cars;
+    }
+
+    public List<Car> getCars() {
+        return cars;
+    }
+
+    public static Creator<User> getCREATOR() {
+        return CREATOR;
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
     @Override
     public int describeContents() {
         return 0;
@@ -178,23 +162,21 @@ public class User implements Parcelable{
         dest.writeString(phone);
         dest.writeString(token);
         dest.writeString(balance);
-        dest.writeString(car);
         dest.writeString(avatar_path);
-        dest.writeString(car_number);
         dest.writeString(push_id);
         dest.writeString(city_id);
-        dest.writeString(car_year);
         dest.writeByte((byte) (isSessionOpened ? 1 : 0));
         dest.writeParcelable(selectedCity, flags);
+        dest.writeTypedList(cars);
     }
+
 
     public class GetFullInfo{
         private User user;
         private CitiesResponse.City city;
-        private String model;
-        private String submodel;
         private String taxi_park;
         private List<String> facilities;
+        private List<Car> cars;
 
         public User getUser() {
             return user;
@@ -204,20 +186,16 @@ public class User implements Parcelable{
             return city;
         }
 
-        public String getModel() {
-            return model;
-        }
-
-        public String getSubmodel() {
-            return submodel;
-        }
-
         public List<String> getFacilities() {
             return facilities;
         }
 
         public String getTaxi_park() {
             return taxi_park;
+        }
+
+        public List<Car> getCars() {
+            return cars;
         }
     }
 }

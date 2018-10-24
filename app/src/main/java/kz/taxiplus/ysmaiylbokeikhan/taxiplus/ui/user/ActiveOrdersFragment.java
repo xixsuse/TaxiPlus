@@ -242,8 +242,8 @@ public class ActiveOrdersFragment extends Fragment {
 
         name.setText(driver.getName());
         phone.setText(driver.getPhone());
-        model.setText(driver.getCar());
-        number.setText(driver.getCar_number());
+//        model.setText(driver.getCar());
+//        number.setText(driver.getCar_number());
 
         declineButton.setOnClickListener(new View.OnClickListener() {
             @Override

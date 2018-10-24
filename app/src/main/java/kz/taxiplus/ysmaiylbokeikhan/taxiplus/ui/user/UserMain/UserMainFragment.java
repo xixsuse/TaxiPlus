@@ -507,8 +507,8 @@ public class UserMainFragment extends Fragment implements OnMapReadyCallback, Ca
 
         confNameText.setText(orderInfo.getDriver().getName());
         confPhoneText.setText(orderInfo.getDriver().getPhone());
-        confNumberText.setText(orderInfo.getDriver().getCar_number());
-        confModelText.setText(orderInfo.getCar());
+        confNumberText.setText(orderInfo.getCar().get(0).getNumber());
+        confModelText.setText(orderInfo.getCar().get(0).getModel() + " "+ orderInfo.getCar().get(0).getSubmodel());
         confModeText.setText(Utility.setOrder(orderInfo.getOrder().getOrder_type(), getContext()));
         confDateText.setText(Utility.setDataString(orderInfo.getOrder().getDate()));
 
