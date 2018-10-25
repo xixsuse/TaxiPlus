@@ -1,7 +1,6 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui;
 
 
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,16 +10,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -29,74 +22,41 @@ import java.util.List;
 
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.MainActivity;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.AccessPrice;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Car;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.DirectionResponse;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.FreightItem;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.IntercityOrder;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.AddCargoFragment;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.IntercityMakeOrderFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class CargoFragment extends Fragment {
-    public static final String TAG = Constants.CARGOFRAGMENT;
-    private static final String TYPE = "type";
+public class InvaTaxiFragment extends Fragment {
+    public static final String TAG = Constants.INVATAXIFRAGMENT;
 
-    private String type;
-
-    private ImageButton menuIcon, addIcon;
+    private ImageButton menuIcon,addButton;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
-    private TextView titleText;
 
     private CompositeSubscription subscription;
-
-    public static CargoFragment newInstance(String type) {
-        CargoFragment fragment = new CargoFragment();
-        Bundle args = new Bundle();
-        args.putString(TYPE, type);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            type = getArguments().getString(TYPE);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_cargo, container, false);
+        View view = inflater.inflate(R.layout.fragment_inva_taxi, container, false);
         initViews(view);
+        getOrder();
 
-        getOrder(type);
         return view;
     }
 
     private void initViews(View view) {
         subscription = new CompositeSubscription();
-        menuIcon = view.findViewById(R.id.fc_menu);
-        addIcon = view.findViewById(R.id.fc_add);
-        recyclerView = view.findViewById(R.id.fc_recyclerview);
-        progressBar = view.findViewById(R.id.fc_progressbar);
-        titleText = view.findViewById(R.id.fc_title);
+        menuIcon = view.findViewById(R.id.fit_menu);
+        addButton = view.findViewById(R.id.fit_add);
+        recyclerView = view.findViewById(R.id.fit_recyclerview);
+        progressBar = view.findViewById(R.id.fit_progressbar);
 
-        if(type.equals("2")){
-            titleText.setText(getResources().getText(R.string.mode_cargo));
-        }else if(type.equals("3")){
-            titleText.setText(getResources().getText(R.string.modeEvo));
-        }
         setListeners();
     }
 
@@ -108,12 +68,12 @@ public class CargoFragment extends Fragment {
             }
         });
 
-        addIcon.setOnClickListener(new View.OnClickListener() {
+        addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
-                AddCargoFragment addCargoFragment = AddCargoFragment.newInstance(type);
+                AddCargoFragment addCargoFragment = AddCargoFragment.newInstance("4");
                 fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
                 fragmentTransaction.replace(R.id.main_activity_frame, addCargoFragment, AddCargoFragment.TAG);
                 fragmentTransaction.addToBackStack(AddCargoFragment.TAG);
@@ -127,37 +87,10 @@ public class CargoFragment extends Fragment {
         recyclerView.setAdapter(new RecyclerOrdersAdapter(orders, getContext()));
     }
 
-    private void haveNotAccessView(AccessPrice accessPrice){
-        final Dialog dialog = new Dialog(getContext());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.custom_dialog_view);
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        Button payButton = (Button) dialog.findViewById(R.id.cdv_close_button);
-        TextView message = (TextView) dialog.findViewById(R.id.cdv_title_text);
-        ImageView image = (ImageView) dialog.findViewById(R.id.cdv_image);
-
-
-        payButton.setText(getResources().getText(R.string.pay));
-        message.setText(getResources().getText(R.string.no_access_message) + " "+ accessPrice.getHour_price() + " тг.");
-        Glide.with(getContext()).load(getResources().getDrawable(R.drawable.icon_error)).into(image);
-
-        payButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buyAccess(type, "0");
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-    }
-
-    //requests
-    private void getOrder(String type){
+    private void getOrder(){
         progressBar.setVisibility(View.VISIBLE);
         subscription.add(NetworkUtil.getRetrofit()
-                .getFreights(Utility.getToken(getContext()),type)
+                .getInvaOrders(Utility.getToken(getContext()),"4")
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(this::handleResponseOrders, this::handleErrorOrders));
@@ -168,37 +101,12 @@ public class CargoFragment extends Fragment {
         if(response.getState().equals("success")){
             Collections.reverse(response.getChats());
             setOrders(response.getChats());
-        }else if(response.getState().equals("do not have access")){
-            haveNotAccessView(response.getPrice());
         }
     }
 
     private void handleErrorOrders(Throwable throwable) {
         progressBar.setVisibility(View.GONE);
     }
-
-
-    private void buyAccess(String type, String accessType){
-        progressBar.setVisibility(View.VISIBLE);
-        subscription.add(NetworkUtil.getRetrofit()
-                .buyAccess(Utility.getToken(getContext()),type, accessType)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(this::handleResponseBuy, this::handleErrorBuy));
-    }
-
-    private void handleResponseBuy(Response response) {
-        progressBar.setVisibility(View.GONE);
-        if(response.getState().equals("success")){
-            getOrder(type);
-        }else {
-            Toast.makeText(getContext(), getResources().getText(R.string.not_enought_balance), Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void handleErrorBuy(Throwable throwable) {
-    }
-
 
     public class RecyclerOrdersAdapter extends RecyclerView.Adapter<RecyclerOrdersAdapter.ViewHolder> {
         public Context mContext;

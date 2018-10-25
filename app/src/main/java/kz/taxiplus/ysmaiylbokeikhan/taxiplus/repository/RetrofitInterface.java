@@ -259,6 +259,11 @@ public interface RetrofitInterface {
                                                       @Field("type")String type);
 
     @FormUrlEncoded
+    @POST("get-specific-chats/")
+    Observable<FreightItem.CargoResponse> getInvaOrders(@Field("token")String token,
+                                                      @Field("type")String type);
+
+    @FormUrlEncoded
     @POST("add-recomendation/")
     Observable<Response> addRecomendation(@Field("token")String token,
                                           @Field("text") String text,

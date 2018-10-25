@@ -11,6 +11,8 @@ public class FreightItem {
     private String comment;
     private String date;
     private String price;
+    private String submodel;
+    private String model;
 
     public String getId() {
         return id;
@@ -42,6 +44,14 @@ public class FreightItem {
 
     public String getPrice() {
         return price;
+    }
+
+    public String getSubmodel() {
+        return submodel;
+    }
+
+    public String getModel() {
+        return model;
     }
 
     public class CargoResponse{

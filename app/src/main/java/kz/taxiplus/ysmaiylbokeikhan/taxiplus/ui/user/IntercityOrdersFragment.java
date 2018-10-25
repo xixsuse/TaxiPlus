@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
@@ -134,6 +135,7 @@ public class IntercityOrdersFragment extends Fragment {
     private void handleResponseOrders(IntercityOrder.InterCityOrdersResponse response) {
         progressBar.setVisibility(View.GONE);
         if(response.getState().equals("success")){
+            Collections.reverse(response.getOrders());
             setOrders(response.getOrders());
         }else if(response.getState().equals("do not have access")){
             haveNotAccessView(response.getAccessPrice());
@@ -207,7 +209,7 @@ public class IntercityOrdersFragment extends Fragment {
             holder.infoText.setText(orderList.get(position).getName() + " (" + orderList.get(position).getPhone() + ")");
             holder.fromText.setText(orderList.get(position).getStart());
             holder.toText.setText(orderList.get(position).getEnd());
-            holder.seatsText.setText(getResources().getString(R.string.seatnumbers) + orderList.get(position).getSeats_number());
+            holder.seatsText.setText(getResources().getString(R.string.seatnumbers) +" "+ orderList.get(position).getSeats_number());
             holder.dateText.setText(setDataString(orderList.get(position).getDate()));
             holder.priceText.setText(orderList.get(position).getPrice() + " тг.");
 
@@ -225,10 +227,14 @@ public class IntercityOrdersFragment extends Fragment {
     }
 
     public static String setDataString(String miliseconds){
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm, dd MMM");
+        String date = "";
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm, dd MMM");
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(Long.parseLong(miliseconds));
-        return formatter.format(calendar.getTime());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(Long.parseLong(miliseconds));
+            date = formatter.format(calendar.getTime());
+        }catch (Exception e){}
+        return date;
     }
 }

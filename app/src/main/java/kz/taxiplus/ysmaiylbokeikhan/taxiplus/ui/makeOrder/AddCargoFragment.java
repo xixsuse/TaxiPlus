@@ -37,9 +37,11 @@ import rx.subscriptions.CompositeSubscription;
 
 public class AddCargoFragment extends Fragment implements OnDateSetListener {
     public static final String TAG = Constants.ADDCARGOFRAGMENT;
+    private static final String TYPE = "type";
 
     private long tenYears = 10L * 365 * 1000 * 60 * 60 * 24L;
     private long selectedDate = 0;
+    private String type;
 
     private EditText fromText, toText,priceText, commentText;
     private TextView dateText;
@@ -50,6 +52,23 @@ public class AddCargoFragment extends Fragment implements OnDateSetListener {
     private Calendar mCalendar;
     private TimePickerDialog datePickerDialog;
     private CompositeSubscription subscription;
+
+    public static AddCargoFragment newInstance(String type) {
+        AddCargoFragment fragment = new AddCargoFragment();
+        Bundle args = new Bundle();
+        args.putString(TYPE, type);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            type = getArguments().getString(TYPE);
+        }
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,6 +89,14 @@ public class AddCargoFragment extends Fragment implements OnDateSetListener {
         dateText = view.findViewById(R.id.fac_date_text);
         addButton = view.findViewById(R.id.fac_make_order_button);
         progressBar = view.findViewById(R.id.fac_progressbar);
+
+        if(type.equals("4")){
+            commentText.setHint(getResources().getString(R.string.enter_desc));
+        }else if(type.equals("2")){
+            commentText.setHint(getResources().getString(R.string.cargo_decs_hint));
+        }else if(type.equals("3")){
+            commentText.setHint(getResources().getString(R.string.evo_desc));
+        }
 
         setListeners();
     }
@@ -129,7 +156,7 @@ public class AddCargoFragment extends Fragment implements OnDateSetListener {
     private void addCargo(String start, String end, String price, long date, String comment){
         progressBar.setVisibility(View.VISIBLE);
         subscription.add(NetworkUtil.getRetrofit()
-                .addCargo(Utility.getToken(getContext()), "2", price, date, start, end,comment)
+                .addCargo(Utility.getToken(getContext()), type, price, date, start, end,comment)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(this::handleResponseAdd, this::handleErrorAdd));
@@ -194,7 +221,7 @@ public class AddCargoFragment extends Fragment implements OnDateSetListener {
         payButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buyAccess("2", "1");
+                buyAccess(type, "1");
                 dialog.dismiss();
             }
         });

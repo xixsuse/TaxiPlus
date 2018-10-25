@@ -46,6 +46,7 @@ public class Constants {
     public static final String CARGOFRAGMENT = "CargoFragment";
     public static final String ADDCARFRAGMENT = "AddCarFragment";
     public static final String ADDCARGOFRAGMENT = "AddCargoFragment";
+    public static final String INVATAXIFRAGMENT = "InvaTaxiFragment";
 
 
     public static final int MAINFRAGMENTCODEFROM = 121;

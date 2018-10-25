@@ -4,11 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginEnd="@dimen/_4sdp"
+    android:layout_marginTop="@dimen/_5sdp"
     android:gravity="center"
+    android:orientation="vertical"
     android:id="@+id/rcti_view">
     <ImageView
         android:id="@+id/rct_image"
         android:layout_width="@dimen/_60sdp"
         android:layout_height="@dimen/_30sdp"
-        android:tint="@color/gray"/>
+        android:tint="@color/gray" />
+    <TextView
+        android:id="@+id/rct_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12ssp"
+        android:textAlignment="center"
+        android:maxLines="1"
+        android:ellipsize="end"/>
 </LinearLayout>

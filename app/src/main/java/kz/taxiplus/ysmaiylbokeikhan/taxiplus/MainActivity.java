@@ -47,6 +47,7 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.RetrofitInterface;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.CargoFragment;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.InvaTaxiFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.AddCarFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.DialogFragments.InfoDialogView;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.DialogFragments.RateDialogFragment;
@@ -152,23 +153,25 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void setUserMenu() {
         List<RecyclerMenuItem>recyclerMenuItemList = new ArrayList<>();
 
-        RecyclerMenuItem taxi = new RecyclerMenuItem(getResources().getString(R.string.modeTaxi),R.drawable.icon_taxi, 100);
-        RecyclerMenuItem ladyTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeLadyTaxi),R.drawable.icon_taxi, 200);
-        RecyclerMenuItem invaTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeInvaTaxi),R.drawable.icon_inva, 300);
-        RecyclerMenuItem interCityTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeCitiesTaxi),R.drawable.icon_cities_taxi, 400);
-        RecyclerMenuItem cargoTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeCargoTaxi),R.drawable.icon_cargo, 500);
+        RecyclerMenuItem taxi = new RecyclerMenuItem(getResources().getString(R.string.modeTaxi),R.drawable.icon_taxi, 1);
+        RecyclerMenuItem ladyTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeLadyTaxi),R.drawable.icon_taxi, 2);
+        RecyclerMenuItem invaTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeInvaTaxi),R.drawable.icon_inva, 3);
+        RecyclerMenuItem interCityTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeCitiesTaxi),R.drawable.icon_cities_taxi, 4);
+        RecyclerMenuItem cargoTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeCargoTaxi),R.drawable.icon_cargo, 5);
+        RecyclerMenuItem evoTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeEvo),R.drawable.icon_evo, 8);
 
-        RecyclerMenuItem menuItem = new RecyclerMenuItem(getResources().getString(R.string.trip_history), R.drawable.icon_history, 0);
-        RecyclerMenuItem menuItem2 = new RecyclerMenuItem(getResources().getString(R.string.add_card), R.drawable.icon_add_card, 2);
-        RecyclerMenuItem menuItem4 = new RecyclerMenuItem(getResources().getString(R.string.settings), R.drawable.icon_settings, 4);
+        RecyclerMenuItem menuItem = new RecyclerMenuItem(getResources().getString(R.string.trip_history), R.drawable.icon_history, 10);
+        RecyclerMenuItem menuItem2 = new RecyclerMenuItem(getResources().getString(R.string.add_card), R.drawable.icon_add_card, 6);
+        RecyclerMenuItem menuItem4 = new RecyclerMenuItem(getResources().getString(R.string.settings), R.drawable.icon_settings, 20);
         RecyclerMenuItem menuItem7 = new RecyclerMenuItem(getResources().getString(R.string.my_bonuses), R.drawable.icon_driver, 7);
-        RecyclerMenuItem menuItem8 = new RecyclerMenuItem(getResources().getString(R.string.driver_mode), R.drawable.icon_switch, 8);
-        RecyclerMenuItem menuItem9 = new RecyclerMenuItem(getResources().getString(R.string.share), R.drawable.icon_share, 18);
+        RecyclerMenuItem menuItem8 = new RecyclerMenuItem(getResources().getString(R.string.driver_mode), R.drawable.icon_switch, 30);
+        RecyclerMenuItem menuItem9 = new RecyclerMenuItem(getResources().getString(R.string.share), R.drawable.icon_share, 40);
 
         recyclerMenuItemList.add(taxi);
         recyclerMenuItemList.add(ladyTaxi);
         recyclerMenuItemList.add(interCityTaxi);
         recyclerMenuItemList.add(cargoTaxi);
+        recyclerMenuItemList.add(evoTaxi);
         recyclerMenuItemList.add(invaTaxi);
         recyclerMenuItemList.add(menuItem);
         recyclerMenuItemList.add(menuItem2);
@@ -184,23 +187,27 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void setDriverMenu(){
         List<RecyclerMenuItem>recyclerMenuItemList = new ArrayList<>();
-        RecyclerMenuItem menuItem11 = new RecyclerMenuItem(getResources().getString(R.string.navigation), R.drawable.icon_main, 101);
-        RecyclerMenuItem menuItem0 = new RecyclerMenuItem(getResources().getString(R.string.open_session), R.drawable.icon_clock, 102);
-        RecyclerMenuItem menuItem = new RecyclerMenuItem(getResources().getString(R.string.mode_city_), R.drawable.icon_history, 10);
-        RecyclerMenuItem menuItem1 = new RecyclerMenuItem(getResources().getString(R.string.mode_intercity), R.drawable.icon_current_order, 11);
-        RecyclerMenuItem menuItem2 = new RecyclerMenuItem(getResources().getString(R.string.mode_cargo), R.drawable.icon_add_card, 12);
-        RecyclerMenuItem menuItem3 = new RecyclerMenuItem(getResources().getString(R.string.trip_history), R.drawable.icon_history, 13);
-        RecyclerMenuItem menuItem5 = new RecyclerMenuItem(getResources().getString(R.string.mode_coins), R.drawable.icon_faq, 14);
-        RecyclerMenuItem menuItem9 = new RecyclerMenuItem(getResources().getString(R.string.user_mode), R.drawable.icon_switch, 19);
-        RecyclerMenuItem menuItem6 = new RecyclerMenuItem(getResources().getString(R.string.settings), R.drawable.icon_settings, 16);
-        RecyclerMenuItem menuItem7 = new RecyclerMenuItem(getModeString(), R.drawable.icon_driver, 17);
-        RecyclerMenuItem menuItem8 = new RecyclerMenuItem(getResources().getString(R.string.share), R.drawable.icon_share, 18);
+        RecyclerMenuItem menuItem11 = new RecyclerMenuItem(getResources().getString(R.string.navigation), R.drawable.icon_main, 100);
+        RecyclerMenuItem menuItem0 = new RecyclerMenuItem(getResources().getString(R.string.open_session), R.drawable.icon_clock, 200);
+        RecyclerMenuItem menuItem = new RecyclerMenuItem(getResources().getString(R.string.mode_city_), R.drawable.icon_taxi, 300);
+        RecyclerMenuItem menuItem1 = new RecyclerMenuItem(getResources().getString(R.string.mode_intercity), R.drawable.icon_cities_taxi, 400);
+        RecyclerMenuItem menuItem2 = new RecyclerMenuItem(getResources().getString(R.string.mode_cargo), R.drawable.icon_cargo, 500);
+        RecyclerMenuItem menuItemEvo = new RecyclerMenuItem(getResources().getString(R.string.modeEvo), R.drawable.icon_evo, 600);
+        RecyclerMenuItem menuItemInva = new RecyclerMenuItem(getResources().getString(R.string.modeInvaTaxi), R.drawable.icon_inva, 700);
+        RecyclerMenuItem menuItem3 = new RecyclerMenuItem(getResources().getString(R.string.trip_history), R.drawable.icon_history, 10);
+        RecyclerMenuItem menuItem5 = new RecyclerMenuItem(getResources().getString(R.string.mode_coins), R.drawable.icon_by_bonuses_p, 800);
+        RecyclerMenuItem menuItem9 = new RecyclerMenuItem(getResources().getString(R.string.user_mode), R.drawable.icon_switch, 50);
+        RecyclerMenuItem menuItem6 = new RecyclerMenuItem(getResources().getString(R.string.settings), R.drawable.icon_settings, 20);
+        RecyclerMenuItem menuItem7 = new RecyclerMenuItem(getModeString(), R.drawable.icon_driver, 900);
+        RecyclerMenuItem menuItem8 = new RecyclerMenuItem(getResources().getString(R.string.share), R.drawable.icon_share, 40);
 
         recyclerMenuItemList.add(menuItem0);
         recyclerMenuItemList.add(menuItem11);
         recyclerMenuItemList.add(menuItem);
         recyclerMenuItemList.add(menuItem1);
         recyclerMenuItemList.add(menuItem2);
+        recyclerMenuItemList.add(menuItemEvo);
+        recyclerMenuItemList.add(menuItemInva);
         recyclerMenuItemList.add(menuItem3);
         recyclerMenuItemList.add(menuItem5);
         recyclerMenuItemList.add(menuItem9);
@@ -361,9 +368,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 fragmentTransaction.add(R.id.main_activity_frame, cityFragment, CityFragment.TAG);
                 fragmentTransaction.addToBackStack(CityFragment.TAG);
             }else if(types.contains("2")){
-                CargoFragment cargoFragment = new CargoFragment();
+                CargoFragment cargoFragment = CargoFragment.newInstance("2");
                 fragmentTransaction.add(R.id.main_activity_frame, cargoFragment, CargoFragment.TAG);
                 fragmentTransaction.addToBackStack(CargoFragment.TAG);
+            }else if(types.contains("3")){
+                CargoFragment cargoFragment = CargoFragment.newInstance("3");
+                fragmentTransaction.add(R.id.main_activity_frame, cargoFragment, CargoFragment.TAG);
+                fragmentTransaction.addToBackStack(CargoFragment.TAG);
+            }else if(types.contains("4")){
+                InvaTaxiFragment invaTaxiFragment = new InvaTaxiFragment();
+                fragmentTransaction.add(R.id.main_activity_frame, invaTaxiFragment, InvaTaxiFragment.TAG);
+                fragmentTransaction.addToBackStack(InvaTaxiFragment.TAG);
             }
 //            for(int i = 0;i<user.getCars().size();i++){
 //                Car car = user.getCars().get(i);
@@ -440,7 +455,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 call.enqueue(new Callback<Response>() {
                     @Override
                     public void onResponse(Call<Response> call, @NonNull retrofit2.Response<Response> response){
-                        if(response.body().getState().equals("success")  && response.body().getPath() != null) {
+                        if(response.body().getState() != null &&response.body().getState().equals("success")  && response.body().getPath() != null) {
                             user.setAvatar_path(response.body().getPath());
                             Glide.with(MainActivity.this)
                                     .load(response.body().getPath())
@@ -504,53 +519,39 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     }
                     FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                     switch (menuList.get(position).getIndex()){
-                        case 100:
+                        case 1:
                             UserMainFragment userMainFragment = UserMainFragment.newInstance(1);
                             fragmentTransaction.replace(R.id.main_activity_frame, userMainFragment, UserMainFragment.TAG);
                             fragmentTransaction.addToBackStack(UserMainFragment.TAG);
                             break;
 
-                        case 200:
+                        case 2:
                             UserMainFragment ladyFragment = UserMainFragment.newInstance(2);
                             fragmentTransaction.replace(R.id.main_activity_frame, ladyFragment, UserMainFragment.TAG);
                             fragmentTransaction.addToBackStack(UserMainFragment.TAG);
                             break;
 
-                        case 300:
-                            UserMainFragment invaFragment = UserMainFragment.newInstance(3);
-                            fragmentTransaction.replace(R.id.main_activity_frame, invaFragment, UserMainFragment.TAG);
-                            fragmentTransaction.addToBackStack(UserMainFragment.TAG);
+                        case 3:
+                            InvaTaxiFragment invaTaxiFragment = new InvaTaxiFragment();
+                            fragmentTransaction.replace(R.id.main_activity_frame, invaTaxiFragment, InvaTaxiFragment.TAG);
+                            fragmentTransaction.addToBackStack(InvaTaxiFragment.TAG);
                             break;
 
-                        case 400:
+                        case 4:
                             IntercityFragment intercityFragment = new IntercityFragment();
                             fragmentTransaction.replace(R.id.main_activity_frame, intercityFragment, IntercityFragment.TAG);
                             fragmentTransaction.addToBackStack(IntercityFragment.TAG);
                             break;
 
-                        case 500:
-                            CargoFragment cargoFragmentUser = new CargoFragment();
+                        case 5:
+                            CargoFragment cargoFragmentUser = CargoFragment.newInstance("2");
                             fragmentTransaction.replace(R.id.main_activity_frame, cargoFragmentUser, CargoFragment.TAG);
                             fragmentTransaction.addToBackStack(CargoFragment.TAG);
                             break;
 
-                        case 0:
-                            HistoryFragment historyFragment = new HistoryFragment();
-                            fragmentTransaction.replace(R.id.main_activity_frame, historyFragment, HistoryFragment.TAG);
-                            fragmentTransaction.addToBackStack(HistoryFragment.TAG);
-                            break;
-
-                        case 2:
+                        case 6:
 
                             break;
-
-
-                        case 4:
-                            SettingsFragment settingsFragment = new SettingsFragment();
-                            fragmentTransaction.replace(R.id.main_activity_frame, settingsFragment, SettingsFragment.TAG);
-                            fragmentTransaction.addToBackStack(SettingsFragment.TAG);
-                            break;
-
 
                         case 7:
                             MyCoinsFragment myCoinsFragment = new MyCoinsFragment();
@@ -559,22 +560,48 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                             break;
 
                         case 8:
+                            CargoFragment evoTaxiFragment = CargoFragment.newInstance("3");
+                            fragmentTransaction.replace(R.id.main_activity_frame, evoTaxiFragment, CargoFragment.TAG);
+                            fragmentTransaction.addToBackStack(CargoFragment.TAG);
+                            break;
+
+                        case 10:
+                            HistoryFragment historyFragment = new HistoryFragment();
+                            fragmentTransaction.replace(R.id.main_activity_frame, historyFragment, HistoryFragment.TAG);
+                            fragmentTransaction.addToBackStack(HistoryFragment.TAG);
+                            break;
+
+                        case 20:
+                            SettingsFragment settingsFragment = new SettingsFragment();
+                            fragmentTransaction.replace(R.id.main_activity_frame, settingsFragment, SettingsFragment.TAG);
+                            fragmentTransaction.addToBackStack(SettingsFragment.TAG);
+                            break;
+
+                        case 30:
                             switchRole("2");
                             break;
 
-                        case 101:
+                        case 40:
+                            shareApp();
+                            break;
+
+                        case 50:
+                            switchRole("1");
+                            break;
+
+                        case 100:
                             DriverMainFragment driverMainFragment = new DriverMainFragment();
                             fragmentTransaction.replace(R.id.main_activity_frame, driverMainFragment, DriverMainFragment.TAG);
                             fragmentTransaction.addToBackStack(DriverMainFragment.TAG);
                             break;
 
-                        case 102:
+                        case 200:
                             OpenSessionFragment openSessionFragment = new OpenSessionFragment();
                             fragmentTransaction.replace(R.id.main_activity_frame, openSessionFragment, OpenSessionFragment.TAG);
                             fragmentTransaction.addToBackStack(OpenSessionFragment.TAG);
                             break;
 
-                        case 10:
+                        case 300:
                             if(checkCar("1")) {
                                 CityFragment cityFragment = new CityFragment();
                                 fragmentTransaction.replace(R.id.main_activity_frame, cityFragment, CityFragment.TAG);
@@ -585,7 +612,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                                 fragmentTransaction.addToBackStack(AddCarFragment.TAG);
                             }
                             break;
-                        case 11:
+                        case 400:
                             if(checkCar("1")) {
                                 IntercityFragment driverIntercityFragment = new IntercityFragment();
                                 fragmentTransaction.replace(R.id.main_activity_frame, driverIntercityFragment, IntercityFragment.TAG);
@@ -597,9 +624,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                             }
                             break;
 
-                        case 12:
+                        case 500:
                             if(checkCar("2")) {
-                                CargoFragment cargoFragment = new CargoFragment();
+                                CargoFragment cargoFragment = CargoFragment.newInstance("2");
                                 fragmentTransaction.replace(R.id.main_activity_frame, cargoFragment, CargoFragment.TAG);
                                 fragmentTransaction.addToBackStack(CargoFragment.TAG);
                             }else {
@@ -609,35 +636,39 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                             }
                             break;
 
-                        case 13:
-                            HistoryFragment driverHistoryFragment = new HistoryFragment();
-                            fragmentTransaction.replace(R.id.main_activity_frame, driverHistoryFragment, HistoryFragment.TAG);
-                            fragmentTransaction.addToBackStack(HistoryFragment.TAG);
+                        case 600:
+                            if(checkCar("3")) {
+                                CargoFragment cargoFragment = CargoFragment.newInstance("3");
+                                fragmentTransaction.replace(R.id.main_activity_frame, cargoFragment, CargoFragment.TAG);
+                                fragmentTransaction.addToBackStack(CargoFragment.TAG);
+                            }else {
+                                AddCarFragment addCarFragment = new AddCarFragment();
+                                fragmentTransaction.replace(R.id.main_activity_frame, addCarFragment, AddCarFragment.TAG);
+                                fragmentTransaction.addToBackStack(AddCarFragment.TAG);
+                            }
                             break;
 
-                        case 14:
+                        case 700:
+                            if(checkCar("4")){
+                                InvaTaxiFragment invaTaxiDriverFragment = new InvaTaxiFragment();
+                                fragmentTransaction.replace(R.id.main_activity_frame, invaTaxiDriverFragment, InvaTaxiFragment.TAG);
+                                fragmentTransaction.addToBackStack(InvaTaxiFragment.TAG);
+                            }else {
+                                AddCarFragment addCarFragment = new AddCarFragment();
+                                fragmentTransaction.replace(R.id.main_activity_frame, addCarFragment, AddCarFragment.TAG);
+                                fragmentTransaction.addToBackStack(AddCarFragment.TAG);
+                            }
+                            break;
+
+                        case 800:
                             MyBalanceFragment myBalanceFragment = new MyBalanceFragment();
                             fragmentTransaction.replace(R.id.main_activity_frame, myBalanceFragment, MyBalanceFragment.TAG);
                             fragmentTransaction.addToBackStack(MyBalanceFragment.TAG);
                             break;
 
-                        case 16:
-                            SettingsFragment driverSettingsFragment = new SettingsFragment();
-                            fragmentTransaction.replace(R.id.main_activity_frame, driverSettingsFragment, SettingsFragment.TAG);
-                            fragmentTransaction.addToBackStack(SettingsFragment.TAG);
-                            break;
-
-                        case 17:
+                        case 900:
                             int mode = Paper.book().read(getString(R.string.prefs_theme_key), 1);
                             setNightMode(mode);
-                            break;
-
-                        case 18:
-                            shareApp();
-                            break;
-
-                        case 19:
-                            switchRole("1");
                             break;
                     }
                     fragmentTransaction.commit();

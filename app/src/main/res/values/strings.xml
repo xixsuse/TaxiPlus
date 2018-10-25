@@ -224,6 +224,7 @@
     <string name="car_type_rec">Тип машины</string>
     <string name="add_car_desc">Для просмотра заказов необходимо добавить необходимую машину</string>
     <string name="cargo_decs_hint">Описание груза</string>
+    <string name="evo_desc">Модель машины и описание</string>
 
     <string name="notifications_admin_channel_name">Name of admin channel</string>
     <string name="notifications_admin_channel_description">Description of admin channel</string>

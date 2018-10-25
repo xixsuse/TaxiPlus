@@ -19,6 +19,7 @@ public class Response {
     private AccessPrice price;
     private CitiesResponse.City city;
     private List<Car> cars;
+    private Car car;
 
     public String getState() {
         return state;
@@ -86,5 +87,9 @@ public class Response {
 
     public List<Car> getCars() {
         return cars;
+    }
+
+    public Car getCar() {
+        return car;
     }
 }

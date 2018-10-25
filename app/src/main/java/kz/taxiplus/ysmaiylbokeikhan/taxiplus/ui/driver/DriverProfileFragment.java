@@ -150,11 +150,11 @@ public class DriverProfileFragment extends Fragment{
     }
 
     private void setCarTypes(){
-        CarType usual = new CarType("1", R.drawable.icon_taxi);
-        CarType cargo = new CarType("2", R.drawable.icon_cargo);
-        CarType intercity = new CarType("1", R.drawable.icon_cities_taxi);
-        CarType inva = new CarType("4", R.drawable.icon_cities_taxi);
-        CarType evac = new CarType("3", R.drawable.icon_evo);
+        CarType usual = new CarType("1", getResources().getString(R.string.modeTaxi), R.drawable.icon_taxi);
+        CarType cargo = new CarType("2", getResources().getString(R.string.mode_cargo), R.drawable.icon_cargo);
+        CarType intercity = new CarType("1", getResources().getString(R.string.intercity), R.drawable.icon_cities_taxi);
+        CarType inva = new CarType("4", getResources().getString(R.string.modeInvaTaxi), R.drawable.icon_inva);
+        CarType evac = new CarType("3",getResources().getString(R.string.modeEvo),  R.drawable.icon_evo);
 
         List<CarType> carTypes = new ArrayList<>();
         carTypes.add(usual);
@@ -380,9 +380,11 @@ public class DriverProfileFragment extends Fragment{
         public class ViewHolder extends RecyclerView.ViewHolder {
             public ImageView imageView;
             public LinearLayout view;
+            public TextView title;
 
             public ViewHolder(View v) {
                 super(v);
+                title = (TextView) v.findViewById(R.id.rct_title);
                 imageView = (ImageView) v.findViewById(R.id.rct_image);
                 view = (LinearLayout) v.findViewById(R.id.rcti_view);
             }
@@ -405,6 +407,7 @@ public class DriverProfileFragment extends Fragment{
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             Glide.with(getContext()).load(carTypes.get(position).getImage()).into(holder.imageView);
+            holder.title.setText(carTypes.get(position).getTitle());
 
             if(position == lastPressedPosition){
                 holder.imageView.setColorFilter(ContextCompat.getColor(mContext, R.color.colorPrimary), android.graphics.PorterDuff.Mode.MULTIPLY);
