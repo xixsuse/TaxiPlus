@@ -2,7 +2,6 @@ package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -13,31 +12,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.List;
 
 import io.paperdb.Paper;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.MainActivity;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Car;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.CitiesResponse;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Facility;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Model;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.TaxiPark;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Order;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.authorization.AuthThirdStepFragment;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.ModelsFragment;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.OrderInfoDialogFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user.SelectCityFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
@@ -45,52 +38,22 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-import static android.app.Activity.RESULT_OK;
-
 public class UserProfileFragment extends Fragment {
     public static final String TAG = Constants.USERPROFILEFRAGMENTTAG;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private String mParam1;
-    private String mParam2;
     private User user;
-    private boolean isLocked = true;
-    private List<String> selectedFacilities = new ArrayList<>();
-    private Facility.GetFacilities facilities;
-    private TaxiPark selectedPark;
+    private CitiesResponse.City selectedCity;
+    private boolean isEditable = false;
 
     private ProgressBar progressBar;
     private ImageButton backView, editIcon;
-    private ConstraintLayout driverInfo;
     private Button saveButton;
-    private TextView nameText, phoneText, coinsText, parkText, cityText;
-    private EditText emailEditText, modelEditText, subModelEditText, yearEditText, numberEditText;
-    private RecyclerView facilitiesRecyclerView;
-
-    private Model selectedModel;
-    private Model selectedSubModel;
-    private CitiesResponse.City selectedCity;
-
+    private TextView nameText, phoneText, coinsText, cityText;
+    private RecyclerView carsRecyclerView;
 
     private CompositeSubscription subscription;
-    public static UserProfileFragment newInstance(String param1, String param2) {
-        UserProfileFragment fragment = new UserProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -106,6 +69,7 @@ public class UserProfileFragment extends Fragment {
     private void initViews(View view){
         subscription = new CompositeSubscription();
         user = Paper.book().read(Constants.USER);
+
         backView = view.findViewById(R.id.fs_back);
         nameText = view.findViewById(R.id.fs_name);
         phoneText = view.findViewById(R.id.fs_phone);
@@ -113,19 +77,14 @@ public class UserProfileFragment extends Fragment {
         cityText = view.findViewById(R.id.fs_city);
         progressBar = view.findViewById(R.id.ff_progressbar);
         editIcon = view.findViewById(R.id.fs_edit);
-        emailEditText = view.findViewById(R.id.fs_email);
-        modelEditText = view.findViewById(R.id.fs_model);
-        subModelEditText = view.findViewById(R.id.fs_submodel);
-        yearEditText = view.findViewById(R.id.fs_year);
-        numberEditText = view.findViewById(R.id.fs_number);
-        parkText = view.findViewById(R.id.fs_park);
         saveButton = view.findViewById(R.id.fs_save_button);
-        driverInfo = view.findViewById(R.id.fs_driver_view);
-        facilitiesRecyclerView = view.findViewById(R.id.fs_facilities_recyclerview);
+        carsRecyclerView = view.findViewById(R.id.fs_cars_recyclerview);
 
-        lockEditTexts(isLocked);
-        setEditableCity(isLocked);
+        setEditable(false);
+        setListeners();
+    }
 
+    private void setListeners() {
         backView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,218 +92,68 @@ public class UserProfileFragment extends Fragment {
             }
         });
 
+        cityText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isEditable) {
+                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+                    SelectCityFragment selectCityFragment = new SelectCityFragment();
+                    selectCityFragment.setTargetFragment(UserProfileFragment.this, Constants.SELECTCITYFROMREGISTER);
+
+                    fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
+                    fragmentTransaction.add(R.id.main_activity_frame, selectCityFragment, SelectCityFragment.TAG);
+                    fragmentTransaction.addToBackStack(SelectCityFragment.TAG);
+                    fragmentTransaction.commit();
+                }
+            }
+        });
+
         editIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(user.getRole_id().equals("2")) {
-                    isLocked = !isLocked;
-                    setRecyclerView(facilities.getFacilities(), !isLocked);
-                    lockEditTexts(isLocked);
-                }else {
-                    isLocked = !isLocked;
-                    setEditableCity(isLocked);
-                }
+                isEditable = !isEditable;
+                setEditable(isEditable);
             }
         });
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!modelEditText.getText().toString().isEmpty() && !subModelEditText.getText().toString().isEmpty()
-                    &&!yearEditText.getText().toString().isEmpty() && !numberEditText.getText().toString().isEmpty()){
-                    HashMap<String, Object> objectHashMap = new HashMap<>();
-                    objectHashMap.put("token", Utility.getToken(getContext()));
-                    objectHashMap.put("gender", 1);
-                    objectHashMap.put("car_number", numberEditText.getText().toString());
-                    objectHashMap.put("car_model", selectedSubModel.getId());
-                    objectHashMap.put("year_of_birth", "1900");
-                    objectHashMap.put("car_year", yearEditText.getText().toString());
-                    objectHashMap.put("facilities", selectedFacilities);
-
-                    driverAuth(objectHashMap);
-
-                    setRecyclerView(facilities.getFacilities(), false);
-                    lockEditTexts(true);
-                }else {
-                    Toast.makeText(getContext(), getResources().getString(R.string.fill_fields), Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-
-        modelEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                Bundle b = new Bundle();
-                b.putBoolean(Constants.MODELMODE, true);
-
-                ModelsFragment modelsFragment = new ModelsFragment();
-                modelsFragment.setTargetFragment(UserProfileFragment.this, Constants.DRIVERPROFILEFRAGMENTCODEMODEL);
-                modelsFragment.setArguments(b);
-
-                fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
-                fragmentTransaction.add(R.id.main_activity_frame, modelsFragment, ModelsFragment.TAG);
-                fragmentTransaction.addToBackStack(ModelsFragment.TAG);
-                fragmentTransaction.commit();
-            }
-        });
-
-        subModelEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(selectedModel != null) {
-                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                    Bundle b = new Bundle();
-                    b.putBoolean(Constants.MODELMODE, false);
-                    b.putString(Constants.MODELID, selectedModel.getId());
-
-                    ModelsFragment modelsFragment = new ModelsFragment();
-                    modelsFragment.setTargetFragment(UserProfileFragment.this, Constants.DRIVERPROFILEFRAGMENTCODESUBMODEL);
-                    modelsFragment.setArguments(b);
-
-                    fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
-                    fragmentTransaction.add(R.id.main_activity_frame, modelsFragment, ModelsFragment.TAG);
-                    fragmentTransaction.addToBackStack(ModelsFragment.TAG);
-                    fragmentTransaction.commit();
-                }
-            }
-        });
-
-        cityText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-
-                SelectCityFragment selectCityFragment = new SelectCityFragment();
-                selectCityFragment.setTargetFragment(UserProfileFragment.this, Constants.SELECTCITYFROMREGISTER);
-
-                fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
-                fragmentTransaction.add(R.id.main_activity_frame, selectCityFragment, SelectCityFragment.TAG);
-                fragmentTransaction.addToBackStack(SelectCityFragment.TAG);
-                fragmentTransaction.commit();
+                isEditable = false;
+                setEditable(isEditable);
             }
         });
     }
 
-    private void setRecyclerView(List<Facility> facilities, boolean isLocked) {
-        facilitiesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        facilitiesRecyclerView.setAdapter(new RecyclerFacilitiesAdapter(facilities, getContext(), isLocked));
+    private void setRecyclerView(List<Car> cars) {
+        carsRecyclerView.setVisibility(View.VISIBLE);
+        carsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        carsRecyclerView.setAdapter(new RecyclerCarsAdapter(cars, getContext()));
     }
 
     private void setUser(User.GetFullInfo user){
-        selectedSubModel = new Model();
-
         nameText.setText(user.getUser().getName());
         phoneText.setText(user.getUser().getPhone());
         coinsText.setText(user.getUser().getBalance());
-        parkText.setText(user.getTaxi_park());
-//        modelEditText.setText(user.getModel());
-//        subModelEditText.setText(user.getSubmodel());
         cityText.setText(user.getCity().getCname());
-//        selectedSubModel.setId(user.getUser().getCar());
 
         if(user.getUser().getRole_id().equals("2")){
-            getFacilities();
-            driverInfo.setVisibility(View.VISIBLE);
-//            editIcon.setVisibility(View.VISIBLE);
-
-//            yearEditText.setText(user.getUser().getCar_year());
-//            numberEditText.setText(user.getUser().getCar_number());
+            setRecyclerView(user.getCars());
         }else {
-            driverInfo.setVisibility(View.GONE);
-//            editIcon.setVisibility(View.GONE);
+            carsRecyclerView.setVisibility(View.GONE);
         }
     }
 
-    private void lockEditTexts(boolean isLocked){
-        if (isLocked){
-            emailEditText.setFocusable(false);
-            emailEditText.setFocusableInTouchMode(false);
-            emailEditText.setClickable(false);
-
-            modelEditText.setFocusable(false);
-            modelEditText.setFocusableInTouchMode(false);
-            modelEditText.setClickable(false);
-            modelEditText.setEnabled(false);
-
-            subModelEditText.setFocusable(false);
-            subModelEditText.setFocusableInTouchMode(false);
-            subModelEditText.setClickable(false);
-            subModelEditText.setEnabled(false);
-
-            yearEditText.setFocusable(false);
-            yearEditText.setFocusableInTouchMode(false);
-            yearEditText.setClickable(false);
-
-            numberEditText.setFocusable(false);
-            numberEditText.setFocusableInTouchMode(false);
-            numberEditText.setClickable(false);
-
-            saveButton.setVisibility(View.GONE);
-        }else {
-            emailEditText.setFocusable(true);
-            emailEditText.setFocusableInTouchMode(true);
-            emailEditText.setClickable(true);
-
-            modelEditText.setFocusable(false);
-            modelEditText.setFocusableInTouchMode(false);
-            modelEditText.setClickable(true);
-            modelEditText.setEnabled(true);
-
-            subModelEditText.setFocusable(false);
-            subModelEditText.setFocusableInTouchMode(false);
-            subModelEditText.setClickable(true);
-            subModelEditText.setEnabled(true);
-
-            yearEditText.setFocusable(true);
-            yearEditText.setFocusableInTouchMode(true);
-            yearEditText.setClickable(true);
-
-            numberEditText.setFocusable(true);
-            numberEditText.setFocusableInTouchMode(true);
-            numberEditText.setClickable(true);
-
+    private void setEditable(boolean isEditable){
+        if (isEditable){
             saveButton.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void setEditableCity(boolean isLocked){
-        if (isLocked){
-            cityText.setFocusable(false);
-            cityText.setClickable(false);
-            cityText.setEnabled(false);
-
-            saveButton.setVisibility(View.GONE);
         }else {
-            cityText.setFocusable(true);
-            cityText.setClickable(true);
-            cityText.setEnabled(true);
-
-            saveButton.setVisibility(View.VISIBLE);
+            saveButton.setVisibility(View.GONE);
         }
     }
 
     //requests
-    private void getFacilities(){
-        progressBar.setVisibility(View.VISIBLE);
-        subscription.add(NetworkUtil.getRetrofit()
-                .getFacilities()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(this::handleResponse, this::handleError));
-    }
-
-    private void handleResponse(Facility.GetFacilities response) {
-        this.facilities = response;
-        progressBar.setVisibility(View.GONE);
-        setRecyclerView(response.getFacilities(), false);
-    }
-
-    private void handleError(Throwable throwable) {
-        progressBar.setVisibility(View.GONE);
-    }
-
-
     private void getUser(){
         progressBar.setVisibility(View.VISIBLE);
         subscription.add(NetworkUtil.getRetrofit()
@@ -358,9 +167,9 @@ public class UserProfileFragment extends Fragment {
         progressBar.setVisibility(View.GONE);
 
         user = response.getUser();
-        selectedFacilities = response.getFacilities();
         selectedCity = response.getCity();
         user.setSelectedCity(selectedCity);
+        user.setCars(response.getCars());
 
         setUser(response);
         Paper.book().write(Constants.USER, user);
@@ -371,77 +180,33 @@ public class UserProfileFragment extends Fragment {
     }
 
 
-    private void driverAuth(HashMap<String, Object> body){
-        progressBar.setVisibility(View.VISIBLE);
-        subscription.add(NetworkUtil.getRetrofit()
-                .driverRegistration(body)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(this::handleResponseAuth, this::handleErrorAuth));
-    }
-
-    private void handleResponseAuth(Response response) {
-        progressBar.setVisibility(View.GONE);
-
-        if(response.getState().equals("success")){
-            Toast.makeText(getContext(), getResources().getString(R.string.after_moderation_will_change), Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void handleErrorAuth(Throwable throwable) {
-        progressBar.setVisibility(View.GONE);
-        Toast.makeText(getContext(), getResources().getString(R.string.try_later), Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == Constants.DRIVERPROFILEFRAGMENTCODEMODEL) {
-                if(selectedModel != null){
-                    selectedSubModel = null;
-                }
-                selectedModel = data.getParcelableExtra(Constants.SELECTEDMODEL);
-                modelEditText.setText(selectedModel.getModel());
-                subModelEditText.setText("");
-            }else if(requestCode == Constants.DRIVERPROFILEFRAGMENTCODESUBMODEL){
-                selectedSubModel = data.getParcelableExtra(Constants.SELECTEDMODEL);
-                subModelEditText.setText(selectedSubModel.getModel());
-            }else if(requestCode == Constants.SELECTCITYFROMREGISTER){
-                selectedCity = data.getParcelableExtra(Constants.SELECTEDCITY);
-                cityText.setText(selectedCity.getCname());
-            }
-        }
-    }
-
-    public class RecyclerFacilitiesAdapter extends RecyclerView.Adapter<RecyclerFacilitiesAdapter.ViewHolder> {
+    public class RecyclerCarsAdapter extends RecyclerView.Adapter<RecyclerCarsAdapter.ViewHolder> {
         public Context mContext;
-        public List<Facility> facilities;
-        public boolean isVisible;
+        public List<Car> carList;
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            public TextView text;
-            public CheckBox checkBox;
-            public LinearLayout view;
+            public TextView title, carName;
+            public ConstraintLayout view;
+            public ImageView image;
 
             public ViewHolder(View v) {
                 super(v);
-                checkBox = (CheckBox) v.findViewById(R.id.rfi_checkbox);
-                text = (TextView) v.findViewById(R.id.rfi_text);
-                view = (LinearLayout) v.findViewById(R.id.rfi_view);
+                title = (TextView)v.findViewById(R.id.rct_title);
+                carName = (TextView)v.findViewById(R.id.rct_carname);
+                image = (ImageView) v.findViewById(R.id.rct_image);
+                view = (ConstraintLayout) v.findViewById(R.id.rcti_view);
             }
         }
 
-        public RecyclerFacilitiesAdapter(List<Facility> facilities, Context mContext, boolean isVisable) {
-            this.facilities = facilities;
+        public RecyclerCarsAdapter(List<Car> cars, Context mContext) {
+            this.carList = cars;
             this.mContext = mContext;
-            this.isVisible = isVisable;
         }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.recyclerview_facilitiy_item, parent, false);
+                    .inflate(R.layout.recyclerview_user_car_item, parent, false);
 
             ViewHolder vh = new ViewHolder(v);
             return vh;
@@ -449,47 +214,35 @@ public class UserProfileFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
-            holder.text.setText(facilities.get(position).getName());
-            if(isExist(facilities.get(position).getId())){
-                holder.checkBox.setChecked(true);
-                holder.text.setTextColor(getResources().getColor(R.color.carrot));
+            holder.carName.setText(carList.get(position).getModel() + " " + carList.get(position).getSubmodel());
+            int imageSrc = R.drawable.icon_taxi;
+            int title = R.string.modeTaxi;
+            switch (carList.get(position).getType()){
+                case "1":
+                    title = R.string.modeTaxi;
+                    imageSrc = R.drawable.icon_taxi;
+                    break;
+                case "2":
+                    title = R.string.modeCargoTaxi;
+                    imageSrc = R.drawable.icon_cargo;
+                    break;
+
+                case "3":
+                    title = R.string.modeEvo;
+                    imageSrc = R.drawable.icon_evo;
+                    break;
+                case "4":
+                    title = R.string.modeInvaTaxi;
+                    imageSrc = R.drawable.icon_inva;
+                    break;
             }
 
-            if (isVisible){
-                holder.checkBox.setVisibility(View.VISIBLE);
-            }else {
-                holder.checkBox.setVisibility(View.GONE);
-            }
-
-            holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if(isExist(facilities.get(position).getId())){
-                        selectedFacilities.remove(facilities.get(position).getId());
-                        holder.text.setTextColor(getResources().getColor(R.color.black));
-                    }else {
-                        selectedFacilities.add(facilities.get(position).getId());
-                        holder.text.setTextColor(getResources().getColor(R.color.colorAccent));
-                    }
-                }
-            });
+            holder.title.setText(title);
+            Glide.with(mContext).load(imageSrc).into(holder.image);
         }
-
         @Override
         public int getItemCount() {
-            return facilities.size();
+            return carList.size();
         }
-    }
-
-    private boolean isExist(String id){
-        boolean isContain = false;
-        for(int i = 0;i<selectedFacilities.size();i++){
-            if(selectedFacilities.get(i).equals(id)){
-                isContain = true;
-                break;
-            }
-        }
-
-        return isContain;
     }
 }

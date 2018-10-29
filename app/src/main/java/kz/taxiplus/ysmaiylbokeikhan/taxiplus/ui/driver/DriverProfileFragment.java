@@ -15,6 +15,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -23,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,9 +73,10 @@ public class DriverProfileFragment extends Fragment{
     private TextView carModelText, carSubmodelText;
     private LinearLayout carModelView, carSubmodelView;
     private ImageButton menuIcon;
-    private RecyclerView facilitiesRecyclerView, typesRecyclerView;
+    private RecyclerView facilitiesRecyclerView;
     private ImageView logo;
     private ProgressBar progressBar;
+    private Spinner typesSpinner;
     private Button registerButton, maleButton, femaleButton;
 
     private CompositeSubscription subscription;
@@ -131,7 +135,7 @@ public class DriverProfileFragment extends Fragment{
         menuIcon = view.findViewById(R.id.fdp_menu_view);
         progressBar = view.findViewById(R.id.fdp_progressbar);
         facilitiesRecyclerView = view.findViewById(R.id.fdp_facilities_recyclerview);
-        typesRecyclerView = view.findViewById(R.id.fdp_types_recyclerview);
+        typesSpinner = view.findViewById(R.id.fdp_spinner);
         logo = view.findViewById(R.id.fdp_logo);
 
         nameEditText.setText(user.getName());
@@ -163,8 +167,19 @@ public class DriverProfileFragment extends Fragment{
         carTypes.add(evac);
         carTypes.add(inva);
 
-        typesRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        typesRecyclerView.setAdapter(new RecyclerTypesAdapter(carTypes, getContext()));
+        selectedCarType = usual;
+        typesSpinner.setAdapter(new CustomTypesAdapter(getContext(), R.layout.recyclerview_car_type_item, carTypes));
+        typesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedCarType = carTypes.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private void setListeners() {
@@ -261,6 +276,7 @@ public class DriverProfileFragment extends Fragment{
         });
     }
 
+    //requests
     private void driverAuth(HashMap<String, Object> body){
         progressBar.setVisibility(View.VISIBLE);
         subscription.add(NetworkUtil.getRetrofit()
@@ -371,67 +387,39 @@ public class DriverProfileFragment extends Fragment{
         }
     }
 
-    public class RecyclerTypesAdapter extends RecyclerView.Adapter<RecyclerTypesAdapter.ViewHolder> {
-        public Context mContext;
-        public List<CarType> carTypes;
-        public int lastPressedPosition = -1;
+    public class CustomTypesAdapter extends ArrayAdapter<CarType> {
+        private List<CarType> carTypes;
+        private Context context;
 
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            public ImageView imageView;
-            public LinearLayout view;
-            public TextView title;
-
-            public ViewHolder(View v) {
-                super(v);
-                title = (TextView) v.findViewById(R.id.rct_title);
-                imageView = (ImageView) v.findViewById(R.id.rct_image);
-                view = (LinearLayout) v.findViewById(R.id.rcti_view);
-            }
-        }
-
-        public RecyclerTypesAdapter(List<CarType> carTypes, Context mContext) {
+        public CustomTypesAdapter(Context context, int textViewResourceId, List<CarType> carTypes) {
+            super(context, textViewResourceId, carTypes);
             this.carTypes = carTypes;
-            this.mContext = mContext;
+            this.context = context;
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.recyclerview_car_type_item, parent, false);
-
-            ViewHolder vh = new ViewHolder(v);
-            return vh;
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            return getCustomView(position, convertView, parent);
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, final int position) {
-            Glide.with(getContext()).load(carTypes.get(position).getImage()).into(holder.imageView);
-            holder.title.setText(carTypes.get(position).getTitle());
-
-            if(position == lastPressedPosition){
-                holder.imageView.setColorFilter(ContextCompat.getColor(mContext, R.color.colorPrimary), android.graphics.PorterDuff.Mode.MULTIPLY);
-            }else {
-                holder.imageView.setColorFilter(ContextCompat.getColor(mContext, R.color.gray), android.graphics.PorterDuff.Mode.MULTIPLY);
-            }
-
-
-            holder.view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    lastPressedPosition = position;
-                    selectedCarType = carTypes.get(position);
-                    notifyDataSetChanged();
-                }
-            });
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return getCustomView(position, convertView, parent);
         }
 
-        @Override
-        public int getItemCount() {
-            return carTypes.size();
+        public View getCustomView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater=getLayoutInflater();
+            View row=inflater.inflate(R.layout.recyclerview_car_type_item, parent, false);
+
+            TextView title=(TextView)row.findViewById(R.id.rct_title);
+            title.setText(carTypes.get(position).getTitle());
+
+            ImageView icon=(ImageView)row.findViewById(R.id.rct_image);
+            Glide.with(context).load(carTypes.get(position).getImage()).into(icon);
+
+            return row;
         }
     }
-
 
     private List<String> getSelectedFacilities() {
         List<String> facilities = new ArrayList<>();

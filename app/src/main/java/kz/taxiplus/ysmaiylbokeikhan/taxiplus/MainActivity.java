@@ -380,21 +380,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 fragmentTransaction.add(R.id.main_activity_frame, invaTaxiFragment, InvaTaxiFragment.TAG);
                 fragmentTransaction.addToBackStack(InvaTaxiFragment.TAG);
             }
-//            for(int i = 0;i<user.getCars().size();i++){
-//                Car car = user.getCars().get(i);
-//
-//                if(car.getType().equals("1")){
-//                    CityFragment cityFragment = new CityFragment();
-//                    fragmentTransaction.add(R.id.main_activity_frame, cityFragment, CityFragment.TAG);
-//                    fragmentTransaction.addToBackStack(CityFragment.TAG);
-//                    break;
-//                }else if(car.getType().equals("2")){
-//                    CargoFragment cargoFragment = new CargoFragment();
-//                    fragmentTransaction.add(R.id.main_activity_frame, cargoFragment, CargoFragment.TAG);
-//                    fragmentTransaction.addToBackStack(CargoFragment.TAG);
-//                    break;
-//                }
-//            }
         }else {
             UserMainFragment userMainFragment = UserMainFragment.newInstance(1);
             fragmentTransaction.add(R.id.main_activity_frame, userMainFragment, UserMainFragment.TAG);
