@@ -1,4 +1,4 @@
-package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.DialogFragments;
+package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.dialogFragments;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -14,13 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 public class DriverComplaintDialogView extends DialogFragment{
     public static String TAG = Constants.DRIVERCOMPLAINTDIALOGVIEW;

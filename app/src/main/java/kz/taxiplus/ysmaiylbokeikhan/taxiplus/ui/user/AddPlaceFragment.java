@@ -46,12 +46,8 @@ import static android.content.Context.LOCATION_SERVICE;
 
 public class AddPlaceFragment extends Fragment implements OnMapReadyCallback {
     public static final String TAG = Constants.ADDPLACEFRAGMENTTAG;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     public static final int REQUEST_GPS_PERMISSION = 123;
 
-    private String mParam1;
-    private String mParam2;
     private LatLng myLocation;
     private int drawerCounter = 0;
     private Address newPlace;
@@ -66,23 +62,6 @@ public class AddPlaceFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap map;
 
     private CompositeSubscription subscription;
-    public static AddPlaceFragment newInstance(String param1, String param2) {
-        AddPlaceFragment fragment = new AddPlaceFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

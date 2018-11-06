@@ -104,7 +104,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:text="@string/set_comment"
             android:textColor="@color/black"
-            android:textSize="@dimen/_14ssp"/>
+            android:textSize="@dimen/_13ssp"/>
         <View
             android:id="@+id/fmo_comment_line"
             android:layout_width="match_parent"
@@ -165,7 +165,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:text="@string/date"
             android:textColor="@color/black"
-            android:textSize="@dimen/_14ssp"/>
+            android:textSize="@dimen/_13ssp"/>
         <View
             android:id="@+id/fmo_date_line"
             android:layout_width="match_parent"
@@ -351,7 +351,7 @@
             android:layout_marginEnd="@dimen/_20sdp"
             android:layout_marginBottom="@dimen/_10sdp"
             android:background="@drawable/rounded_green_view"
-            android:textSize="@dimen/_15ssp"
+            android:textSize="@dimen/_14ssp"
             android:textColor="@color/white"
             android:text="@string/make_order"/>
 

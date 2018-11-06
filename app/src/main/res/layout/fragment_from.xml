@@ -8,7 +8,6 @@
     android:background="@color/white"
     tools:context=".ui.makeOrder.FromAndToFragment">
 
-
     <LinearLayout
         android:id="@+id/top_view"
         android:layout_width="match_parent"
@@ -16,22 +15,6 @@
         app:layout_constraintTop_toTopOf="parent"
         android:padding="@dimen/_6sdp"
         android:background="?attr/colorPrimary">
-        <!--<EditText-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="@dimen/_27sdp"-->
-            <!--android:background="@color/white"-->
-            <!--android:hint="@string/from"-->
-            <!--android:textColorHint="?attr/colorPrimary"-->
-            <!--android:textAlignment="center"-->
-            <!--android:textColor="?attr/colorPrimary"-->
-            <!--android:textSize="@dimen/_13ssp"-->
-            <!--android:textAllCaps="false"-->
-            <!--android:layout_marginStart="@dimen/_5sdp"-->
-            <!--android:layout_marginEnd="@dimen/_5sdp"-->
-            <!--android:layout_marginBottom="@dimen/_15sdp"-->
-            <!--android:inputType="text"-->
-            <!--android:imeOptions="actionSearch"/>-->
-
         <AutoCompleteTextView
             android:id="@+id/ff_mode_edittext"
             android:layout_width="match_parent"
@@ -81,9 +64,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginStart="@dimen/_10sdp"
             android:layout_marginEnd="@dimen/_4sdp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:text="@string/save_place"
             android:textColor="@color/black"
-            android:textSize="@dimen/_15ssp"/>
+            android:textSize="@dimen/_13ssp"/>
 
         <View
             android:layout_width="match_parent"
@@ -117,11 +102,13 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:layout_marginStart="@dimen/_6sdp"
             android:layout_marginEnd="@dimen/_4sdp"
             android:text="@string/set_on_map"
             android:textColor="@color/black"
-            android:textSize="@dimen/_15ssp"/>
+            android:textSize="@dimen/_13ssp"/>
 
         <View
             android:layout_width="match_parent"

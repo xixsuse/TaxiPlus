@@ -28,7 +28,7 @@
         android:layout_marginEnd="@dimen/_4sdp"
         android:text="text"
         android:textColor="@color/black"
-        android:textSize="@dimen/_15ssp"/>
+        android:textSize="@dimen/_13ssp"/>
 
     <TextView
         android:id="@+id/rspi_nick"
@@ -40,7 +40,7 @@
         android:layout_marginStart="@dimen/_9sdp"
         android:layout_marginEnd="@dimen/_4sdp"
         android:textColor="@color/black"
-        android:textSize="@dimen/_15ssp"/>
+        android:textSize="@dimen/_13ssp"/>
 
     <View
         android:layout_width="match_parent"

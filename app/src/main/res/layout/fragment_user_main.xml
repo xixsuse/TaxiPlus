@@ -70,7 +70,7 @@
                 android:layout_marginEnd="@dimen/_15sdp"
                 android:textColor="?attr/buttonColor"
                 android:textAllCaps="false"
-                android:textSize="@dimen/_15ssp"
+                android:textSize="@dimen/_14ssp"
                 android:text="@string/from"
                 android:maxLines="1"
                 android:ellipsize="end"/>
@@ -84,7 +84,7 @@
                 android:layout_marginStart="@dimen/_15sdp"
                 android:layout_marginEnd="@dimen/_15sdp"
                 android:textColor="?attr/buttonColor"
-                android:textSize="@dimen/_15ssp"
+                android:textSize="@dimen/_14ssp"
                 android:textAllCaps="false"
                 android:text="@string/to"
                 android:maxLines="1"
@@ -98,7 +98,7 @@
                 android:layout_marginStart="@dimen/_15sdp"
                 android:layout_marginEnd="@dimen/_15sdp"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_15ssp"
+                android:textSize="@dimen/_14ssp"
                 android:textAllCaps="false"
                 android:text="@string/make_order" />
         </android.support.constraint.ConstraintLayout>

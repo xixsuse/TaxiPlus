@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:clickable="true"
-    android:background="@color/white"
-    tools:context=".ui.MainFragment">
+    android:background="@color/white">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/fmp_toolbar"
@@ -36,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/my_places"
                 android:textAlignment="center"
-                android:textSize="@dimen/_16ssp"
+                android:textSize="@dimen/_13ssp"
                 android:textColor="@color/white"/>
             <ImageButton
                 android:id="@+id/fmp_add"

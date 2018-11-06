@@ -184,6 +184,7 @@
     <string name="is_order_ended">Вы подъехали?</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
+    <string name="are_you_sure_to_exit">Вы уверены что хотите выйти?</string>
     <string name="start_trip">Начать поездку</string>
     <string name="end_trip">Закончить поездку</string>
     <string name="trip_is_started">Поездка началась</string>
@@ -225,6 +226,10 @@
     <string name="add_car_desc">Для просмотра заказов необходимо добавить необходимую машину</string>
     <string name="cargo_decs_hint">Описание груза</string>
     <string name="evo_desc">Модель машины и описание</string>
+    <string name="mech">МКПП</string>
+    <string name="auto">АКПП</string>
+    <string name="failed_payment">Онлайн оплата не прошла</string>
+    <string name="pay_by_hand">Оплатите наличными</string>
 
     <string name="notifications_admin_channel_name">Name of admin channel</string>
     <string name="notifications_admin_channel_description">Description of admin channel</string>

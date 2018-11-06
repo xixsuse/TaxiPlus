@@ -1,4 +1,4 @@
-package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.DialogFragments;
+package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.dialogFragments;
 
 
 import android.os.Bundle;

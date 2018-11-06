@@ -25,7 +25,7 @@
         app:layout_constraintStart_toEndOf="@id/location_icon"
         android:layout_marginStart="@dimen/_8sdp"
         app:layout_constraintEnd_toStartOf="@id/rhi_date_text"
-        android:textSize="@dimen/_15ssp"
+        android:textSize="@dimen/_13ssp"
         android:text="Abai 28 - Novai 5"
         android:textColor="@color/black"/>
 
@@ -44,6 +44,7 @@
         android:text="500"
         android:maxLines="1"
         android:ellipsize="end"/>
+
     <TextView
         android:id="@+id/rhi_date_text"
         android:layout_width="wrap_content"
@@ -57,8 +58,6 @@
         android:text="24.04.2018"
         android:maxLines="1"
         android:ellipsize="end"/>
-
-
 
     <View
         android:id="@+id/line"

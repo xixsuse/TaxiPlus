@@ -36,7 +36,7 @@
                 android:layout_marginEnd="@dimen/_30sdp"
                 android:text="@string/driver_register"
                 android:textAlignment="center"
-                android:textSize="@dimen/_16ssp"
+                android:textSize="@dimen/_13ssp"
                 android:textColor="@color/white"/>
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
@@ -73,7 +73,7 @@
                 android:textColor="@color/gray"
                 android:textColorHint="@color/gray"
                 android:inputType="textCapWords"
-                android:textSize="@dimen/_14ssp"
+                android:textSize="@dimen/_13ssp"
                 android:padding="@dimen/_5sdp"
                 android:clickable="false"
                 android:cursorVisible="false"
@@ -88,7 +88,6 @@
                 android:layout_marginEnd="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:orientation="horizontal"
-                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/fdp_name_edittext">
                 <Button
                     android:id="@+id/fdp_male_button"
@@ -100,7 +99,7 @@
                     android:textColor="?attr/colorPrimary"
                     android:text="@string/male"
                     android:textAllCaps="false"
-                    android:textSize="@dimen/_14ssp"
+                    android:textSize="@dimen/_13ssp"
                     android:minHeight="0dp"
                     android:paddingTop="@dimen/_8sdp"
                     android:paddingBottom="@dimen/_8sdp"/>
@@ -114,7 +113,7 @@
                     android:textColor="?attr/colorPrimary"
                     android:text="@string/female"
                     android:textAllCaps="false"
-                    android:textSize="@dimen/_14ssp"
+                    android:textSize="@dimen/_13ssp"
                     android:minHeight="0dp"
                     android:paddingTop="@dimen/_8sdp"
                     android:paddingBottom="@dimen/_8sdp"/>
@@ -134,7 +133,7 @@
                 android:textColorHint="@color/gray"
                 android:inputType="phone"
                 android:maxLength="17"
-                android:textSize="@dimen/_14ssp"
+                android:textSize="@dimen/_13ssp"
                 android:padding="@dimen/_5sdp"
                 android:clickable="false"
                 android:cursorVisible="false"
@@ -153,7 +152,7 @@
                 android:hint="@string/enter_email"
                 android:textColor="@color/gray"
                 android:textColorHint="@color/gray"
-                android:textSize="@dimen/_14ssp"
+                android:textSize="@dimen/_13ssp"
                 android:inputType="textEmailAddress"
                 android:padding="@dimen/_5sdp" />
 
@@ -175,7 +174,7 @@
                     android:layout_weight="1"
                     android:textColor="@color/gray"
                     android:text="@string/car_model"
-                    android:textSize="@dimen/_14ssp"
+                    android:textSize="@dimen/_13ssp"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_marginEnd="@dimen/_5sdp"/>
                 <ImageView
@@ -203,7 +202,7 @@
                     android:layout_weight="1"
                     android:textColor="@color/gray"
                     android:text="@string/car_type"
-                    android:textSize="@dimen/_14ssp"
+                    android:textSize="@dimen/_13ssp"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_marginEnd="@dimen/_5sdp"/>
                 <ImageView
@@ -247,7 +246,7 @@
                 android:layout_marginTop="@dimen/_15sdp"
                 android:background="@drawable/border_for_view"
                 android:hint="@string/seat_numbers"
-                android:textSize="@dimen/_14ssp"
+                android:textSize="@dimen/_13ssp"
                 android:inputType="number"
                 android:textColor="@color/gray"
                 android:textColorHint="@color/gray"
@@ -263,7 +262,7 @@
                 android:layout_marginTop="@dimen/_15sdp"
                 android:background="@drawable/border_for_view"
                 android:hint="@string/enter_gos_number"
-                android:textSize="@dimen/_14ssp"
+                android:textSize="@dimen/_13ssp"
                 android:inputType="textCapCharacters"
                 android:textColor="@color/gray"
                 android:textColorHint="@color/gray"
@@ -279,7 +278,7 @@
                 android:layout_marginTop="@dimen/_15sdp"
                 android:background="@drawable/border_for_view"
                 android:hint="@string/produced_year"
-                android:textSize="@dimen/_14ssp"
+                android:textSize="@dimen/_13ssp"
                 android:inputType="number"
                 android:maxLength="4"
                 android:digits="0123456789"
@@ -292,7 +291,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/fdp_year_edittext"
                 android:textColor="@color/gray"
-                android:textSize="@dimen/_14ssp"
+                android:textSize="@dimen/_12ssp"
                 android:text="@string/additional"
                 android:layout_marginStart="@dimen/_20sdp"
                 android:layout_marginEnd="@dimen/_20sdp"
@@ -314,7 +313,7 @@
                 android:layout_margin="@dimen/_20sdp"
                 android:background="@drawable/rounded_green_view"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_15ssp"
+                android:textSize="@dimen/_14ssp"
                 android:textAllCaps="false"
                 android:text="@string/register"/>
         </android.support.constraint.ConstraintLayout>

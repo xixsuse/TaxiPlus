@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:text="23.09.2018"
-        android:textSize="@dimen/_13ssp"/>
+        android:textSize="@dimen/_12ssp"/>
     
     <TextView
         android:id="@+id/rci_coins_number"
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:textSize="@dimen/_14ssp"
+        android:textSize="@dimen/_13ssp"
         android:textColor="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="@dimen/_9sdp"
@@ -39,7 +39,7 @@
         app:layout_constraintTop_toBottomOf="@id/rci_date"
         app:layout_constraintStart_toStartOf="@id/rci_date"
         app:layout_constraintEnd_toStartOf="@id/rci_coins_number"
-        android:textSize="@dimen/_15ssp"
+        android:textSize="@dimen/_13ssp"
         android:textColor="@color/black"
         android:text="Abai 20 - Novai 1"/>
 
@@ -50,7 +50,7 @@
         app:layout_constraintTop_toBottomOf="@id/rci_address_from"
         app:layout_constraintStart_toStartOf="@id/rci_date"
         app:layout_constraintEnd_toStartOf="@id/rci_coins_number"
-        android:textSize="@dimen/_15ssp"
+        android:textSize="@dimen/_13ssp"
         android:textColor="@color/black"
         android:text="Abai 20 - Novai 1"/>
 
@@ -64,7 +64,7 @@
         android:layout_marginBottom="@dimen/_7sdp"
         android:layout_marginTop="@dimen/_3sdp"
         android:textColor="@color/gray"
-        android:textSize="@dimen/_14ssp"
+        android:textSize="@dimen/_12ssp"
         android:text="econom"/>
 
     <View

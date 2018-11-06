@@ -47,6 +47,9 @@ public class Constants {
     public static final String ADDCARFRAGMENT = "AddCarFragment";
     public static final String ADDCARGOFRAGMENT = "AddCargoFragment";
     public static final String INVATAXIFRAGMENT = "InvaTaxiFragment";
+    public static final String SOBERFRAGMENT = "AddSoberOrderFragment";
+    public static final String WEBFRAGMENT = "WebFragment";
+    public static final String LOGOUTVIEW = "LogoutDialogFragment";
 
 
     public static final int MAINFRAGMENTCODEFROM = 121;
@@ -72,6 +75,7 @@ public class Constants {
     public static final String FROMADDRESS = "fromAddress";
     public static final String ADDRESS = "Address";
     public static final String URL = "http://185.236.130.126/profile/account/";
+    public static final String TEST_URL = "http://192.168.0.116/profile/account/";
     public static final String NEWORDER = "newOrder";
     public static final String SELECTEDMODEL = "selectedModel";
     public static final String SELECTEDCITY = "selectedCity";

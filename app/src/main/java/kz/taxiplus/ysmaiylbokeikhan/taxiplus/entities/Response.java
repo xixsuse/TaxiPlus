@@ -12,6 +12,7 @@ public class Response {
     private String status;
     private String order_id;
     private String path;
+    private String url;
     private User user;
     private int code;
     private int is_active;
@@ -91,5 +92,9 @@ public class Response {
 
     public Car getCar() {
         return car;
+    }
+
+    public String getUrl() {
+        return url;
     }
 }

@@ -14,12 +14,12 @@
         android:id="@+id/enter_phone"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
-        android:layout_marginStart="@dimen/_30sdp"
-        android:layout_marginEnd="@dimen/_30sdp"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="@dimen/_10sdp"
         android:textColor="@color/gray"
-        android:textSize="@dimen/_14ssp"
+        android:textSize="@dimen/_12ssp"
         android:text="@string/enter_phone_for_auth"
         android:textAlignment="center"/>
 
@@ -53,8 +53,8 @@
         android:textSize="@dimen/_15ssp"
         android:textColor="@color/white"
         android:text="@string/next"
-        android:textAllCaps="false"
-        />
+        android:textAllCaps="false" />
+
     <TextView
         android:id="@+id/fafs_user_agreement"
         android:layout_width="match_parent"

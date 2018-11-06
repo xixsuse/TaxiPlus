@@ -45,6 +45,7 @@
                     android:text="@string/logout"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_14ssp"
+                    android:textAllCaps="false"
                     android:background="@drawable/rounded_carrot_view"/>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>

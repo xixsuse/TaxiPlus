@@ -24,9 +24,6 @@ import rx.subscriptions.CompositeSubscription;
 
 public class AddRecomendationFragment extends Fragment {
     public static final String TAG = Constants.ADDRECOMFRAGMENTTAG;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
 
     private float ratedRating = 0;
 

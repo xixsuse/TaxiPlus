@@ -47,13 +47,15 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.RetrofitInterface;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.CargoFragment;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.dialogFragments.LogoutDialogFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.InvaTaxiFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.AddCarFragment;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.DialogFragments.InfoDialogView;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.DialogFragments.RateDialogFragment;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.dialogFragments.InfoDialogView;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.dialogFragments.RateDialogFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.SettingsFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.DriverMainFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.OpenSessionFragment;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.AddSoberOrderFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user.HistoryFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user.MyCoinsFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.CityFragment;
@@ -136,7 +138,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                LogoutDialogFragment logoutDialogFragment = new LogoutDialogFragment();
+                logoutDialogFragment.show(getSupportFragmentManager(), LogoutDialogFragment.TAG);
             }
         });
 
@@ -159,6 +162,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         RecyclerMenuItem interCityTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeCitiesTaxi),R.drawable.icon_cities_taxi, 4);
         RecyclerMenuItem cargoTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeCargoTaxi),R.drawable.icon_cargo, 5);
         RecyclerMenuItem evoTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeEvo),R.drawable.icon_evo, 8);
+        RecyclerMenuItem sober = new RecyclerMenuItem(getResources().getString(R.string.order_driver),R.drawable.icon_driver, 11);
 
         RecyclerMenuItem menuItem = new RecyclerMenuItem(getResources().getString(R.string.trip_history), R.drawable.icon_history, 10);
         RecyclerMenuItem menuItem2 = new RecyclerMenuItem(getResources().getString(R.string.add_card), R.drawable.icon_add_card, 6);
@@ -173,6 +177,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         recyclerMenuItemList.add(cargoTaxi);
         recyclerMenuItemList.add(evoTaxi);
         recyclerMenuItemList.add(invaTaxi);
+        recyclerMenuItemList.add(sober);
         recyclerMenuItemList.add(menuItem);
         recyclerMenuItemList.add(menuItem2);
         recyclerMenuItemList.add(menuItem4);
@@ -556,6 +561,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                             fragmentTransaction.addToBackStack(HistoryFragment.TAG);
                             break;
 
+                        case 11:
+                            AddSoberOrderFragment addSoberOrderFragment = new AddSoberOrderFragment();
+                            fragmentTransaction.replace(R.id.main_activity_frame, addSoberOrderFragment, AddSoberOrderFragment.TAG);
+                            fragmentTransaction.addToBackStack(AddSoberOrderFragment.TAG);
+                            break;
+
                         case 20:
                             SettingsFragment settingsFragment = new SettingsFragment();
                             fragmentTransaction.replace(R.id.main_activity_frame, settingsFragment, SettingsFragment.TAG);
@@ -693,6 +704,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             }else if(type.equals("501")){
                 RateDialogFragment rateDialogFragment = RateDialogFragment.newInstance(orderId);
                 rateDialogFragment.show(getSupportFragmentManager(), RateDialogFragment.TAG);
+            }else if(type.equals("0")){
+                InfoDialogView infoDialogView = InfoDialogView.newInstance(getResources().getString(R.string.failed_payment), R.drawable.icon_error);
+                infoDialogView.show(getSupportFragmentManager(), InfoDialogView.TAG);
             }
         }
     }
@@ -724,6 +738,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             }else if(type.equals("501")){
                 RateDialogFragment rateDialogFragment = RateDialogFragment.newInstance(orderId);
                 rateDialogFragment.show(getSupportFragmentManager(), RateDialogFragment.TAG);
+            }else if(type.equals("0")){
+                InfoDialogView infoDialogView = InfoDialogView.newInstance(getResources().getString(R.string.failed_payment), R.drawable.icon_error);
+                infoDialogView.show(getSupportFragmentManager(), InfoDialogView.TAG);
             }
         }
     };

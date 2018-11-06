@@ -58,10 +58,11 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.OrderToDriver;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Place;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.DialogFragments.CancelOrderDialogFragment;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.dialogFragments.CancelOrderDialogFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.FromAndToFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.MakeOrderFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.ModesDialogFragment;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.WebFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user.ChatFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
@@ -442,7 +443,7 @@ public class UserMainFragment extends Fragment implements OnMapReadyCallback, Ca
                 break;
 
             case "1":
-                setWaitingState(orderId);
+                setWaitingState(orderId, "");
                 break;
 
             case "2":
@@ -479,7 +480,7 @@ public class UserMainFragment extends Fragment implements OnMapReadyCallback, Ca
         }
     }
 
-    public void setWaitingState(String orderId){
+    public void setWaitingState(String orderId, String url){
         this.orderId = orderId;
         newOrderView.setVisibility(View.GONE);
         waitingView.setVisibility(View.VISIBLE);
@@ -490,6 +491,16 @@ public class UserMainFragment extends Fragment implements OnMapReadyCallback, Ca
                     .load(user.getAvatar_path())
                     .apply(RequestOptions.circleCropTransform())
                     .into(userLogo);
+        }
+
+        if(url != null && !url.equals("")){
+            fragmentTransaction = getFragmentManager().beginTransaction();
+
+            WebFragment webFragment = WebFragment.newInstance(url);
+            fragmentTransaction.setCustomAnimations(R.anim.enter_from_bottom, R.anim.enter_from_top, R.anim.exit_to_bottom, R.anim.exit_to_top);
+            fragmentTransaction.add(R.id.main_activity_frame, webFragment, WebFragment.TAG);
+            fragmentTransaction.addToBackStack(WebFragment.TAG);
+            fragmentTransaction.commit();
         }
     }
 
@@ -504,18 +515,19 @@ public class UserMainFragment extends Fragment implements OnMapReadyCallback, Ca
 
     private void setOrderInfoView(OrderToDriver.GetOrderInfo orderInfo){
         this.orderInfo = orderInfo;
+        try {
+            confNameText.setText(orderInfo.getDriver().getName());
+            confPhoneText.setText(orderInfo.getDriver().getPhone());
+            confNumberText.setText(orderInfo.getCar().get(0).getNumber());
+            confModelText.setText(orderInfo.getCar().get(0).getModel() + " "+ orderInfo.getCar().get(0).getSubmodel());
+            confModeText.setText(Utility.setOrder(orderInfo.getOrder().getOrder_type(), getContext()));
+            confDateText.setText(Utility.setDataString(orderInfo.getOrder().getDate()));
 
-        confNameText.setText(orderInfo.getDriver().getName());
-        confPhoneText.setText(orderInfo.getDriver().getPhone());
-        confNumberText.setText(orderInfo.getCar().get(0).getNumber());
-        confModelText.setText(orderInfo.getCar().get(0).getModel() + " "+ orderInfo.getCar().get(0).getSubmodel());
-        confModeText.setText(Utility.setOrder(orderInfo.getOrder().getOrder_type(), getContext()));
-        confDateText.setText(Utility.setDataString(orderInfo.getOrder().getDate()));
+            confirmFromText.setText(Utility.getAddressFromLatLngStr(new LatLng(orderInfo.getOrder().getFrom_latitude(), orderInfo.getOrder().getFrom_longitude()), getContext()));
+            confirmToText.setText(Utility.getAddressFromLatLngStr(new LatLng(orderInfo.getOrder().getTo_latitude(), orderInfo.getOrder().getTo_longitude()), getContext()));
 
-        confirmFromText.setText(Utility.getAddressFromLatLngStr(new LatLng(orderInfo.getOrder().getFrom_latitude(), orderInfo.getOrder().getFrom_longitude()), getContext()));
-        confirmToText.setText(Utility.getAddressFromLatLngStr(new LatLng(orderInfo.getOrder().getTo_latitude(), orderInfo.getOrder().getTo_longitude()), getContext()));
-
-        layoutBottomSheet.setVisibility(View.VISIBLE);
+            layoutBottomSheet.setVisibility(View.VISIBLE);
+        }catch (Exception e){}
     }
 
     private void drawMarker(Location location) {
@@ -569,11 +581,14 @@ public class UserMainFragment extends Fragment implements OnMapReadyCallback, Ca
                 .icon(BitmapDescriptorFactory.fromBitmap(Utility.setIcon(R.drawable.icon_point_a, getContext())))
                 .position(from));
 
-        for (int i = 0; i < direction.getRouteList().size(); i++) {
-            Route route = direction.getRouteList().get(i);
-            ArrayList<LatLng> directionPositionList = route.getLegList().get(0).getDirectionPoint();
-            map.addPolyline(DirectionConverter.createPolyline(getContext(), directionPositionList, 7, getResources().getColor(R.color.colorPrimary)));
-        }
+//        for (int i = 0; i < direction.getRouteList().size(); i++) {
+//            Route route = direction.getRouteList().get(i);
+//            ArrayList<LatLng> directionPositionList = route.getLegList().get(0).getDirectionPoint();
+//            map.addPolyline(DirectionConverter.createPolyline(getContext(), directionPositionList, 7, getResources().getColor(R.color.colorPrimary)));
+//        }
+        Route route = direction.getRouteList().get(0);
+        map.addPolyline(DirectionConverter.createPolyline(getContext(), route.getLegList().get(0).getDirectionPoint(), 7, getResources().getColor(R.color.colorPrimary)));
+
         setCameraWithCoordinationBounds(direction.getRouteList().get(0));
     }
 

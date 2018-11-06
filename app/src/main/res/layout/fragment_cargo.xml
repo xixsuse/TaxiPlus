@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/modeCargoTaxi"
                 android:textAlignment="center"
-                android:textSize="@dimen/_16ssp"
+                android:textSize="@dimen/_13ssp"
                 android:textColor="@color/white"/>
             <ImageButton
                 android:id="@+id/fc_add"

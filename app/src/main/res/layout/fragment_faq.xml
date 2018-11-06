@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/faq_all"
                 android:textAlignment="center"
-                android:textSize="@dimen/_16ssp"
+                android:textSize="@dimen/_13ssp"
                 android:textColor="@color/white"/>
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
@@ -55,7 +55,7 @@
         android:background="@drawable/rounded_green_view"
         android:layout_margin="@dimen/_15sdp"
         android:textColor="@color/white"
-        android:textSize="@dimen/_15ssp"
+        android:textSize="@dimen/_14ssp"
         android:text="@string/recomendations"
         android:textAllCaps="false"/>
 </android.support.constraint.ConstraintLayout>

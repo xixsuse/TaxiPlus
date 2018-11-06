@@ -25,7 +25,8 @@
         android:text="@string/new_order_text"
         android:textAlignment="center"
         android:textColor="?attr/colorPrimary"
-        android:textSize="@dimen/_20ssp"
+        android:textSize="@dimen/_17ssp"
+        android:textStyle="bold"
         android:visibility="gone" />
 
     <LinearLayout
@@ -57,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_7sdp"
                 android:text="@string/offer_name"
-                android:textSize="@dimen/_14sdp"
+                android:textSize="@dimen/_13sdp"
                 android:textColor="?attr/colorPrimary"/>
             <TextView
                 android:id="@+id/foi_name_text"
@@ -66,7 +67,7 @@
                 android:textAlignment="textEnd"
                 android:layout_height="wrap_content"
                 android:text="name"
-                android:textSize="@dimen/_14sdp"
+                android:textSize="@dimen/_13sdp"
                 android:textColor="?attr/colorPrimary"/>
         </LinearLayout>
         <LinearLayout
@@ -86,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
                 android:text="@string/price"
-                android:textSize="@dimen/_14sdp"
+                android:textSize="@dimen/_13sdp"
                 android:textColor="?attr/colorPrimary"/>
             <TextView
                 android:id="@+id/foi_price_text"
@@ -95,7 +96,7 @@
                 android:textAlignment="textEnd"
                 android:layout_height="wrap_content"
                 android:text="price"
-                android:textSize="@dimen/_14sdp"
+                android:textSize="@dimen/_13sdp"
                 android:textColor="?attr/colorPrimary"/>
         </LinearLayout>
         <LinearLayout
@@ -114,7 +115,7 @@
                 android:layout_height="@dimen/_35sdp"
                 android:background="@drawable/rounded_green_view"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_15ssp"
+                android:textSize="@dimen/_14ssp"
                 android:textAllCaps="false"
                 android:text="@string/accept"/>
             <Button
@@ -126,7 +127,7 @@
                 android:layout_height="@dimen/_35sdp"
                 android:background="@drawable/rounded_carrot_view"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_15ssp"
+                android:textSize="@dimen/_14ssp"
                 android:textAllCaps="false"
                 android:text="@string/decline"/>
         </LinearLayout>

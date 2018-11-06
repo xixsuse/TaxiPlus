@@ -29,6 +29,7 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Model;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.FromAndToFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -37,11 +38,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class ModelsFragment extends Fragment {
     public static final String TAG = Constants.MODELSFRAGMENTTAG;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    private String mParam1;
-    private String mParam2;
     private String selectedModelId;
     private List<Model> modelList;
     private boolean mode = true;
@@ -53,21 +50,11 @@ public class ModelsFragment extends Fragment {
 
     private CompositeSubscription subscription;
 
-    public static ModelsFragment newInstance(String param1, String param2) {
-        ModelsFragment fragment = new ModelsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
             mode = getArguments().getBoolean(Constants.MODELMODE);
             selectedModelId = getArguments().getString(Constants.MODELID);
         }
@@ -93,6 +80,8 @@ public class ModelsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.fm_recyclerview);
         progressBar = view.findViewById(R.id.fm_progressbar);
         searchView = view.findViewById(R.id.fm_search_edittext);
+
+        searchView.requestFocus();
 
         backView.setOnClickListener(new View.OnClickListener() {
             @Override

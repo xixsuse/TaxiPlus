@@ -26,7 +26,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="center">
                 <ImageButton
                     android:id="@+id/fi_menu"
                     android:layout_width="@dimen/_25sdp"
@@ -39,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/intercity"
                     android:textAlignment="center"
-                    android:textSize="@dimen/_16ssp"
+                    android:textSize="@dimen/_13ssp"
                     android:textColor="@color/white"/>
                 <ImageButton
                     android:id="@+id/fi_add"
@@ -66,7 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_30sdp"
                 android:hint="@string/search"
-                android:textSize="@dimen/_13ssp"
+                android:textSize="@dimen/_12ssp"
                 android:textColor="@color/gray"
                 android:padding="@dimen/_4sdp"
                 android:background="@drawable/rounded_white_view"

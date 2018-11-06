@@ -6,12 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,10 +40,8 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.CarType;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Facility;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Model;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.TaxiPark;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.DialogFragments.CancelOrderDialogFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
 import rx.android.schedulers.AndroidSchedulers;
@@ -57,11 +51,7 @@ import rx.subscriptions.CompositeSubscription;
 import static android.app.Activity.RESULT_OK;
 public class DriverProfileFragment extends Fragment{
     public static final String TAG = Constants.DRIVERPROFILEFRAGMENTTAG;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    private String mParam1;
-    private String mParam2;
     private int male = 0;
     private User user;
     private CarType selectedCarType;
@@ -81,24 +71,6 @@ public class DriverProfileFragment extends Fragment{
 
     private CompositeSubscription subscription;
     private FragmentTransaction fragmentTransaction;
-
-    public static DriverProfileFragment newInstance(String param1, String param2) {
-        DriverProfileFragment fragment = new DriverProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -235,7 +207,7 @@ public class DriverProfileFragment extends Fragment{
                if(checkFields()){
                    HashMap<String, Object> objectHashMap = new HashMap<>();
                    objectHashMap.put("token", Utility.getToken(getContext()));
-                   objectHashMap.put("gender", 2);
+                   objectHashMap.put("gender_id", male);
                    objectHashMap.put("car_number", gosNumberEditText.getText().toString());
                    objectHashMap.put("car_model", selectedSubmodel.getId());
                    objectHashMap.put("year_of_birth", "1900");
@@ -255,10 +227,10 @@ public class DriverProfileFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 male = 2;
-                maleButton.setBackground(getResources().getDrawable(R.drawable.rounded_green_view));
+                maleButton.setBackgroundResource(R.drawable.rounded_green_view);
                 maleButton.setTextColor(getResources().getColor(R.color.white));
 
-                femaleButton.setBackground(getResources().getDrawable(R.drawable.border_for_view));
+                femaleButton.setBackgroundResource(R.drawable.border_for_view);
                 femaleButton.setTextColor(getResources().getColor(R.color.colorAccent));
             }
         });
@@ -267,10 +239,10 @@ public class DriverProfileFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 male = 1;
-                maleButton.setBackground(getResources().getDrawable(R.drawable.border_for_view));
+                maleButton.setBackgroundResource(R.drawable.border_for_view);
                 maleButton.setTextColor(getResources().getColor(R.color.colorAccent));
 
-                femaleButton.setBackground(getResources().getDrawable(R.drawable.rounded_green_view));
+                femaleButton.setBackgroundResource(R.drawable.rounded_green_view);
                 femaleButton.setTextColor(getResources().getColor(R.color.white));
             }
         });
@@ -435,7 +407,7 @@ public class DriverProfileFragment extends Fragment{
         boolean isCorrect = false;
         if(selectedModel!=null && selectedSubmodel!=null && !gosNumberEditText.getText().toString().isEmpty() &&
                 !yearEditText.getText().toString().isEmpty() && !seatsEditText.getText().toString().isEmpty()&&
-                selectedCarType != null){
+                selectedCarType != null && male != 0){
             isCorrect = true;
         }
 

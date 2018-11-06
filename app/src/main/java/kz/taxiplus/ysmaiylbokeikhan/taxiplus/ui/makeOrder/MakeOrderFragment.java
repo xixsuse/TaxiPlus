@@ -35,11 +35,7 @@ import rx.subjects.BehaviorSubject;
 
 public class MakeOrderFragment extends Fragment implements OnDateSetListener {
     public static final String TAG = Constants.MAKEORDERFRAGMENTTAG;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    private String mParam1;
-    private String mParam2;
     private boolean priceViewState = false;
     private boolean commentViewState = false;
     private boolean weightViewState = false;
@@ -60,21 +56,10 @@ public class MakeOrderFragment extends Fragment implements OnDateSetListener {
     private FragmentTransaction fragmentTransaction;
     private BehaviorSubject<String> mObservable = BehaviorSubject.create();
 
-    public static MakeOrderFragment newInstance(String param1, String param2) {
-        MakeOrderFragment fragment = new MakeOrderFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
             toAddress = getArguments().getParcelable(Constants.TOADDRESS);
             fromAddress = getArguments().getParcelable(Constants.FROMADDRESS);
             mode = getArguments().getInt(Constants.MODE);
@@ -167,20 +152,6 @@ public class MakeOrderFragment extends Fragment implements OnDateSetListener {
             }
         });
 
-//        priceText.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                priceViewState = !priceViewState;
-//                if(!priceViewState){
-//                    slide_up(getContext(),priceView);
-//                    priceView.setVisibility(View.GONE);
-//                }else {
-//                    priceView.setVisibility(View.VISIBLE);
-//                    slide_down(getContext(), priceView);
-//                }
-//            }
-//        });
-
         commentText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -252,14 +223,6 @@ public class MakeOrderFragment extends Fragment implements OnDateSetListener {
                 mDialogMonthDayHourMinute.show(getFragmentManager(), "month_day_hour_minute");
             }
         });
-//
-//        priceSwipeView.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
-//            public void onSwipeTop() {
-//                priceViewState = !priceViewState;
-//                slide_up(getContext(), priceView);
-//                priceView.setVisibility(View.GONE);
-//            }
-//        });
 
         commentSwipeView.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
             public void onSwipeTop() {
@@ -284,23 +247,6 @@ public class MakeOrderFragment extends Fragment implements OnDateSetListener {
                 modelView.setVisibility(View.GONE);
             }
         });
-
-//        priceEditText.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                checkAllFields();
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
 
         weightEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -411,14 +357,5 @@ public class MakeOrderFragment extends Fragment implements OnDateSetListener {
                 makeOrderButton.setVisibility(View.GONE);
             }
         }
-    }
-
-    private void setObserver(){
-        mObservable.subscribe(new Action1<String>() {
-            @Override
-            public void call(String string) {
-                checkAllFields();
-            }
-        });
     }
 }

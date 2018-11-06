@@ -24,7 +24,7 @@ public class NetworkUtil {
         clientBuilder.addInterceptor(loggingInterceptor);
 
         return new Retrofit.Builder()
-                .baseUrl(Constants.URL)
+                .baseUrl(Constants.TEST_URL)
                 .client(clientBuilder.build())
                 .addCallAdapterFactory(rxAdapter)
                 .addConverterFactory(GsonConverterFactory.create())

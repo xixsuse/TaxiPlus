@@ -25,11 +25,6 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 
 public class FaqFragment extends Fragment {
     public static final String TAG = Constants.SETTINGSFRAGMENTTAG;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
 
     private ImageButton menuIcon;
     private RecyclerView recyclerView;
@@ -38,23 +33,6 @@ public class FaqFragment extends Fragment {
     private RecyclerFaqAdapter adapter;
 
     private FragmentTransaction fragmentTransaction;
-    public static FaqFragment newInstance(String param1, String param2) {
-        FaqFragment fragment = new FaqFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

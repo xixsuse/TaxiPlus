@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/add_car_text"
                 android:textAlignment="center"
-                android:textSize="@dimen/_16ssp"
+                android:textSize="@dimen/_13ssp"
                 android:textColor="@color/white"/>
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
@@ -77,7 +77,7 @@
                     android:layout_weight="1"
                     android:textColor="@color/gray"
                     android:text="@string/car_model"
-                    android:textSize="@dimen/_14ssp"
+                    android:textSize="@dimen/_13ssp"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_marginEnd="@dimen/_5sdp"/>
                 <ImageView
@@ -105,7 +105,7 @@
                     android:layout_weight="1"
                     android:textColor="@color/gray"
                     android:text="@string/car_type"
-                    android:textSize="@dimen/_14ssp"
+                    android:textSize="@dimen/_13ssp"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_marginEnd="@dimen/_5sdp"/>
                 <ImageView
@@ -149,7 +149,7 @@
                 android:layout_marginTop="@dimen/_15sdp"
                 android:background="@drawable/border_for_view"
                 android:hint="@string/seat_numbers"
-                android:textSize="@dimen/_14ssp"
+                android:textSize="@dimen/_13ssp"
                 android:inputType="number"
                 android:textColor="@color/gray"
                 android:textColorHint="@color/gray"
@@ -167,7 +167,7 @@
                 android:padding="@dimen/_5sdp"
                 android:textColor="@color/gray"
                 android:textColorHint="@color/gray"
-                android:textSize="@dimen/_14ssp"
+                android:textSize="@dimen/_13ssp"
                 app:layout_constraintTop_toBottomOf="@id/facf_seats_edittext"/>
 
             <EditText
@@ -180,7 +180,7 @@
                 android:layout_marginTop="@dimen/_15sdp"
                 android:background="@drawable/border_for_view"
                 android:hint="@string/produced_year"
-                android:textSize="@dimen/_14ssp"
+                android:textSize="@dimen/_13ssp"
                 android:inputType="number"
                 android:maxLength="4"
                 android:digits="0123456789"
@@ -193,7 +193,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/facf_year_edittext"
                 android:textColor="@color/gray"
-                android:textSize="@dimen/_14ssp"
+                android:textSize="@dimen/_12ssp"
                 android:text="@string/additional"
                 android:layout_marginStart="@dimen/_20sdp"
                 android:layout_marginEnd="@dimen/_20sdp"
@@ -217,7 +217,7 @@
                 android:layout_margin="@dimen/_20sdp"
                 android:background="@drawable/rounded_green_view"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_15ssp"
+                android:textSize="@dimen/_14ssp"
                 android:textAllCaps="false"
                 android:text="@string/register"/>
 

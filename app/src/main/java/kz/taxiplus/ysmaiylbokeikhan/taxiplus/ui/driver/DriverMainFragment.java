@@ -23,7 +23,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.akexorcist.googledirection.model.Route;
@@ -41,7 +40,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import io.paperdb.Paper;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.MainActivity;
@@ -49,8 +47,8 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.OrderToDriver;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.DialogFragments.DriverComplaintDialogView;
-import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.DialogFragments.InfoDialogView;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.dialogFragments.DriverComplaintDialogView;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.dialogFragments.InfoDialogView;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user.ChatFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user.UserMain.UserMainViewModel;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
@@ -356,11 +354,15 @@ public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
                         .icon(BitmapDescriptorFactory.fromBitmap(Utility.setIcon(R.drawable.icon_point_a, getContext())))
                         .position(from));
 
-                for (int i = 0; i < direction.getRouteList().size(); i++) {
-                    Route route = direction.getRouteList().get(i);
-                    ArrayList<LatLng> directionPositionList = route.getLegList().get(0).getDirectionPoint();
-                    map.addPolyline(DirectionConverter.createPolyline(getContext(), directionPositionList, 7, getResources().getColor(R.color.colorPrimary)));
-                }
+//                for (int i = 0; i < direction.getRouteList().size(); i++) {
+//                    Route route = direction.getRouteList().get(i);
+//                    ArrayList<LatLng> directionPositionList = route.getLegList().get(0).getDirectionPoint();
+//                    map.addPolyline(DirectionConverter.createPolyline(getContext(), directionPositionList, 7, getResources().getColor(R.color.colorPrimary)));
+//                }
+
+                Route route = direction.getRouteList().get(0);
+                map.addPolyline(DirectionConverter.createPolyline(getContext(), route.getLegList().get(0).getDirectionPoint(), 7, getResources().getColor(R.color.colorPrimary)));
+
                 setCameraWithCoordinationBounds(direction.getRouteList().get(0));
             }
         });

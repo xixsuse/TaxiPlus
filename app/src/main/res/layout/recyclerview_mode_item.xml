@@ -26,7 +26,7 @@
         app:layout_constraintStart_toEndOf="@id/rmi_icon"
         app:layout_constraintEnd_toEndOf="parent"
         android:textColor="@color/black"
-        android:textSize="@dimen/_15ssp"
+        android:textSize="@dimen/_14ssp"
         android:text="Menu"/>
 
     <View

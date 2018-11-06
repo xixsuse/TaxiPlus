@@ -39,11 +39,10 @@ import rx.subscriptions.CompositeSubscription;
 public class ModesDialogFragment extends Fragment {
     public static final String TAG = Constants.MODESFRAGMENTTAG;
     private static final String ORDER = "order";
-    private static final String ARG_PARAM2 = "param2";
 
     private NewOrder order;
-    private int selectedPayType = 0;
-    private int selectedModeType = 0;
+    private int selectedPayType = 1;
+    private int selectedModeType = 1;
 
     private TextView toAddressText, fromAddressText;
     private RecyclerView modeRecyclerView, payTypeRecyclerView;
@@ -95,11 +94,7 @@ public class ModesDialogFragment extends Fragment {
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(selectedModeType != 0 && selectedPayType != 0){
-                    makeOrder();
-                }else {
-                    Toast.makeText(getContext(), getResources().getString(R.string.fill_fields), Toast.LENGTH_SHORT).show();
-                }
+                makeOrder();
             }
         });
     }
@@ -121,9 +116,8 @@ public class ModesDialogFragment extends Fragment {
 
           UserMainFragment mainFragment = (UserMainFragment) getFragmentManager().findFragmentByTag(UserMainFragment.TAG);
           if(mainFragment!= null){
-              mainFragment.setWaitingState(response.getMessage());
+              mainFragment.setWaitingState(response.getMessage(), response.getUrl());
           }
-
           getActivity().onBackPressed();
       }
     }
@@ -142,11 +136,11 @@ public class ModesDialogFragment extends Fragment {
         payTypes.add(byHand);
         payTypes.add(byBonuses);
 
-        taxiModeAdapter = new RecyclerTaxiModeAdapter(priceList, getContext());
+        taxiModeAdapter = new RecyclerTaxiModeAdapter(priceList, getContext(), selectedModeType);
         modeRecyclerView.setAdapter(taxiModeAdapter);
         modeRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), priceList.size()));
 
-        payTypeAdapter = new RecyclerPayTypeAdapter(payTypes, getContext());
+        payTypeAdapter = new RecyclerPayTypeAdapter(payTypes, getContext(), selectedPayType);
         payTypeRecyclerView.setAdapter(payTypeAdapter);
         payTypeRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), payTypes.size()));
     }
@@ -192,9 +186,10 @@ public class ModesDialogFragment extends Fragment {
             }
         }
 
-        public RecyclerTaxiModeAdapter(List<Price> priceList, Context mContext) {
+        public RecyclerTaxiModeAdapter(List<Price> priceList, Context mContext, int lastPressedPosition) {
             this.priceList = priceList;
             this.mContext = mContext;
+            this.lastPressedPosition = lastPressedPosition;
         }
 
         @Override
@@ -212,12 +207,7 @@ public class ModesDialogFragment extends Fragment {
                 holder.left.setVisibility(View.GONE);
             }
 
-            if(priceList.get(position).getService_id().equals("1")){
-                lastPressedPosition = position;
-                selectedModeType = Integer.valueOf(priceList.get(position).getService_id());
-            }
-
-            if(position == lastPressedPosition){
+            if(priceList.get(position).getService_id().equals(String.valueOf(lastPressedPosition))){
                 holder.price.setTextColor(getResources().getColor(R.color.colorPrimary));
                 holder.title.setTextColor(getResources().getColor(R.color.colorPrimary));
             }else {
@@ -225,7 +215,7 @@ public class ModesDialogFragment extends Fragment {
                 holder.title.setTextColor(getResources().getColor(R.color.gray));
             }
 
-            if(position == lastPressedPosition){
+            if(priceList.get(position).getService_id().equals(String.valueOf(lastPressedPosition))){
                 Glide.with(getContext()).load(priceList.get(position).getImg1()).into(holder.logo);
             }else {
                 Glide.with(getContext()).load(priceList.get(position).getImg()).into(holder.logo);
@@ -236,7 +226,7 @@ public class ModesDialogFragment extends Fragment {
             holder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    lastPressedPosition = position;
+                    lastPressedPosition = position+1;
                     selectedModeType = Integer.valueOf(priceList.get(position).getService_id());
                     notifyDataSetChanged();
                 }
@@ -253,7 +243,7 @@ public class ModesDialogFragment extends Fragment {
     public class RecyclerPayTypeAdapter extends RecyclerView.Adapter<RecyclerPayTypeAdapter.ViewHolder> {
         public Context mContext;
         public List<PayType> payTypes;
-        public int lastPressedPosition = -1;
+        public int selected = -1;
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public TextView title;
@@ -271,9 +261,10 @@ public class ModesDialogFragment extends Fragment {
             }
         }
 
-        public RecyclerPayTypeAdapter(List<PayType> payTypes, Context mContext) {
+        public RecyclerPayTypeAdapter(List<PayType> payTypes, Context mContext, int selected) {
             this.payTypes = payTypes;
             this.mContext = mContext;
+            this.selected = selected;
         }
 
         @Override
@@ -291,18 +282,13 @@ public class ModesDialogFragment extends Fragment {
                 holder.left.setVisibility(View.GONE);
             }
 
-            if(payTypes.get(position).getId() == 1){
-                lastPressedPosition = position;
-                selectedPayType = payTypes.get(position).getId();
-            }
-
-            if(position == lastPressedPosition){
+            if(position == selected){
                 holder.title.setTextColor(getResources().getColor(R.color.colorPrimary));
             }else {
                 holder.title.setTextColor(getResources().getColor(R.color.gray));
             }
 
-            if(position == lastPressedPosition){
+            if(position == selected){
                 if(payTypes.get(position).getName().equals(getResources().getString(R.string.by_hand))){
                     holder.logo.setImageResource(R.drawable.icon_by_hand_p);
                 }else if(payTypes.get(position).getName().equals(getResources().getString(R.string.by_card))){
@@ -318,7 +304,7 @@ public class ModesDialogFragment extends Fragment {
             holder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    lastPressedPosition = position;
+                    selected = position;
                     selectedPayType = payTypes.get(position).getId();
                     notifyDataSetChanged();
                 }

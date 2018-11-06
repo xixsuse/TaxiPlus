@@ -16,6 +16,9 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,6 +100,17 @@ public class OrderInfoDialogFragment extends DialogFragment implements OnMapRead
         args.putString(ORDERID, orderId);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void show(FragmentManager manager, String tag) {
+        try {
+            FragmentTransaction ft = manager.beginTransaction();
+            ft.add(this, tag);
+            ft.commit();
+        } catch (IllegalStateException e) {
+            Log.d("ABSDIALOGFRAG", "Exception", e);
+        }
     }
 
     @Override
@@ -218,6 +232,7 @@ public class OrderInfoDialogFragment extends DialogFragment implements OnMapRead
 
     private void handleErrorAccept(Throwable throwable){
         progressBar.setVisibility(View.GONE);
+        getDialog().dismiss();
     }
 
     @Override
@@ -283,11 +298,14 @@ public class OrderInfoDialogFragment extends DialogFragment implements OnMapRead
                     .icon(BitmapDescriptorFactory.fromBitmap(setIcon(R.drawable.icon_point_a)))
                     .position(from));
 
-            for (int i = 0; i < direction.getRouteList().size(); i++) {
-                Route route = direction.getRouteList().get(i);
-                ArrayList<LatLng> directionPositionList = route.getLegList().get(0).getDirectionPoint();
-                map.addPolyline(DirectionConverter.createPolyline(getContext(), directionPositionList, 7, getResources().getColor(R.color.colorPrimary)));
-            }
+//            for (int i = 0; i < direction.getRouteList().size(); i++) {
+//                Route route = direction.getRouteList().get(i);
+//                ArrayList<LatLng> directionPositionList = route.getLegList().get(0).getDirectionPoint();
+//                map.addPolyline(DirectionConverter.createPolyline(getContext(), directionPositionList, 7, getResources().getColor(R.color.colorPrimary)));
+//            }
+            Route route = direction.getRouteList().get(0);
+            map.addPolyline(DirectionConverter.createPolyline(getContext(), route.getLegList().get(0).getDirectionPoint(), 7, getResources().getColor(R.color.colorPrimary)));
+
             setCameraWithCoordinationBounds(direction.getRouteList().get(0));
         }
     }

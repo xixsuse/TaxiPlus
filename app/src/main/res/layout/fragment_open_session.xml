@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/open_session"
                 android:textAlignment="center"
-                android:textSize="@dimen/_16ssp"
+                android:textSize="@dimen/_13ssp"
                 android:textColor="@color/white"/>
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
@@ -61,7 +61,7 @@
                 android:id="@+id/coins"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/_15ssp"
+                android:textSize="@dimen/_14ssp"
                 android:textColor="@color/black"
                 android:text="@string/coins" />
             <TextView
@@ -69,7 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_15sdp"
-                android:textSize="@dimen/_15ssp"
+                android:textSize="@dimen/_14ssp"
                 android:textColor="?attr/colorPrimary"
                 android:textStyle="bold"
                 android:text="1000"/>
@@ -92,7 +92,7 @@
                 android:layout_width="wrap_content"
                 android:textAlignment="center"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/_15ssp"
+                android:textSize="@dimen/_14ssp"
                 android:textColor="?attr/colorPrimary"
                 android:text="6 hours"/>
             <View
@@ -104,7 +104,7 @@
                 android:layout_width="wrap_content"
                 android:textAlignment="center"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/_15ssp"
+                android:textSize="@dimen/_14ssp"
                 android:textColor="?attr/colorPrimary"
                 android:text="12 hours"/>
             <View
@@ -156,7 +156,7 @@
                 android:id="@+id/remainder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/_15ssp"
+                android:textSize="@dimen/_14ssp"
                 android:textColor="@color/black"
                 android:text="@string/remainder" />
             <TextView
@@ -164,7 +164,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_15sdp"
-                android:textSize="@dimen/_15ssp"
+                android:textSize="@dimen/_14ssp"
                 android:textColor="?attr/colorPrimary"
                 android:textStyle="bold"
                 android:text="1000"/>
@@ -180,7 +180,7 @@
             android:layout_marginTop="@dimen/_5sdp"
             android:text="@string/open_session_event"
             android:textColor="@color/white"
-            android:textSize="@dimen/_15ssp"
+            android:textSize="@dimen/_14ssp"
             android:textAllCaps="false"/>
     </android.support.constraint.ConstraintLayout>
 

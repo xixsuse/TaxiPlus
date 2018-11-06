@@ -26,11 +26,7 @@ import rx.subscriptions.CompositeSubscription;
 
 public class AuthSecondStepFragment extends Fragment {
     public static final String TAG = Constants.AUTHSECONDEPFRAGMENTTAG;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    private String mParam1;
-    private String mParam2;
     private String phone;
 
     private EditText codeEditText;
@@ -39,24 +35,6 @@ public class AuthSecondStepFragment extends Fragment {
 
     private FragmentTransaction fragmentTransaction;
     private CompositeSubscription subscription;
-
-    public static AuthSecondStepFragment newInstance(String param1, String param2) {
-        AuthSecondStepFragment fragment = new AuthSecondStepFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

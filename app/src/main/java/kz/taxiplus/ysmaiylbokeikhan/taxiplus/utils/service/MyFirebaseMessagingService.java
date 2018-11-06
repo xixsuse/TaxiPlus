@@ -212,6 +212,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             case "501":
                 text = getResources().getString(R.string.rate_driver_text);
                 break;
+
+            case "0":
+                text = getResources().getString(R.string.failed_payment);
+                break;
         }
         return text;
     }
@@ -229,6 +233,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             case "301":
                 text = "";
+                break;
+
+            case "0":
+                text = getResources().getString(R.string.pay_by_hand);
                 break;
         }
         return text;

@@ -36,7 +36,7 @@
                 android:layout_marginEnd="@dimen/_30sdp"
                 android:text="@string/current_trips"
                 android:textAlignment="center"
-                android:textSize="@dimen/_16ssp"
+                android:textSize="@dimen/_13ssp"
                 android:textColor="@color/white"/>
         </LinearLayout>
     </android.support.v7.widget.Toolbar>

@@ -13,7 +13,12 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.MainActivity;
@@ -29,35 +34,13 @@ import rx.subscriptions.CompositeSubscription;
 
 public class MyBalanceFragment extends Fragment {
     public static final String TAG = Constants.MYBALANCERAGMENTTAG;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
 
     private ImageButton menuIcon;
     private ProgressBar progressBar;
-    private CalendarView calendarView;
+    private MaterialCalendarView calendarView;
     private TextView tripsAmountText, coinsText;
 
     private CompositeSubscription subscription;
-    public static MyBalanceFragment newInstance(String param1, String param2) {
-        MyBalanceFragment fragment = new MyBalanceFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,8 +60,6 @@ public class MyBalanceFragment extends Fragment {
         coinsText = view.findViewById(R.id.fmb_coins_amount_text);
         progressBar = view.findViewById(R.id.fmb_progressbar);
 
-        calendarView.setDate(Calendar.getInstance().getTimeInMillis(),false,true);
-
         menuIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,16 +67,16 @@ public class MyBalanceFragment extends Fragment {
             }
         });
 
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                Calendar c = Calendar.getInstance();
-                c.set(Calendar.YEAR, year);
-                c.set(Calendar.MONTH, month);
-                c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                long date = c.getTimeInMillis()/1000;
+        calendarView.setSelectedDate(CalendarDay.today());
 
-                getBalance(String.valueOf(date));
+        calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
+            @Override
+            public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b) {
+                Calendar selectedCalndar = Calendar.getInstance();
+                selectedCalndar.set(Calendar.YEAR, calendarDay.getYear());
+                selectedCalndar.set(Calendar.MONTH, calendarDay.getMonth());
+                selectedCalndar.set(Calendar.DAY_OF_MONTH, calendarDay.getDay());
+                getBalance(String.valueOf(selectedCalndar.getTimeInMillis()));
             }
         });
     }
@@ -120,5 +101,4 @@ public class MyBalanceFragment extends Fragment {
     private void handleError(Throwable throwable) {
         progressBar.setVisibility(View.GONE);
     }
-
 }
