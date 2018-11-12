@@ -21,7 +21,7 @@ public class ProjectRepository {
 
     private ProjectRepository(){
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.TEST_URL)
+                .baseUrl(Constants.URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

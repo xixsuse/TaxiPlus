@@ -64,6 +64,7 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.IntercityFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.MyBalanceFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver.OrderInfoDialogFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user.UserMain.UserMainFragment;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.AcceptOrderInterface;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.BaseActivity;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
@@ -76,7 +77,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener{
     private static final int RESULT_LOAD_IMAGE = 11;
 
     private User user;

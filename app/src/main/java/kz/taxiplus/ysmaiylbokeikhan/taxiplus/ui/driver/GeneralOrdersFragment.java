@@ -43,6 +43,7 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Order;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.OrderToDriver;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.AcceptOrderInterface;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
 import rx.android.schedulers.AndroidSchedulers;
@@ -61,6 +62,7 @@ public class GeneralOrdersFragment extends Fragment {
 
     private CompositeSubscription subscription;
     private RecyclerOrdersAdapter ordersAdapter;
+    private AcceptOrderInterface acceptOrderInterface;
 
     private List<Order> myOrders = new ArrayList<>();
     private List<Order> sharedOrders = new ArrayList();
@@ -98,6 +100,10 @@ public class GeneralOrdersFragment extends Fragment {
         }
 
         return view;
+    }
+
+    public void setAcceptOrderInterface(AcceptOrderInterface acceptOrderInterface){
+        this.acceptOrderInterface = acceptOrderInterface;
     }
 
     private void initViews(View view){
@@ -187,6 +193,7 @@ public class GeneralOrdersFragment extends Fragment {
     private void handleResponseAccept(Response response) {
         progressBar.setVisibility(View.GONE);
         if(response.getState().equals("success")){
+            acceptOrderInterface.onOrderAccept(true);
             Toast.makeText(getContext(), getResources().getString(R.string.wait_response), Toast.LENGTH_LONG).show();
         }
     }
@@ -194,7 +201,6 @@ public class GeneralOrdersFragment extends Fragment {
     private void handleErrorAccept(Throwable throwable){
         progressBar.setVisibility(View.GONE);
     }
-
 
 
     public class RecyclerOrdersAdapter extends RecyclerView.Adapter<RecyclerOrdersAdapter.ViewHolder> {

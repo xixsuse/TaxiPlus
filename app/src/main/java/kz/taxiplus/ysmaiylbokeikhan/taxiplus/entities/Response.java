@@ -17,6 +17,7 @@ public class Response {
     private int code;
     private int is_active;
     private int is_session_opened;
+    private boolean show_chat;
     private AccessPrice price;
     private CitiesResponse.City city;
     private List<Car> cars;
@@ -96,5 +97,9 @@ public class Response {
 
     public String getUrl() {
         return url;
+    }
+
+    public boolean isShow_chat() {
+        return show_chat;
     }
 }

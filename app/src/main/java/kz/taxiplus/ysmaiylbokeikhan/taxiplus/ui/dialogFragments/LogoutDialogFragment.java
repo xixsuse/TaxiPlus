@@ -12,15 +12,25 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import java.util.Collections;
+
 import io.paperdb.Paper;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.AuthActivity;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Order;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 public class LogoutDialogFragment extends DialogFragment {
     public static final String TAG = Constants.LOGOUTVIEW;
 
     private Button yesBtn, noBtn;
+    private CompositeSubscription subscription;
 
     @Override
     public void onResume() {
@@ -49,12 +59,14 @@ public class LogoutDialogFragment extends DialogFragment {
     }
 
     private void initViews(View view) {
+        subscription = new CompositeSubscription();
         yesBtn = view.findViewById(R.id.clv_yes_button);
         noBtn = view.findViewById(R.id.clv_no_button);
 
         yesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                logout();
                 Intent i = new Intent(getActivity(), AuthActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 Paper.book().delete(Constants.USER);
@@ -71,5 +83,20 @@ public class LogoutDialogFragment extends DialogFragment {
             }
         });
     }
+
+    private void logout() {
+        subscription.add(NetworkUtil.getRetrofit()
+                .logout(Utility.getToken(getContext()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponse, this::handleError));
+    }
+
+    private void handleResponse(Response response) {
+    }
+
+    private void handleError(Throwable throwable) {
+    }
+
 
 }

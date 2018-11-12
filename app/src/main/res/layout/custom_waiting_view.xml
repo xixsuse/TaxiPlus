@@ -31,13 +31,19 @@
 
     <Button
         android:id="@+id/fw_cancel_button"
-        android:layout_width="@dimen/_26sdp"
-        android:layout_height="@dimen/_26sdp"
-        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_11sdp"
         android:layout_marginEnd="@dimen/_12sdp"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:textAllCaps="false"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="@dimen/_13ssp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@drawable/icon_close_rounded"
+        android:background="@color/trans"
+        android:text="@string/cancel"
         android:visibility="visible"/>
 
 </android.support.constraint.ConstraintLayout>

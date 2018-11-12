@@ -2,4 +2,5 @@
 <resources>
     <attr name="colorPrimary" format="color"/>
     <attr name="buttonColor" format="color"/>
+    <attr name="orderBackground" format="color"/>
 </resources>

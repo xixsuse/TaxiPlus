@@ -6,6 +6,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="buttonColor">@color/colorAccent</item>
+        <item name="orderBackground">@color/white</item>
     </style>
 
     <style name="AppThemeDark">
@@ -13,6 +14,7 @@
         <item name="colorPrimaryDark">@color/colorAccentDark</item>
         <item name="colorAccent">@color/colorAccentDark</item>
         <item name="buttonColor">@color/colorAccentDark</item>
+        <item name="orderBackground">@color/hint_gray</item>
     </style>
 
     <style name="AppTheme.ProgressbarColor">

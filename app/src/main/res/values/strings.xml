@@ -53,7 +53,7 @@
     <string name="modeLadyTaxi">Lady Такси</string>
     <string name="modeInvaTaxi">ИнваТакси</string>
     <string name="modeCitiesTaxi">Межгород</string>
-    <string name="modeCargoTaxi">Грузоперевозка</string>
+    <string name="modeCargoTaxi">Грузоперевозки</string>
     <string name="modeEvo">Эвакуатор</string>
 
     <string name="save_place">Сохраненные адреса</string>
@@ -135,7 +135,7 @@
     <string name="mode_night">Ночной режим</string>
     <string name="mode_day">Дневной режим</string>
 
-    <string name="my_taxipark">Мой таксопарк</string>
+    <string name="my_taxipark">Лента заказов</string>
     <string name="intercity">Межгород</string>
     <string name="general_chat">Общий чат</string>
     <string name="hide">Скрыть</string>

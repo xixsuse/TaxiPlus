@@ -2,6 +2,7 @@ package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -37,6 +38,8 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
+
+import static android.app.Activity.RESULT_OK;
 
 public class UserProfileFragment extends Fragment {
     public static final String TAG = Constants.USERPROFILEFRAGMENTTAG;
@@ -241,6 +244,17 @@ public class UserProfileFragment extends Fragment {
         @Override
         public int getItemCount() {
             return carList.size();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == Constants.SELECTCITYFROMREGISTER) {
+                selectedCity = data.getParcelableExtra(Constants.SELECTEDCITY);
+                cityText.setText(selectedCity.getCname());
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.authorization;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -50,6 +52,8 @@ public class AuthSecondStepFragment extends Fragment {
         codeEditText = view.findViewById(R.id.fass_code_edittext);
         nextButton = view.findViewById(R.id.fass_next_button);
         progressBar = view.findViewById(R.id.fass_progressbar);
+
+        showSoftKeyboard(codeEditText);
 
         setListeners();
     }
@@ -121,6 +125,12 @@ public class AuthSecondStepFragment extends Fragment {
     }
 
     private void handleErrorChange(Throwable throwable) {
+    }
+
+    public void showSoftKeyboard(EditText editText) {
+        InputMethodManager imgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imgr.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        editText.requestFocus();
     }
 
 }

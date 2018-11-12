@@ -276,6 +276,14 @@ public interface RetrofitInterface {
                                                   @Field("publish") String publish);
 
     @FormUrlEncoded
+    @POST("logout/")
+    Observable<Response> logout(@Field("token")String token);
+
+    @FormUrlEncoded
+    @POST("how-many-chats/")
+    Observable<Response> howManyChats(@Field("token")String token);
+
+    @FormUrlEncoded
     @POST("add-specific-order/")
     Observable<Response> addIntercityOrder(@Field("token")String token,
                                                   @Field("type") String type,
