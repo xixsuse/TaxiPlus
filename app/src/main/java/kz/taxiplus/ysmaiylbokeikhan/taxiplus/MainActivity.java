@@ -175,9 +175,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         recyclerMenuItemList.add(taxi);
         recyclerMenuItemList.add(ladyTaxi);
         recyclerMenuItemList.add(interCityTaxi);
+        recyclerMenuItemList.add(invaTaxi);
         recyclerMenuItemList.add(cargoTaxi);
         recyclerMenuItemList.add(evoTaxi);
-        recyclerMenuItemList.add(invaTaxi);
         recyclerMenuItemList.add(sober);
         recyclerMenuItemList.add(menuItem);
         recyclerMenuItemList.add(menuItem2);

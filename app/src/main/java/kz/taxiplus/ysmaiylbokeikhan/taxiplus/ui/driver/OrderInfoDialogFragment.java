@@ -185,6 +185,7 @@ public class OrderInfoDialogFragment extends DialogFragment implements OnMapRead
         declineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                rejectOrder(order.getId());
                 getDialog().dismiss();
             }
         });
@@ -215,6 +216,7 @@ public class OrderInfoDialogFragment extends DialogFragment implements OnMapRead
         progressBar.setVisibility(View.GONE);
     }
 
+
     private void acceptOrder(String orderId) {
         progressBar.setVisibility(View.VISIBLE);
         subscription.add(NetworkUtil.getRetrofit()
@@ -227,6 +229,7 @@ public class OrderInfoDialogFragment extends DialogFragment implements OnMapRead
     private void handleResponseAccept(Response response) {
         progressBar.setVisibility(View.GONE);
         if(response.getState().equals("success")){
+            Toast.makeText(getContext(), getResources().getString(R.string.wait_response), Toast.LENGTH_LONG).show();
             getDialog().dismiss();
         }
     }
@@ -235,6 +238,27 @@ public class OrderInfoDialogFragment extends DialogFragment implements OnMapRead
         progressBar.setVisibility(View.GONE);
         getDialog().dismiss();
     }
+
+    private void rejectOrder(String order_id) {
+        progressBar.setVisibility(View.VISIBLE);
+        subscription.add(NetworkUtil.getRetrofit()
+                .rejectOrder(Utility.getToken(getContext()), order_id)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponseReject, this::handleErrorReject));
+    }
+
+    private void handleResponseReject(Response response) {
+        progressBar.setVisibility(View.GONE);
+        if(response.getState().equals("success")) {
+            Toast.makeText(getContext(), getResources().getText(R.string.successfully_rejected), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void handleErrorReject(Throwable throwable) {
+        progressBar.setVisibility(View.GONE);
+    }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {

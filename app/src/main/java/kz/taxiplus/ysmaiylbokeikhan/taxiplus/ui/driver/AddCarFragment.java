@@ -246,6 +246,7 @@ public class AddCarFragment extends Fragment{
         progressBar.setVisibility(View.GONE);
     }
 
+
     private void driverAuth(HashMap<String, Object> body){
         progressBar.setVisibility(View.VISIBLE);
         subscription.add(NetworkUtil.getRetrofit()

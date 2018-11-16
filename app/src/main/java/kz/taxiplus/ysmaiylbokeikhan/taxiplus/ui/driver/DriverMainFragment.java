@@ -353,13 +353,6 @@ public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
                 map.addMarker(new MarkerOptions()
                         .icon(BitmapDescriptorFactory.fromBitmap(Utility.setIcon(R.drawable.icon_point_a, getContext())))
                         .position(from));
-
-//                for (int i = 0; i < direction.getRouteList().size(); i++) {
-//                    Route route = direction.getRouteList().get(i);
-//                    ArrayList<LatLng> directionPositionList = route.getLegList().get(0).getDirectionPoint();
-//                    map.addPolyline(DirectionConverter.createPolyline(getContext(), directionPositionList, 7, getResources().getColor(R.color.colorPrimary)));
-//                }
-
                 Route route = direction.getRouteList().get(0);
                 map.addPolyline(DirectionConverter.createPolyline(getContext(), route.getLegList().get(0).getDirectionPoint(), 7, getResources().getColor(R.color.colorPrimary)));
 
@@ -399,7 +392,6 @@ public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
     private void setWithOrderState(String orderId, int optionType){
         this.orderId = orderId;
         setDriverStateButton(optionType);
-        //option view visible after get orderInfo
 
         viewModel.sentRequestToOrderInfo(orderId);
         observeOrderInfoViewModel(viewModel);
