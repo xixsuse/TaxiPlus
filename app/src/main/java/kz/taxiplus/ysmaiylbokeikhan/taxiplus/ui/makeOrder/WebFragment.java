@@ -1,6 +1,7 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,9 +15,12 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.authorization.AuthSecondStepFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 
+import static android.app.Activity.RESULT_OK;
+
 public class WebFragment extends Fragment {
     public static final String TAG = Constants.WEBFRAGMENT;
     private static final String URL = "url";
+    private static final String ORDERID = "orderID";
 
     private ImageButton back;
     private WebView webView;
@@ -60,7 +64,10 @@ public class WebFragment extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                Intent intent = new Intent(getContext(), FromAndToFragment.class);
+
+                getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK, intent);
+                getFragmentManager().popBackStack();
             }
         });
 

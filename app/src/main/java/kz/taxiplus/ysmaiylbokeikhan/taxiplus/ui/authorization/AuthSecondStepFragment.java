@@ -73,7 +73,7 @@ public class AuthSecondStepFragment extends Fragment {
 
     private void authSecondStep(String phone, String code){
         progressBar.setVisibility(View.VISIBLE);
-        subscription.add(NetworkUtil.getRetrofit()
+        subscription.add(NetworkUtil.getRetrofit1()
                 .authSecondStep(phone, code)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())

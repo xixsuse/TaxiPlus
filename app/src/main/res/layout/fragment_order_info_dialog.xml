@@ -36,7 +36,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@color/white"
+        android:background="?attr/orderBackground"
         android:orientation="vertical"
         android:padding="@dimen/_6sdp"
         android:visibility="visible">
@@ -51,7 +51,8 @@
                 android:id="@+id/foi_name_icon"
                 android:layout_width="@dimen/_18sdp"
                 android:layout_height="@dimen/_18sdp"
-                android:background="@drawable/icon_profile" />
+                android:background="@drawable/icon_profile"
+                android:tint="?attr/textColor"/>
             <TextView
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
@@ -59,7 +60,7 @@
                 android:layout_marginStart="@dimen/_7sdp"
                 android:text="@string/offer_name"
                 android:textSize="@dimen/_13sdp"
-                android:textColor="?attr/colorPrimary"/>
+                android:textColor="?attr/textColor"/>
             <TextView
                 android:id="@+id/foi_name_text"
                 android:layout_width="0dp"
@@ -68,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:text="name"
                 android:textSize="@dimen/_13sdp"
-                android:textColor="?attr/colorPrimary"/>
+                android:textColor="?attr/textColor"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -80,7 +81,8 @@
                 android:id="@+id/foi_price_icon"
                 android:layout_width="@dimen/_18sdp"
                 android:layout_height="@dimen/_18sdp"
-                android:background="@drawable/icon_by_bonuses"/>
+                android:background="@drawable/icon_by_bonuses"
+                android:tint="?attr/textColor"/>
             <TextView
                 android:id="@+id/price"
                 android:layout_width="wrap_content"
@@ -88,7 +90,7 @@
                 android:layout_marginStart="@dimen/_8sdp"
                 android:text="@string/price"
                 android:textSize="@dimen/_13sdp"
-                android:textColor="?attr/colorPrimary"/>
+                android:textColor="?attr/textColor"/>
             <TextView
                 android:id="@+id/foi_price_text"
                 android:layout_width="0dp"
@@ -97,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:text="price"
                 android:textSize="@dimen/_13sdp"
-                android:textColor="?attr/colorPrimary"/>
+                android:textColor="?attr/textColor"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"

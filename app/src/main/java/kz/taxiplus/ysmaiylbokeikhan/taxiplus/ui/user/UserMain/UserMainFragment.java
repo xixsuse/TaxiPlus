@@ -497,6 +497,8 @@ public class UserMainFragment extends Fragment implements OnMapReadyCallback, Ca
             fragmentTransaction = getFragmentManager().beginTransaction();
 
             WebFragment webFragment = WebFragment.newInstance(url);
+            webFragment.setTargetFragment(UserMainFragment.this, Constants.MAINFRAGMENTCODEWEB);
+
             fragmentTransaction.setCustomAnimations(R.anim.enter_from_bottom, R.anim.enter_from_top, R.anim.exit_to_bottom, R.anim.exit_to_top);
             fragmentTransaction.add(R.id.main_activity_frame, webFragment, WebFragment.TAG);
             fragmentTransaction.addToBackStack(WebFragment.TAG);
@@ -668,6 +670,8 @@ public class UserMainFragment extends Fragment implements OnMapReadyCallback, Ca
                 }else if(requestCode == Constants.MAINFRAGMENTCODECHECKOUT){
                     map.clear();
                     newOrderView.setVisibility(View.VISIBLE);
+                }else if(requestCode == Constants.MAINFRAGMENTCODEWEB){
+                    getActivity().onBackPressed();
                 }
             }else {
                 int mode = data.getIntExtra(Constants.MODE, 1);

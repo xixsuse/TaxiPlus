@@ -26,4 +26,22 @@ public class NetworkUtil {
                 .create(RetrofitInterface.class);
 
     }
+
+    public static RetrofitInterface getRetrofit1(){
+
+        RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io());
+        OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        clientBuilder.addInterceptor(loggingInterceptor);
+
+        return new Retrofit.Builder()
+                .baseUrl(Constants.URL_NODE)
+                .client(clientBuilder.build())
+                .addCallAdapterFactory(rxAdapter)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(RetrofitInterface.class);
+
+    }
 }

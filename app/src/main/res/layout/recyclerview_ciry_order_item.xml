@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="?attr/colorPrimary">
+    android:background="?attr/colorPrimary"
+    android:paddingBottom="@dimen/_3sdp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -28,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_4sdp"
             android:textSize="@dimen/_10ssp"
-            android:textColor="@color/gray"/>
+            android:textColor="?attr/usText"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,8 +47,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/_12ssp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
+                    android:textColor="?attr/usText"                    android:textStyle="bold"
                     android:text="from"/>
                 <TextView
                     android:id="@+id/rcoi_price_text"
@@ -58,7 +58,7 @@
                     android:textSize="@dimen/_11ssp"
                     android:text="600 th"
                     android:textStyle="bold"
-                    android:textColor="@color/black"/>
+                    android:textColor="?attr/usText"/>                    />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -74,7 +74,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/_11ssp"
                     android:text="toto"
-                    android:textColor="@color/black"/>
+                    android:textColor="?attr/usText"/>
                 <TextView
                     android:id="@+id/rcoi_distance_text"
                     android:layout_width="wrap_content"
@@ -83,72 +83,9 @@
                     android:layout_marginEnd="@dimen/_5sdp"
                     android:textSize="@dimen/_11ssp"
                     android:text="120"
-                    android:textColor="?attr/colorPrimary"/>
+                    android:textColor="?attr/tabColor"/>
             </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="?attr/colorPrimary"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/rcoi_info_view"
-        app:layout_constraintBottom_toTopOf="@id/line">
-        <LinearLayout
-            android:id="@+id/rcoi_accept_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:paddingStart="@dimen/_15sdp"
-            android:paddingEnd="@dimen/_20sdp"
-            android:paddingTop="@dimen/_7sdp"
-            android:paddingBottom="@dimen/_7sdp"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageButton
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:background="@drawable/icon_accept"
-                android:clickable="false"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_11ssp"
-                android:text="@string/accept"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/rcoi_onmap_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:paddingStart="@dimen/_20sdp"
-            android:paddingEnd="@dimen/_20sdp"
-            android:paddingTop="@dimen/_7sdp"
-            android:paddingBottom="@dimen/_7sdp"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageButton
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:background="@drawable/icon_onmap"
-                android:clickable="false"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_11ssp"
-                android:text="@string/on_map"/>
-        </LinearLayout>
-    </LinearLayout>
-    <View
-        android:id="@+id/line"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@color/gray"/>
-
 </android.support.constraint.ConstraintLayout>

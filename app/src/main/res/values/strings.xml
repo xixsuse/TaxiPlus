@@ -110,7 +110,7 @@
     <string name="point_b">Точка В</string>
     <string name="order_information">Информация о заказе</string>
     <string name="decline_order">Отменить</string>
-    <string name="select_place">Выберите место</string>
+    <string name="select_place">Выберите место на карте</string>
     <string name="fav_place">Избранное место</string>
 
     <string name="fill_fields">Заполните все поля</string>
@@ -156,6 +156,7 @@
     <string name="close">Закрыть</string>
     <string name="rate">Оценить</string>
     <string name="navigation">Навигация</string>
+    <string name="current_orders">Текущий заказ</string>
     <string name="open_session_event">Открыть смену</string>
 
     <string name="successfully_added">Успешно добавлено!</string>
@@ -171,9 +172,11 @@
     <string name="unlim">12 часов</string>
     <string name="select_time">Выберите длину смены</string>
     <string name="wait_response">Ожидайте ответа от пользователя</string>
+    <string name="order_exist">Окончите текущий заказ</string>
     <string name="user_accepted">Клиент подтвердил Вас</string>
 
     <string name="new_offer">Водитель откликнулся</string>
+    <string name="new_orders">Новые заказы</string>
     <string name="new_offer_body">на Ваш заказ</string>
     <string name="came_button">Я подъехал</string>
     <string name="driver_is_came">Водитель подъехал</string>
@@ -230,6 +233,7 @@
     <string name="auto">АКПП</string>
     <string name="failed_payment">Онлайн оплата не прошла</string>
     <string name="pay_by_hand">Оплатите наличными</string>
+    <string name="new_message_from">Новое сообщение от: </string>
 
     <string name="notifications_admin_channel_name">Name of admin channel</string>
     <string name="notifications_admin_channel_description">Description of admin channel</string>

@@ -54,8 +54,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
 
         String type = remoteMessage.getData().get("type");
-
-        if(type.equals("1")){//silent push notification
+        if (type.equals("2")){
+            showNotification(remoteMessage, type);
+        }else if(type.equals("1")){//silent push notification
             String orderId = remoteMessage.getData().get("order_id");
             if(getLocation() != null){
                 subscription = new CompositeSubscription();
@@ -65,27 +66,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             if(Application.isActivityVisible()) {
                 drawDriverLocation(remoteMessage.getData());
             }
-        }else {//real push notifications
+        }else if(type.equals("101")) {//new orders
+            handleNewOrdersPush(remoteMessage.getData());
+        }else{//real push notifications
             if(Application.isActivityVisible()){
                 handlePush(remoteMessage.getData());
             }else {
-                int notificationId = new Random().nextInt(60000);
-                Intent intentResult = new Intent(this, SplashActivity.class);
-                intentResult.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intentResult.putExtra(Constants.PENDINGINTENTEXTRA, remoteMessage);
-
-                PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, intentResult, PendingIntent.FLAG_ONE_SHOT);
-
-                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle(setNotificationTitle(type))
-                    .setContentText(setNotificationBody(type))
-                    .setAutoCancel(true)
-                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                    .setContentIntent(pendingIntent);
-
-                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.notify(notificationId, notificationBuilder.build());
+                showNotificationDependType(remoteMessage, type);
             }
         }
     }
@@ -110,6 +97,60 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         intent.putExtra(Constants.DRIVERLATITUDE, latitude);
         intent.putExtra(Constants.DRIVERLONGITUDE, longitude);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    private void handleNewOrdersPush(Map<String, String> data){
+        Intent intent = new Intent("thisIsForCityFragment");
+        String orderId = data.get("order_id");
+
+        intent.putExtra(Constants.ORDERID, orderId);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    private void showNotificationDependType(RemoteMessage remoteMessage, String type){
+        int notificationId = new Random().nextInt(60000);
+        Intent intentResult = new Intent(this, SplashActivity.class);
+        intentResult.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intentResult.putExtra(Constants.PENDINGINTENTEXTRA, remoteMessage);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, intentResult, PendingIntent.FLAG_ONE_SHOT);
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(setNotificationTitle(type))
+                .setContentText(setNotificationBody(type))
+                .setAutoCancel(true)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(notificationId, notificationBuilder.build());
+    }
+
+    private void showNotification(RemoteMessage remoteMessage, String type){
+        int notificationId = new Random().nextInt(60000);
+        Intent intentResult = new Intent(this, SplashActivity.class);
+        intentResult.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intentResult.putExtra(Constants.PENDINGINTENTEXTRA, remoteMessage);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, intentResult, PendingIntent.FLAG_ONE_SHOT);
+
+        String title;
+        if(type.equals("2")){
+            title = getResources().getString(R.string.new_message_from)+ " "+remoteMessage.getData().get("author");
+        }else {
+            title = "title";
+        }
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(remoteMessage.getData().get("text"))
+                .setAutoCancel(true)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(notificationId, notificationBuilder.build());
     }
 
     @Override

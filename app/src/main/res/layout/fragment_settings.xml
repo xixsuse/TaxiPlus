@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.SettingsFragment"
-    android:background="@color/white"
+    android:background="?attr/orderBackground"
     android:clickable="true">
 
     <android.support.v7.widget.Toolbar
@@ -64,6 +64,7 @@
             android:id="@+id/profile_icon"
             android:layout_width="@dimen/_20sdp"
             android:layout_height="@dimen/_20sdp"
+            android:tint="?attr/textColor"
             android:background="@drawable/icon_profile"/>
 
         <TextView
@@ -72,7 +73,7 @@
             android:layout_marginStart="@dimen/_5sdp"
             android:layout_marginEnd="@dimen/_5sdp"
             android:textSize="@dimen/_13ssp"
-            android:textColor="@color/black"
+            android:textColor="?attr/usText"
             android:text="@string/profile_settings"/>
     </LinearLayout>
 
@@ -96,6 +97,7 @@
             android:id="@+id/faq_icon"
             android:layout_width="@dimen/_20sdp"
             android:layout_height="@dimen/_20sdp"
+            android:tint="?attr/textColor"
             android:background="@drawable/icon_faq"/>
 
         <TextView
@@ -104,7 +106,7 @@
             android:layout_marginStart="@dimen/_5sdp"
             android:layout_marginEnd="@dimen/_5sdp"
             android:textSize="@dimen/_13ssp"
-            android:textColor="@color/black"
+            android:textColor="?attr/usText"
             android:text="@string/faq"/>
     </LinearLayout>
     <View

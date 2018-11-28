@@ -115,10 +115,12 @@ public class ModesDialogFragment extends Fragment {
           writePlaceToLastplaces(order.getFromAddess(), order.getToAddess());
 
           UserMainFragment mainFragment = (UserMainFragment) getFragmentManager().findFragmentByTag(UserMainFragment.TAG);
-          if(mainFragment!= null){
+          if(mainFragment!= null) {
               mainFragment.setWaitingState(response.getMessage(), response.getUrl());
+              if(response.getUrl() == null || response.getUrl().equals("")){
+                  getActivity().onBackPressed();
+              }
           }
-          getActivity().onBackPressed();
       }
     }
 

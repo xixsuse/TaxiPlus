@@ -50,11 +50,12 @@ public class Constants {
     public static final String SOBERFRAGMENT = "AddSoberOrderFragment";
     public static final String WEBFRAGMENT = "WebFragment";
     public static final String LOGOUTVIEW = "LogoutDialogFragment";
+    public static final String INFOFRAGMENT = "InfoFragment";
 
 
     public static final int MAINFRAGMENTCODEFROM = 121;
     public static final int MAINFRAGMENTCODETO = 122;
-    public static final int MAINFRAGMENTCODEOFFER = 120;
+    public static final int MAINFRAGMENTCODEWEB = 120;
     public static final int MAINFRAGMENTCODECHECKOUT = 100;
     public static final int DRIVERPROFILEFRAGMENTCODESUBMODEL = 123;
     public static final int DRIVERPROFILEFRAGMENTCODEMODEL = 124;
@@ -74,7 +75,8 @@ public class Constants {
     public static final String TOADDRESS = "toAddress";
     public static final String FROMADDRESS = "fromAddress";
     public static final String ADDRESS = "Address";
-    public static final String URL = "http://185.236.130.126/profile/account/";
+    public static final String URL = "http://194.87.146.89/profile/account/";
+    public static final String URL_NODE = "http://185.236.130.126:443/";
     public static final String TEST_URL = "http://192.168.0.116/profile/account/";
     public static final String NEWORDER = "newOrder";
     public static final String SELECTEDMODEL = "selectedModel";

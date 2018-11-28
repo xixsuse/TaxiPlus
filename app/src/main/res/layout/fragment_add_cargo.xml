@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?attr/orderBackground"
     android:clickable="true"
     tools:context=".ui.makeOrder.IntercityMakeOrderFragment">
     <android.support.v7.widget.Toolbar
@@ -112,6 +112,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
+        android:background="?attr/orderBackground"
         app:layout_constraintTop_toBottomOf="@id/top_view"
         app:layout_constraintBottom_toBottomOf="parent">
         <LinearLayout
@@ -126,6 +127,7 @@
                 android:layout_marginTop="@dimen/_7sdp"
                 android:layout_marginStart="@dimen/_9sdp"
                 android:layout_marginBottom="@dimen/_7sdp"
+                android:tint="?attr/tabColor"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:background="@drawable/icon_by_bonuses" />
@@ -137,8 +139,9 @@
                 android:layout_marginStart="@dimen/_12sdp"
                 android:layout_marginEnd="@dimen/_4sdp"
                 android:hint="@string/price"
+                android:textColorHint="@color/light_gray"
                 android:inputType="number"
-                android:textColor="@color/black"
+                android:textColor="?attr/usText"
                 android:textSize="@dimen/_12ssp"/>
         </LinearLayout>
         <View
@@ -157,6 +160,7 @@
                 android:layout_marginTop="@dimen/_7sdp"
                 android:layout_marginStart="@dimen/_9sdp"
                 android:layout_marginBottom="@dimen/_7sdp"
+                android:tint="?attr/tabColor"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:background="@drawable/icon_calendar"
@@ -169,7 +173,8 @@
                 android:layout_marginStart="@dimen/_12sdp"
                 android:layout_marginEnd="@dimen/_4sdp"
                 android:hint="@string/date"
-                android:textColor="@color/black"
+                android:textColorHint="@color/light_gray"
+                android:textColor="?attr/usText"
                 android:textSize="@dimen/_12ssp"/>
         </LinearLayout>
         <View
@@ -188,6 +193,7 @@
                 android:layout_marginTop="@dimen/_7sdp"
                 android:layout_marginStart="@dimen/_9sdp"
                 android:layout_marginBottom="@dimen/_7sdp"
+                android:tint="?attr/tabColor"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:background="@drawable/icon_dialog" />
@@ -199,7 +205,8 @@
                 android:layout_marginStart="@dimen/_9sdp"
                 android:layout_marginEnd="@dimen/_4sdp"
                 android:hint="@string/cargo_decs_hint"
-                android:textColor="@color/black"
+                android:textColorHint="@color/light_gray"
+                android:textColor="?attr/usText"
                 android:textSize="@dimen/_12ssp"/>
         </LinearLayout>
         <View

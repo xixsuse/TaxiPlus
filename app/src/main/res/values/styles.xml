@@ -7,6 +7,9 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="buttonColor">@color/colorAccent</item>
         <item name="orderBackground">@color/white</item>
+        <item name="textColor">@color/colorPrimary</item>
+        <item name="usText">@color/black</item>
+        <item name="tabColor">@color/colorPrimary</item>
     </style>
 
     <style name="AppThemeDark">
@@ -15,6 +18,9 @@
         <item name="colorAccent">@color/colorAccentDark</item>
         <item name="buttonColor">@color/colorAccentDark</item>
         <item name="orderBackground">@color/hint_gray</item>
+        <item name="textColor">@color/light_gray</item>
+        <item name="usText">@color/white</item>
+        <item name="tabColor">@color/white</item>
     </style>
 
     <style name="AppTheme.ProgressbarColor">

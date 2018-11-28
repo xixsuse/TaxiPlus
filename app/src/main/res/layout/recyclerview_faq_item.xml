@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?attr/orderBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rfi_view">
-
 
     <TextView
         android:id="@+id/rfi_question_text"
@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:foreground="?attr/selectableItemBackground"
         android:textSize="@dimen/_13ssp"
-        android:textColor="@color/black"
+        android:textColor="?attr/usText"
         android:text="Question #1"
         android:padding="@dimen/_8sdp"/>
     <TextView
@@ -24,7 +24,7 @@
         app:layout_constraintTop_toBottomOf="@id/rfi_question_text"
         app:layout_constraintBottom_toTopOf="@id/bottom_line"
         android:textSize="@dimen/_13ssp"
-        android:textColor="@color/black"
+        android:textColor="?attr/usText"
         android:layout_marginStart="@dimen/_10ssp"
         android:text="Answer for #1"
         android:fontFamily="sans-serif-light"

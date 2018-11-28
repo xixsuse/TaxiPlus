@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@color/white"
+                android:background="?attr/orderBackground"
                 android:paddingBottom="@dimen/_15sdp">
                 <include
                     layout="@layout/nav_header_main"/>
@@ -34,7 +34,7 @@
                     android:id="@+id/ma_recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
+                    android:background="?attr/orderBackground"
                     android:padding="@dimen/_12sdp"/>
                 <Button
                     android:id="@+id/ma_logout_button"

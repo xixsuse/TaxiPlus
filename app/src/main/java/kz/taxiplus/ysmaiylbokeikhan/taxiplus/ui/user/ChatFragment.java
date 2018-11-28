@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.daasuu.bl.ArrowDirection;
@@ -33,9 +34,16 @@ import java.util.Random;
 
 import io.paperdb.Paper;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.HistoryItem;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Message;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 public class ChatFragment extends Fragment {
     public static final String TAG = Constants.CHATFRAGMENTTAG;
@@ -51,9 +59,11 @@ public class ChatFragment extends Fragment {
     private RecyclerView recyclerView;
     private EditText inputEditText;
     private ImageButton sendButton;
+    private ProgressBar progressBar;
 
     private RecyclerChatAdapter chatAdapter;
     private DatabaseReference databaseReference;
+    private CompositeSubscription subscription;
 
     public static ChatFragment newInstance(String recipientPhone, String recipientName) {
         ChatFragment fragment = new ChatFragment();
@@ -92,11 +102,13 @@ public class ChatFragment extends Fragment {
     private void initViews(View view){
         databaseReference = FirebaseDatabase.getInstance().getReference("Message");
 
+        subscription = new CompositeSubscription();
         nameText = view.findViewById(R.id.fc_name_text);
         numberText = view.findViewById(R.id.fc_number_text);
         inputEditText = view.findViewById(R.id.fc_input_edittext);
         recyclerView = view.findViewById(R.id.fс_recyclerview);
         sendButton = view.findViewById(R.id.fc_send_button);
+        progressBar = view.findViewById(R.id.fc_progressbar);
 
         numberText.setText(recipientPhone);
         nameText.setText(recipientName);
@@ -139,6 +151,7 @@ public class ChatFragment extends Fragment {
     }
 
     private void getMessages() {
+        progressBar.setVisibility(View.VISIBLE);
         databaseReference.child(chatUrl).child("chat").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -164,6 +177,7 @@ public class ChatFragment extends Fragment {
         chatAdapter = new RecyclerChatAdapter(messageList);
         recyclerView.setAdapter(chatAdapter);
         recyclerView.scrollToPosition(messageList.size()-1);
+        progressBar.setVisibility(View.GONE);
     }
 
     public class RecyclerChatAdapter extends RecyclerView.Adapter<RecyclerChatAdapter.ViewHolder>{
@@ -227,13 +241,31 @@ public class ChatFragment extends Fragment {
     private void sendMessage(String msg){
         Message message = new Message(msg, user.getPhone());
         databaseReference.child(chatUrl).child("chat").push().setValue(message);
+        notifyUser(recipientPhone, msg);
     }
 
-    public static String getDate(long milliSeconds) {
+    public static String getDate(String milliSeconds) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm");
 
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(milliSeconds);
+        calendar.setTimeInMillis(Long.valueOf(milliSeconds));
         return formatter.format(calendar.getTime());
+    }
+
+    private void notifyUser(String phone, String text){
+        progressBar.setVisibility(View.VISIBLE);
+        subscription.add(NetworkUtil.getRetrofit()
+                .sendMessage(Utility.getToken(getContext()), phone, text)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponse, this::handleError));
+    }
+
+    private void handleResponse(Response response) {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private void handleError(Throwable throwable) {
+        progressBar.setVisibility(View.GONE);
     }
 }

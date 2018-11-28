@@ -53,7 +53,7 @@ public interface RetrofitInterface {
     Observable<Response> authFirstStep(@Field("phone") String phone);
 
     @FormUrlEncoded
-    @POST("verify-code/")
+    @POST("verify-code")
     Observable<Response> authSecondStep(@Field("phone") String phone, @Field("code")String code);
 
     @FormUrlEncoded
@@ -157,6 +157,12 @@ public interface RetrofitInterface {
                                     @Field("push_id")String push_id,
                                     @Field("lat")double lat,
                                     @Field("long")double longi,
+                                    @Field("platform") String platform);
+
+    @FormUrlEncoded
+    @POST("set-push-id/")
+    Observable<Response> checkStateDriver(@Field("token")String token,
+                                    @Field("push_id")String push_id,
                                     @Field("platform") String platform);
 
     @FormUrlEncoded
@@ -284,6 +290,12 @@ public interface RetrofitInterface {
     Observable<Response> howManyChats(@Field("token")String token);
 
     @FormUrlEncoded
+    @POST("message/")
+    Observable<Response> sendMessage(@Field("token") String token,
+                                     @Field("phone")String phone,
+                                     @Field("text") String text);
+
+    @FormUrlEncoded
     @POST("add-specific-order/")
     Observable<Response> addIntercityOrder(@Field("token")String token,
                                                   @Field("type") String type,
@@ -309,5 +321,4 @@ public interface RetrofitInterface {
     @Multipart
     @POST("upload-avatar/")
     Call<Response> uploadAva(@Part MultipartBody.Part file, @Part("token") RequestBody token);
-
 }

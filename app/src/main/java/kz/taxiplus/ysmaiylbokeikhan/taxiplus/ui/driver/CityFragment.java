@@ -1,21 +1,30 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.driver;
 
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.MainActivity;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
@@ -34,9 +43,11 @@ public class CityFragment extends Fragment implements AcceptOrderInterface{
     public static final String TAG = Constants.CITYFRAGMENTTAG;
 
     private ImageButton menuIcon;
+    private Button newOrdersButton;
     private TabLayout tabLayout;
     private ProgressBar progressBar;
     private ViewPager viewPager;
+
     private FragmentPagerAdapter fragmentPagerAdapter;
     private CompositeSubscription subscription;
 
@@ -47,6 +58,7 @@ public class CityFragment extends Fragment implements AcceptOrderInterface{
         initViews(view);
 
         getAccess();
+
         return view;
     }
 
@@ -64,16 +76,28 @@ public class CityFragment extends Fragment implements AcceptOrderInterface{
     }
 
     private void initViews(View view) {
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(myBroadcastReceiver,
+                new IntentFilter("thisIsForCityFragment"));
+
         subscription = new CompositeSubscription();
         menuIcon = view.findViewById(R.id.fc_back);
         tabLayout = view.findViewById(R.id.fc_sliding_tabs);
         viewPager = view.findViewById(R.id.fc_viewpager);
+        newOrdersButton = view.findViewById(R.id.fc_new_orders);
         progressBar = view.findViewById(R.id.fc_progressbar);
 
         menuIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((MainActivity)getActivity()).drawerAction();
+            }
+        });
+
+        newOrdersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newOrdersButton.setVisibility(View.GONE);
+                getAccess();
             }
         });
     }
@@ -169,4 +193,15 @@ public class CityFragment extends Fragment implements AcceptOrderInterface{
         }
 
     }
+
+    private final BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, android.content.Intent intent) {
+            String orderId = intent.getStringExtra(Constants.ORDERID);
+
+           if (newOrdersButton.getVisibility() == View.GONE){
+                newOrdersButton.setVisibility(View.VISIBLE);
+           }
+        }
+    };
 }

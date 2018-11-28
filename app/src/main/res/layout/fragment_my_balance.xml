@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:clickable="true"
-    android:background="@color/white">
+    android:background="?attr/orderBackground">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/fmb_toolbar"
@@ -45,6 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:mcv_calendarMode="month"
+        android:background="@color/white"
         app:layout_constraintTop_toBottomOf="@id/fmb_toolbar"/>
 
     <View
@@ -67,12 +68,12 @@
             android:layout_height="wrap_content"
             android:text="@string/trips_amount"
             android:textSize="@dimen/_13ssp"
-            android:textColor="@color/black"/>
+            android:textColor="?attr/usText"/>
         <TextView
             android:id="@+id/fmb_trips_amount_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
+            android:textColor="?attr/usText"
             android:textSize="@dimen/_13ssp"
             android:text="5"/>
     </LinearLayout>
@@ -96,12 +97,12 @@
             android:layout_height="wrap_content"
             android:text="@string/earn_coins"
             android:textSize="@dimen/_13ssp"
-            android:textColor="@color/black"/>
+            android:textColor="?attr/usText"/>
         <TextView
             android:id="@+id/fmb_coins_amount_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
+            android:textColor="?attr/usText"
             android:textSize="@dimen/_13ssp"
             android:text="500"/>
     </LinearLayout>

@@ -3,4 +3,7 @@
     <attr name="colorPrimary" format="color"/>
     <attr name="buttonColor" format="color"/>
     <attr name="orderBackground" format="color"/>
+    <attr name="textColor" format="color"/>
+    <attr name="tabColor" format="color"/>
+    <attr name="usText" format="color"/>
 </resources>

@@ -86,6 +86,7 @@ public class OrderInfoDialogFragment extends DialogFragment implements OnMapRead
     private boolean isNewOrder = false;
 
     private CompositeSubscription subscription;
+    private AcceptOrderInterface acceptOrderInterface;
 
     public static OrderInfoDialogFragment newInstance(NewOrder order) {
         OrderInfoDialogFragment fragment = new OrderInfoDialogFragment();
@@ -101,6 +102,10 @@ public class OrderInfoDialogFragment extends DialogFragment implements OnMapRead
         args.putString(ORDERID, orderId);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public void setAcceptOrderInterface(AcceptOrderInterface acceptOrderInterface){
+        this.acceptOrderInterface = acceptOrderInterface;
     }
 
     @Override
@@ -231,6 +236,12 @@ public class OrderInfoDialogFragment extends DialogFragment implements OnMapRead
         if(response.getState().equals("success")){
             Toast.makeText(getContext(), getResources().getString(R.string.wait_response), Toast.LENGTH_LONG).show();
             getDialog().dismiss();
+
+            if (acceptOrderInterface != null){
+                acceptOrderInterface.onOrderAccept(true);
+            }
+        }else if(response.getState().equals("exist")){
+            Toast.makeText(getContext(), getResources().getString(R.string.order_exist), Toast.LENGTH_LONG).show();
         }
     }
 

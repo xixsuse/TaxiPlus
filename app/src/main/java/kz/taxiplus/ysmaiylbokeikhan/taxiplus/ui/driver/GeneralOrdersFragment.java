@@ -195,6 +195,8 @@ public class GeneralOrdersFragment extends Fragment {
         if(response.getState().equals("success")){
             acceptOrderInterface.onOrderAccept(true);
             Toast.makeText(getContext(), getResources().getString(R.string.wait_response), Toast.LENGTH_LONG).show();
+        }else if(response.getState().equals("exist")){
+            Toast.makeText(getContext(), getResources().getString(R.string.order_exist), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -209,7 +211,7 @@ public class GeneralOrdersFragment extends Fragment {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public TextView userInfo, fromText, toText, priceText, distanceText;
-            public LinearLayout view, acceptView, onMapView;
+            public LinearLayout view;
 
             public ViewHolder(View v) {
                 super(v);
@@ -219,8 +221,6 @@ public class GeneralOrdersFragment extends Fragment {
                 priceText = (TextView)v.findViewById(R.id.rcoi_price_text);
                 distanceText = (TextView)v.findViewById(R.id.rcoi_distance_text);
                 view = (LinearLayout) v.findViewById(R.id.rcoi_info_view);
-                acceptView = (LinearLayout) v.findViewById(R.id.rcoi_accept_view);
-                onMapView = (LinearLayout) v.findViewById(R.id.rcoi_onmap_view);
             }
         }
 
@@ -257,17 +257,11 @@ public class GeneralOrdersFragment extends Fragment {
                 blinkingView(holder.view);
             }
 
-            holder.acceptView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    acceptOrder(orderList.get(position).getId());
-                }
-            });
-
-            holder.onMapView.setOnClickListener(new View.OnClickListener() {
+            holder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     OrderInfoDialogFragment newOrderDialogFragment = OrderInfoDialogFragment.newInstance(orderList.get(position).getId());
+                    newOrderDialogFragment.setAcceptOrderInterface(acceptOrderInterface);
                     newOrderDialogFragment.show(getChildFragmentManager(), OrderInfoDialogFragment.TAG);
                 }
             });
