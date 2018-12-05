@@ -196,6 +196,8 @@ public class OrderInfoDialogFragment extends DialogFragment implements OnMapRead
         });
     }
 
+
+    //requests
     private void getFulInfo(String orderId) {
         progressBar.setVisibility(View.VISIBLE);
         subscription.add(NetworkUtil.getRetrofit()
@@ -249,6 +251,7 @@ public class OrderInfoDialogFragment extends DialogFragment implements OnMapRead
         progressBar.setVisibility(View.GONE);
         getDialog().dismiss();
     }
+
 
     private void rejectOrder(String order_id) {
         progressBar.setVisibility(View.VISIBLE);
@@ -334,11 +337,6 @@ public class OrderInfoDialogFragment extends DialogFragment implements OnMapRead
                     .icon(BitmapDescriptorFactory.fromBitmap(setIcon(R.drawable.icon_point_a)))
                     .position(from));
 
-//            for (int i = 0; i < direction.getRouteList().size(); i++) {
-//                Route route = direction.getRouteList().get(i);
-//                ArrayList<LatLng> directionPositionList = route.getLegList().get(0).getDirectionPoint();
-//                map.addPolyline(DirectionConverter.createPolyline(getContext(), directionPositionList, 7, getResources().getColor(R.color.colorPrimary)));
-//            }
             Route route = direction.getRouteList().get(0);
             map.addPolyline(DirectionConverter.createPolyline(getContext(), route.getLegList().get(0).getDirectionPoint(), 7, getResources().getColor(R.color.colorPrimary)));
 

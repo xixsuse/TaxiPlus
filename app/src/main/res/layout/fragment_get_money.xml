@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
+    android:padding="@dimen/_15sdp"
+    android:orientation="vertical"
+    android:background="@color/white">
+    <ImageView
+        android:id="@+id/fgm_image"
+        android:layout_width="@dimen/_43sdp"
+        android:layout_height="@dimen/_33sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/icon_credit_card"/>
+
+    <EditText
+        android:id="@+id/fgm_amount_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_27sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        app:layout_constraintTop_toBottomOf="@id/fgm_image"
+        android:background="@drawable/border_for_view"
+        android:textColor="?attr/textColor"
+        android:textSize="@dimen/_11sdp"
+        android:textAlignment="center"
+        android:inputType="number"
+        android:hint="@string/amount"/>
+
+    <EditText
+        android:id="@+id/fgm_card_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_27sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        app:layout_constraintTop_toBottomOf="@id/fgm_amount_edittext"
+        android:background="@drawable/border_for_view"
+        android:textColor="?attr/textColor"
+        android:textSize="@dimen/_11sdp"
+        android:textAlignment="center"
+        android:inputType="number"
+        android:maxLength="16"
+        android:hint="@string/card_number"/>
+
+    <Button
+        android:id="@+id/fgm_send_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fgm_card_edittext"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:text="@string/get_money"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:textAllCaps="false"
+        android:background="@color/trans"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="@dimen/_14ssp"
+        android:visibility="visible"/>
+</android.support.constraint.ConstraintLayout>

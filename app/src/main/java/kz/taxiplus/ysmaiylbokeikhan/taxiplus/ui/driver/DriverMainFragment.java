@@ -425,11 +425,6 @@ public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
         Paper.book().write(Constants.USER, user);
     }
 
-    public void clientIsAccepted(String orderId){
-        this.orderId = orderId;
-        setWithOrderState(orderId, 0);
-    }
-
     private void drawMarker(Location location) {
         LatLng currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
         myLocation = new LatLng(location.getLatitude(), location.getLongitude());

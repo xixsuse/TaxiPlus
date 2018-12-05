@@ -10,7 +10,6 @@ import rx.schedulers.Schedulers;
 
 public class NetworkUtil {
     public static RetrofitInterface getRetrofit(){
-
         RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io());
         OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
@@ -24,11 +23,9 @@ public class NetworkUtil {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(RetrofitInterface.class);
-
     }
 
     public static RetrofitInterface getRetrofit1(){
-
         RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io());
         OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
@@ -42,6 +39,5 @@ public class NetworkUtil {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(RetrofitInterface.class);
-
     }
 }

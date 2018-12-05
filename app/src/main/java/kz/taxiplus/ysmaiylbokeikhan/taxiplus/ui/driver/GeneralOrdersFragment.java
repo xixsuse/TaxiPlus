@@ -210,7 +210,7 @@ public class GeneralOrdersFragment extends Fragment {
         public List<Order> orderList;
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            public TextView userInfo, fromText, toText, priceText, distanceText;
+            public TextView userInfo, fromText, toText, priceText, distanceText, statusText;
             public LinearLayout view;
 
             public ViewHolder(View v) {
@@ -220,6 +220,7 @@ public class GeneralOrdersFragment extends Fragment {
                 toText = (TextView)v.findViewById(R.id.rcoi_address_to_text);
                 priceText = (TextView)v.findViewById(R.id.rcoi_price_text);
                 distanceText = (TextView)v.findViewById(R.id.rcoi_distance_text);
+                statusText = (TextView)v.findViewById(R.id.rcoi_status_text);
                 view = (LinearLayout) v.findViewById(R.id.rcoi_info_view);
             }
         }
@@ -255,6 +256,15 @@ public class GeneralOrdersFragment extends Fragment {
 
             if((new Date().getTime()/1000 - orderList.get(position).getCreated()) > 15*60){
                 blinkingView(holder.view);
+            }
+
+            if (orderList.get(position).getOrder_type()!= null && orderList.get(position).getOrder_type().equals("4")){
+                holder.statusText.setText(getResources().getString(R.string.modeLadyTaxi));
+                holder.statusText.setTextColor(getResources().getColor(R.color.pink));
+            }else if(orderList.get(position).getOrder_type()!= null && orderList.get(position).getOrder_type().equals("5")){
+                holder.statusText.setText(getResources().getString(R.string.order_driver));
+            }else {
+                holder.statusText.setText("");
             }
 
             holder.view.setOnClickListener(new View.OnClickListener() {

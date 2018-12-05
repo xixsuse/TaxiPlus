@@ -110,7 +110,8 @@ public class AuthSecondStepFragment extends Fragment {
         }
     }
     private void handleError(Throwable throwable) {
-
+        progressBar.setVisibility(View.GONE);
+        Toast.makeText(getContext(), getResources().getString(R.string.try_later), Toast.LENGTH_SHORT).show();
     }
 
     private void changeFireBaseToken(String token, String push_id) {

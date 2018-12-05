@@ -51,6 +51,8 @@ public class Constants {
     public static final String WEBFRAGMENT = "WebFragment";
     public static final String LOGOUTVIEW = "LogoutDialogFragment";
     public static final String INFOFRAGMENT = "InfoFragment";
+    public static final String NEWSFRAGMENT = "NewsFragment";
+    public static final String GETMONEYFRAGMENT = "GetMoneyFragment";
 
 
     public static final int MAINFRAGMENTCODEFROM = 121;

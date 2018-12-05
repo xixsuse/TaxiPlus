@@ -11,6 +11,7 @@ public class Order {
     private String to_longitude;
     private String to_latitude;
     private String price;
+    private String order_type;
     private long created;
 
     public String getId() {
@@ -47,6 +48,10 @@ public class Order {
 
     public long getCreated() {
         return created;
+    }
+
+    public String getOrder_type() {
+        return order_type;
     }
 
     public class GetOrders{

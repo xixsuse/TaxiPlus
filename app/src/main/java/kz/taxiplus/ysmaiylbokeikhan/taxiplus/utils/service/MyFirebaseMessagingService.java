@@ -56,6 +56,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String type = remoteMessage.getData().get("type");
         if (type.equals("2")){
             showNotification(remoteMessage, type);
+        }else if(type.equals("7")){
+            showNotification(remoteMessage, type);
         }else if(type.equals("1")){//silent push notification
             String orderId = remoteMessage.getData().get("order_id");
             if(getLocation() != null){
@@ -138,7 +140,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if(type.equals("2")){
             title = getResources().getString(R.string.new_message_from)+ " "+remoteMessage.getData().get("author");
         }else {
-            title = "title";
+            title = remoteMessage.getData().get("title");
         }
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)

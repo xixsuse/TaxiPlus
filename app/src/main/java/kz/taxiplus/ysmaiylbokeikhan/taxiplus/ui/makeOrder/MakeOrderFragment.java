@@ -36,21 +36,17 @@ import rx.subjects.BehaviorSubject;
 public class MakeOrderFragment extends Fragment implements OnDateSetListener {
     public static final String TAG = Constants.MAKEORDERFRAGMENTTAG;
 
-    private boolean priceViewState = false;
     private boolean commentViewState = false;
-    private boolean weightViewState = false;
-    private boolean modelViewState = false;
-    private Calendar mCalendar, orderCalendar;
+    private Calendar mCalendar;
     private int mode;
     private long tenYears = 10L * 365 * 1000 * 60 * 60 * 24L;
     private long selectedDate = 0;
     private Place toAddress, fromAddress;
 
     private TimePickerDialog mDialogMonthDayHourMinute;
-    private TextView toText, fromText, commentText, dateText, weightText, modelText;
-    private ConstraintLayout commentView, weightView, modelView, commentSwipeView,
-            weightSwipeView, modelSwipeView,mainWeightView, mainModelView;
-    private EditText commentEditText, volumeEditText, weightEditText, modelEditText;
+    private TextView toText, fromText, commentText, dateText;
+    private ConstraintLayout commentView, commentSwipeView;
+    private EditText commentEditText;
     private Button makeOrderButton;
 
     private FragmentTransaction fragmentTransaction;
@@ -71,7 +67,7 @@ public class MakeOrderFragment extends Fragment implements OnDateSetListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_make_order, container, false);
         initViews(view);
-//        setObserver();
+
         return view;
     }
 
@@ -82,33 +78,14 @@ public class MakeOrderFragment extends Fragment implements OnDateSetListener {
 
         commentText = view.findViewById(R.id.fmo_comment_text);
         dateText = view.findViewById(R.id.fmo_date_text);
-        weightText = view.findViewById(R.id.fmo_weight_text);
-        modelText = view.findViewById(R.id.fmo_model_text);
-
         commentEditText = view.findViewById(R.id.fmo_comment_edittext);
-        weightEditText = view.findViewById(R.id.fmo_weight_edittext);
-        volumeEditText = view.findViewById(R.id.fmo_volume_edittext);
-        modelEditText = view.findViewById(R.id.fmo_model_edittext);
 
         commentView = view.findViewById(R.id.fmo_comment_view);
-        mainWeightView = view.findViewById(R.id.fmo_main_weight_view);
-        mainModelView = view.findViewById(R.id.fmo_main_model_view);
-        weightView = view.findViewById(R.id.fmo_weight_view);
-        modelView = view.findViewById(R.id.fmo_model_view);
-
         commentSwipeView = view.findViewById(R.id.fmo_comment_swipe_view);
-        weightSwipeView = view.findViewById(R.id.fmo_weight_swipe_view);
-        modelSwipeView = view.findViewById(R.id.fmo_model_swipe_view);
 
         if(toAddress != null && fromAddress != null){
             fromText.setText(fromAddress.getAddress());
             toText.setText(toAddress.getAddress());
-
-            if(mode == 5){
-                mainModelView.setVisibility(View.VISIBLE);
-            }else if(mode == 4){
-                mainWeightView.setVisibility(View.VISIBLE);
-            }
         }
 
         setListeners();
@@ -125,16 +102,7 @@ public class MakeOrderFragment extends Fragment implements OnDateSetListener {
                     selectedDate = new Date().getTime();
                 }
 
-                if(mode == 5){
-                    order = new NewOrder(toAddress, fromAddress, mode, commentEditText.getText().toString(),
-                            selectedDate, modelEditText.getText().toString());
-                }else if(mode == 4){
-                    order = new NewOrder(toAddress, fromAddress, mode, commentEditText.getText().toString(),
-                            selectedDate, volumeEditText.getText().toString(), weightEditText.getText().toString());
-
-                }else {
-                    order = new NewOrder(toAddress, fromAddress, mode, commentEditText.getText().toString(), selectedDate);
-                }
+                order = new NewOrder(toAddress, fromAddress, mode, commentEditText.getText().toString(), selectedDate);
 
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(Constants.NEWORDER, order);
@@ -162,34 +130,6 @@ public class MakeOrderFragment extends Fragment implements OnDateSetListener {
                 }else {
                     commentView.setVisibility(View.VISIBLE);
                     slide_down(getContext(), commentView);
-                }
-            }
-        });
-
-        weightText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                weightViewState = !weightViewState;
-                if(!weightViewState){
-                    slide_up(getContext(),weightView);
-                    weightView.setVisibility(View.GONE);
-                }else {
-                    weightView.setVisibility(View.VISIBLE);
-                    slide_down(getContext(), weightView);
-                }
-            }
-        });
-
-        modelText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                modelViewState = !modelViewState;
-                if(!modelViewState){
-                    slide_up(getContext(),modelView);
-                    modelView.setVisibility(View.GONE);
-                }else {
-                    modelView.setVisibility(View.VISIBLE);
-                    slide_down(getContext(), modelView);
                 }
             }
         });
@@ -231,73 +171,6 @@ public class MakeOrderFragment extends Fragment implements OnDateSetListener {
                 commentView.setVisibility(View.GONE);
             }
         });
-
-        weightSwipeView.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
-            public void onSwipeTop() {
-                weightViewState = !weightViewState;
-                slide_up(getContext(), weightView);
-                weightView.setVisibility(View.GONE);
-            }
-        });
-
-        modelSwipeView.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
-            public void onSwipeTop() {
-                modelViewState = !modelViewState;
-                slide_up(getContext(), modelView);
-                modelView.setVisibility(View.GONE);
-            }
-        });
-
-        weightEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                checkAllFields();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        volumeEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                checkAllFields();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        modelEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                checkAllFields();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
     }
 
     @Override
@@ -334,28 +207,5 @@ public class MakeOrderFragment extends Fragment implements OnDateSetListener {
         Date d = new Date(time);
         SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return sf.format(d);
-    }
-
-    private void checkAllFields(){
-        if(mode == 5){
-            if(!modelEditText.getText().toString().isEmpty() && selectedDate != 0){
-                makeOrderButton.setVisibility(View.VISIBLE);
-            }else {
-                makeOrderButton.setVisibility(View.GONE);
-            }
-        }else if(mode ==4){
-            if(!weightEditText.getText().toString().isEmpty() && !volumeEditText.getText().toString().isEmpty()
-                    && selectedDate != 0){
-                makeOrderButton.setVisibility(View.VISIBLE);
-            }else {
-                makeOrderButton.setVisibility(View.GONE);
-            }
-        }else {
-            if(selectedDate != 0){
-                makeOrderButton.setVisibility(View.VISIBLE);
-            }else {
-                makeOrderButton.setVisibility(View.GONE);
-            }
-        }
     }
 }

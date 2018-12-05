@@ -23,13 +23,34 @@
         android:layout_marginStart="@dimen/_3sdp"
         android:paddingStart="@dimen/_25sdp"
         android:paddingBottom="@dimen/_4sdp">
-        <TextView
-            android:id="@+id/rcoi_user_info_text"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_4sdp"
-            android:textSize="@dimen/_10ssp"
-            android:textColor="?attr/usText"/>
+            android:orientation="horizontal"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/rcoi_user_info_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:textSize="@dimen/_10ssp"
+                android:textColor="?attr/usText"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+            <TextView
+                android:id="@+id/rcoi_status_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:textSize="@dimen/_10ssp"
+                android:textStyle="bold"
+                android:textAlignment="textEnd"
+                android:textColor="?attr/textColor"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

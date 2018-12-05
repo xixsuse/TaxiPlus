@@ -9,12 +9,14 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.FreightItem;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.HistoryItem;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.IntercityOrder;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Model;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.NewsItem;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Order;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.OrderToDriver;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Place;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Price;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.CitiesResponse;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.ResponsePrice;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.SessionPrices;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.TaxiPark;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
@@ -211,6 +213,19 @@ public interface RetrofitInterface {
                                    @Field("payment_type")int payment_type);
 
     @FormUrlEncoded
+    @POST("make-order/")
+    Observable<Response> makeOrderSobber(@Field("token")String token,
+                                         @Field("latitude_a")double latitude_a,
+                                         @Field("longitude_a")double longitude_a,
+                                         @Field("latitude_b")double latitude_b,
+                                         @Field("longitude_b")double longitude_b,
+                                         @Field("service_id")int service_id,
+                                         @Field("comment")String comment,
+                                         @Field("date")long date,
+                                         @Field("payment_type")int payment_type,
+                                         @Field("kpp") int kpp_type);
+
+    @FormUrlEncoded
     @POST("get-referal-link/")
     Observable<Response> getReferalLink(@Field("token")String token);
 
@@ -243,8 +258,8 @@ public interface RetrofitInterface {
     Observable<HistoryItem> getHistory(@Field("token")String token, @Field("date")String date);
 
     @FormUrlEncoded
-    @POST("get-balance-history/")
-    Observable<DriverBalance> getBalanceHistory(@Field("token")String token, @Field("date")String date);
+    @POST("get-my-balance/")
+    Observable<DriverBalance> getBalance(@Field("token")String token);
 
     @FormUrlEncoded
     @POST("get-active-orders/")
@@ -286,6 +301,10 @@ public interface RetrofitInterface {
     Observable<Response> logout(@Field("token")String token);
 
     @FormUrlEncoded
+    @POST("get-news/")
+    Observable<NewsItem.NewsResponse> getNews(@Field("token")String token);
+
+    @FormUrlEncoded
     @POST("how-many-chats/")
     Observable<Response> howManyChats(@Field("token")String token);
 
@@ -294,6 +313,12 @@ public interface RetrofitInterface {
     Observable<Response> sendMessage(@Field("token") String token,
                                      @Field("phone")String phone,
                                      @Field("text") String text);
+
+    @FormUrlEncoded
+    @POST("money-request/")
+    Observable<Response> sendMoney(@Field("token") String token,
+                                     @Field("amount")String amount,
+                                     @Field("card_number") String card_number);
 
     @FormUrlEncoded
     @POST("add-specific-order/")
@@ -317,6 +342,15 @@ public interface RetrofitInterface {
                                            @Field("end_string") String end_string,
                                            @Field("comment") String comment
                                     );
+
+    @FormUrlEncoded
+    @POST("get-trezvy-price/")
+    Observable<ResponsePrice> getSoberPrice(@Field("token")String token,
+                                            @Field("latitude_a")double latitude_a,
+                                            @Field("longitude_a")double longitude_a,
+                                            @Field("latitude_b")double latitude_b,
+                                            @Field("longitude_b")double longitude_b,
+                                            @Field("comment")String comment);
 
     @Multipart
     @POST("upload-avatar/")

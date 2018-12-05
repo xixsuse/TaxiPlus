@@ -1,6 +1,7 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui;
 
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,10 +11,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -22,7 +29,9 @@ import java.util.List;
 
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.MainActivity;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.AccessPrice;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.FreightItem;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.repository.NetworkUtil;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.makeOrder.AddCargoFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
@@ -101,11 +110,60 @@ public class InvaTaxiFragment extends Fragment {
         if(response.getState().equals("success")){
             Collections.reverse(response.getChats());
             setOrders(response.getChats());
+        }else if (response.getState().equals("do not have access")){
+            haveNotAccessView(response.getPrice());
         }
     }
 
     private void handleErrorOrders(Throwable throwable) {
         progressBar.setVisibility(View.GONE);
+    }
+
+    private void buyAccess(String type, String accessType){
+        progressBar.setVisibility(View.VISIBLE);
+        subscription.add(NetworkUtil.getRetrofit()
+                .buyAccess(Utility.getToken(getContext()),type, accessType)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponseBuy, this::handleErrorBuy));
+    }
+
+    private void handleResponseBuy(Response response) {
+        progressBar.setVisibility(View.GONE);
+        if(response.getState().equals("success")){
+            getOrder();
+        }else {
+            Toast.makeText(getContext(), getResources().getText(R.string.not_enought_balance), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void handleErrorBuy(Throwable throwable) {
+    }
+
+    private void haveNotAccessView(AccessPrice accessPrice){
+        final Dialog dialog = new Dialog(getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.custom_dialog_view);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        Button payButton = (Button) dialog.findViewById(R.id.cdv_close_button);
+        TextView message = (TextView) dialog.findViewById(R.id.cdv_title_text);
+        ImageView image = (ImageView) dialog.findViewById(R.id.cdv_image);
+
+
+        payButton.setText(getResources().getText(R.string.pay));
+        message.setText(getResources().getText(R.string.no_access_message) + " "+ accessPrice.getHour_price() + " тг.");
+        Glide.with(getContext()).load(getResources().getDrawable(R.drawable.icon_error)).into(image);
+
+        payButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buyAccess("4", "0");
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     public class RecyclerOrdersAdapter extends RecyclerView.Adapter<RecyclerOrdersAdapter.ViewHolder> {

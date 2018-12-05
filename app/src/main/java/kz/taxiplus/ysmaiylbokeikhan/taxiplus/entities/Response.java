@@ -3,6 +3,10 @@ package kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities;
 import java.util.List;
 
 public class Response {
+    private int code;
+    private int is_active;
+    private int is_session_opened;
+    private boolean show_chat;
     private String state;
     private String token;
     private String message;
@@ -13,11 +17,10 @@ public class Response {
     private String order_id;
     private String path;
     private String url;
+    private String stars;
+    private String rating;
+    private String avatar;
     private User user;
-    private int code;
-    private int is_active;
-    private int is_session_opened;
-    private boolean show_chat;
     private AccessPrice price;
     private CitiesResponse.City city;
     private List<Car> cars;
@@ -101,5 +104,17 @@ public class Response {
 
     public boolean isShow_chat() {
         return show_chat;
+    }
+
+    public String getStars() {
+        return stars;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public String getRating() {
+        return rating;
     }
 }

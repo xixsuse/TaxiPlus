@@ -42,7 +42,7 @@ public class ModesDialogFragment extends Fragment {
 
     private NewOrder order;
     private int selectedPayType = 1;
-    private int selectedModeType = 1;
+    private int selectedModeType = -1;
 
     private TextView toAddressText, fromAddressText;
     private RecyclerView modeRecyclerView, payTypeRecyclerView;
@@ -138,7 +138,9 @@ public class ModesDialogFragment extends Fragment {
         payTypes.add(byHand);
         payTypes.add(byBonuses);
 
-        taxiModeAdapter = new RecyclerTaxiModeAdapter(priceList, getContext(), selectedModeType);
+        selectedModeType = Integer.valueOf(priceList.get(0).getService_id());
+
+        taxiModeAdapter = new RecyclerTaxiModeAdapter(priceList, getContext());
         modeRecyclerView.setAdapter(taxiModeAdapter);
         modeRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), priceList.size()));
 
@@ -169,7 +171,6 @@ public class ModesDialogFragment extends Fragment {
     public class RecyclerTaxiModeAdapter extends RecyclerView.Adapter<RecyclerTaxiModeAdapter.ViewHolder> {
         public Context mContext;
         public List<Price> priceList;
-        public int lastPressedPosition = -1;
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public TextView title, price;
@@ -188,10 +189,9 @@ public class ModesDialogFragment extends Fragment {
             }
         }
 
-        public RecyclerTaxiModeAdapter(List<Price> priceList, Context mContext, int lastPressedPosition) {
+        public RecyclerTaxiModeAdapter(List<Price> priceList, Context mContext) {
             this.priceList = priceList;
             this.mContext = mContext;
-            this.lastPressedPosition = lastPressedPosition;
         }
 
         @Override
@@ -209,7 +209,7 @@ public class ModesDialogFragment extends Fragment {
                 holder.left.setVisibility(View.GONE);
             }
 
-            if(priceList.get(position).getService_id().equals(String.valueOf(lastPressedPosition))){
+            if(priceList.get(position).getService_id().equals(String.valueOf(selectedModeType))){
                 holder.price.setTextColor(getResources().getColor(R.color.colorPrimary));
                 holder.title.setTextColor(getResources().getColor(R.color.colorPrimary));
             }else {
@@ -217,7 +217,7 @@ public class ModesDialogFragment extends Fragment {
                 holder.title.setTextColor(getResources().getColor(R.color.gray));
             }
 
-            if(priceList.get(position).getService_id().equals(String.valueOf(lastPressedPosition))){
+            if(priceList.get(position).getService_id().equals(String.valueOf(selectedModeType))){
                 Glide.with(getContext()).load(priceList.get(position).getImg1()).into(holder.logo);
             }else {
                 Glide.with(getContext()).load(priceList.get(position).getImg()).into(holder.logo);
@@ -228,7 +228,6 @@ public class ModesDialogFragment extends Fragment {
             holder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    lastPressedPosition = position+1;
                     selectedModeType = Integer.valueOf(priceList.get(position).getService_id());
                     notifyDataSetChanged();
                 }
