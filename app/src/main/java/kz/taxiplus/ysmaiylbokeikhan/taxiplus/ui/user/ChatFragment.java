@@ -211,6 +211,7 @@ public class ChatFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
+            //fdf
             holder.message.setText(messagesList.get(position).getMessage());
             holder.time.setText(getDate(messageList.get(position).getTime()));
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
