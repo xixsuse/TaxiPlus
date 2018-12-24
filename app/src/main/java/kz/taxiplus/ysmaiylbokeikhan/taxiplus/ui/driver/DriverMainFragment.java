@@ -47,13 +47,16 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.R;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.OrderToDriver;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.dialogFragments.ActiverOrdersDialogFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.dialogFragments.DriverComplaintDialogView;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.dialogFragments.InfoDialogView;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user.ChatFragment;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user.UserMain.UserMainFragment;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.ui.user.UserMain.UserMainViewModel;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Constants;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.utils.Utility;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.Context.LOCATION_SERVICE;
 
 public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
@@ -131,10 +134,10 @@ public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
             map.getUiSettings().setMyLocationButtonEnabled(false);
             map.getUiSettings().setMyLocationButtonEnabled(true);
 
-            if(theme == 2){
-                googleMap.setMapStyle(new MapStyleOptions(getResources()
-                        .getString(R.string.style_json)));
-            }
+//            if(theme == 2){
+//                googleMap.setMapStyle(new MapStyleOptions(getResources()
+//                        .getString(R.string.style_json)));
+//            }
 
             LocationManager locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
             Criteria criteria = new Criteria();
@@ -253,7 +256,9 @@ public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
             public void onClick(View v) {
                 if(orderInfo != null){
                     if(Utility.checkCallPermission(getContext())){
-                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:+" + orderInfo.getClient().getPhone()));
+                        String phone = orderInfo.getDispatcher() == null ? orderInfo.getClient().getPhone() : orderInfo.getDispatcher().getPhone();
+
+                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:+" + phone));
                         startActivity(intent);
                     }else {
                         requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL_PERMISSION);
@@ -266,9 +271,10 @@ public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
             @Override
             public void onClick(View v) {
                 if(orderInfo != null){
-                    fragmentTransaction = getFragmentManager().beginTransaction();
+                    String phone = orderInfo.getDispatcher() == null ? orderInfo.getClient().getPhone() : orderInfo.getDispatcher().getPhone();
 
-                    ChatFragment chatFragment = ChatFragment.newInstance(orderInfo.getClient().getPhone(), orderInfo.getClient().getName());
+                    fragmentTransaction = getFragmentManager().beginTransaction();
+                    ChatFragment chatFragment = ChatFragment.newInstance(phone, orderInfo.getClient().getName());
                     fragmentTransaction.add(R.id.main_activity_frame, chatFragment, ChatFragment.TAG);
                     fragmentTransaction.addToBackStack(ChatFragment.TAG);
                     fragmentTransaction.commit();
@@ -338,6 +344,7 @@ public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
                 setDriverStateButton(0);
                 clearMap();
                 Toast.makeText(getContext(), getResources().getString(R.string.trip_is_ended), Toast.LENGTH_LONG).show();
+                openOrdersFragment();
             }
         });
     }
@@ -361,27 +368,46 @@ public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
         });
     }
 
+    private void observeOrderViewModel(UserMainViewModel viewModel) {
+        viewModel.getOrderLiveData().observe(this, orderInfo -> {
+            if(orderInfo != null && orderInfo.getState().equals("success")) {
+                switch (orderInfo.getOrder().getStatus()){
+                    case "0":
+                        setCancelledState();
+                        break;
+
+                    case "2":
+                        setWithOrderState(orderInfo.getOrder().getId(),0);
+                        break;
+
+                    case "3":
+                        setWithOrderState(orderInfo.getOrder().getId(),1);
+                        break;
+
+                    case "4":
+                        setWithOrderState(orderInfo.getOrder().getId(),2);
+                        break;
+                }
+            }
+        });
+    }
+
     //helper functions
     private void setDriverState(Response res){
         setSessionState(res);
 
-        switch (res.getStatus()){
-            case "0":
-                setCancelledState();
-                break;
-
-            case "2":
-                setWithOrderState(res.getOrder_id(),0);
-                break;
-
-            case "3":
-                setWithOrderState(res.getOrder_id(),1);
-                break;
-
-            case "4":
-                setWithOrderState(res.getOrder_id(),2);
-                break;
-
+        if (res.getStatus().equals("0")){
+            setCancelledState();
+        }else {
+            if (res.getActive_orders() != null && res.getActive_orders().size() > 1) {
+                ActiverOrdersDialogFragment activerOrdersDialogFragment = ActiverOrdersDialogFragment.newInstance(res.getActive_orders());
+                activerOrdersDialogFragment.setTargetFragment(DriverMainFragment.this, Constants.ACTIVEORDERSCODE);
+                activerOrdersDialogFragment.show(getFragmentManager(), ActiverOrdersDialogFragment.TAG);
+            }else if(res.getActive_orders() != null && res.getActive_orders().size() == 1){
+                orderId = res.getActive_orders().get(0).getId();
+                viewModel.sentRequestToOrder(orderId);
+                observeOrderViewModel(viewModel);
+            }
         }
     }
 
@@ -458,6 +484,27 @@ public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
         setCancelledState();
     }
 
+    private void openOrdersFragment(){
+        fragmentTransaction = getFragmentManager().beginTransaction();
+
+        CityFragment cityFragment = new CityFragment();
+        fragmentTransaction.replace(R.id.main_activity_frame, cityFragment, CityFragment.TAG);
+        fragmentTransaction.addToBackStack(CityFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if(requestCode == Constants.ACTIVEORDERSCODE){
+                orderId = data.getStringExtra("order_id");
+                viewModel.sentRequestToOrder(orderId);
+                observeOrderViewModel(viewModel);
+            }
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -473,7 +520,8 @@ public class DriverMainFragment extends Fragment implements OnMapReadyCallback{
 
             case REQUEST_CALL_PERMISSION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:+" + orderInfo.getDriver().getPhone()));
+                    String phone = orderInfo.getDispatcher() == null ? orderInfo.getClient().getPhone() : orderInfo.getDispatcher().getPhone();
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:+" + phone));
                     startActivity(intent);
                 } else {
                     requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL_PERMISSION);

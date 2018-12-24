@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.os.Build;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
@@ -16,6 +17,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import org.objectweb.asm.Handle;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -47,11 +50,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Paper.init(getApplicationContext());
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            setupChannels();
-        }
 
         String type = remoteMessage.getData().get("type");
         if (type.equals("2")){
@@ -125,7 +123,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setContentIntent(pendingIntent);
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            setupChannels();
+        }
         notificationManager.notify(notificationId, notificationBuilder.build());
     }
 
@@ -151,7 +152,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setContentIntent(pendingIntent);
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            setupChannels();
+        }
+
         notificationManager.notify(notificationId, notificationBuilder.build());
     }
 
@@ -161,9 +166,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Paper.init(getBaseContext());
 
         subscription = new CompositeSubscription();
-
-        changeFireBaseToken(s);
         Paper.book().write(Constants.FIREBASE_TOKEN, s);
+
+        if (!getToken().equals("") && getToken() != null){
+            changeFireBaseToken(s);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -172,10 +179,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String adminChannelDescription = getString(R.string.notifications_admin_channel_description);
 
         NotificationChannel adminChannel;
-        adminChannel = new NotificationChannel(ADMIN_CHANNEL_ID, adminChannelName, NotificationManager.IMPORTANCE_LOW);
+        adminChannel = new NotificationChannel(ADMIN_CHANNEL_ID, adminChannelName, NotificationManager.IMPORTANCE_DEFAULT);
         adminChannel.setDescription(adminChannelDescription);
-        adminChannel.enableLights(true); adminChannel.setLightColor(Color.RED);
+        adminChannel.enableLights(true);
+        adminChannel.setLightColor(Color.RED);
         adminChannel.enableVibration(true);
+
         if (notificationManager != null) {
             notificationManager.createNotificationChannel(adminChannel);
         }

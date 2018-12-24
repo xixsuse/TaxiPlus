@@ -1,17 +1,29 @@
 package kz.taxiplus.ysmaiylbokeikhan.taxiplus;
 
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +36,7 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,13 +46,17 @@ import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.google.firebase.messaging.RemoteMessage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import io.paperdb.Paper;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Car;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.OnLineResponse;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.RecyclerMenuItem;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Response;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.User;
@@ -75,6 +92,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
+import static okhttp3.MediaType.parse;
+
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener{
     private static final int RESULT_LOAD_IMAGE = 11;
 
@@ -94,6 +113,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private RecyclerMenuAdapter menuAdapter;
     private FragmentTransaction fragmentTransaction;
     private CompositeSubscription subscription;
+
+    NotificationManager notificationManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -153,22 +174,28 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         });
     }
 
-    private void setUserMenu() {
+    private void setUserMenu(List<String> countList){
         List<RecyclerMenuItem>recyclerMenuItemList = new ArrayList<>();
 
-        RecyclerMenuItem taxi = new RecyclerMenuItem(getResources().getString(R.string.modeTaxi),R.drawable.icon_taxi, 1);
-        RecyclerMenuItem ladyTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeLadyTaxi),R.drawable.icon_taxi, 2);
-        RecyclerMenuItem invaTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeInvaTaxi),R.drawable.icon_inva, 3);
-        RecyclerMenuItem interCityTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeCitiesTaxi),R.drawable.icon_cities_taxi, 4);
-        RecyclerMenuItem cargoTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeCargoTaxi),R.drawable.icon_cargo, 5);
-        RecyclerMenuItem evoTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeEvo),R.drawable.icon_evo, 8);
-        RecyclerMenuItem sober = new RecyclerMenuItem(getResources().getString(R.string.order_driver),R.drawable.icon_driver, 11);
-        RecyclerMenuItem menuItem = new RecyclerMenuItem(getResources().getString(R.string.trip_history), R.drawable.icon_history, 10);
-        RecyclerMenuItem menuNews = new RecyclerMenuItem(getResources().getString(R.string.news), R.drawable.ic_news, 55);
-        RecyclerMenuItem menuItem4 = new RecyclerMenuItem(getResources().getString(R.string.settings), R.drawable.icon_settings, 20);
-        RecyclerMenuItem menuItem7 = new RecyclerMenuItem(getResources().getString(R.string.my_bonuses), R.drawable.icon_driver, 7);
-        RecyclerMenuItem menuItem8 = new RecyclerMenuItem(getResources().getString(R.string.driver_mode), R.drawable.icon_switch, 30);
-        RecyclerMenuItem menuItem9 = new RecyclerMenuItem(getResources().getString(R.string.share), R.drawable.icon_share, 40);
+        RecyclerMenuItem taxi = new RecyclerMenuItem(getResources().getString(R.string.modeTaxi),R.drawable.icon_taxi, 1,
+                countList == null ? "0" : countList.get(0));
+        RecyclerMenuItem ladyTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeLadyTaxi),R.drawable.icon_taxi, 2,
+                countList == null ? "0" : countList.get(1));
+        RecyclerMenuItem invaTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeInvaTaxi),R.drawable.icon_inva, 3,
+                countList == null ? "0" : countList.get(2));
+        RecyclerMenuItem interCityTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeCitiesTaxi),R.drawable.icon_cities_taxi, 4,
+                countList == null ? "0" : countList.get(5));
+        RecyclerMenuItem cargoTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeCargoTaxi),R.drawable.icon_cargo, 5,
+                countList == null ? "0" : countList.get(3));
+        RecyclerMenuItem evoTaxi = new RecyclerMenuItem(getResources().getString(R.string.modeEvo),R.drawable.icon_evo, 8,
+                countList == null ? "0" : countList.get(4));
+        RecyclerMenuItem sober = new RecyclerMenuItem(getResources().getString(R.string.order_driver),R.drawable.icon_driver, 11, "");
+        RecyclerMenuItem menuItem = new RecyclerMenuItem(getResources().getString(R.string.trip_history), R.drawable.icon_history, 10, "");
+        RecyclerMenuItem menuNews = new RecyclerMenuItem(getResources().getString(R.string.news), R.drawable.ic_news, 55,"");
+        RecyclerMenuItem menuItem4 = new RecyclerMenuItem(getResources().getString(R.string.settings), R.drawable.icon_settings, 20, "");
+        RecyclerMenuItem menuItem7 = new RecyclerMenuItem(getResources().getString(R.string.my_bonuses), R.drawable.icon_driver, 7, "");
+        RecyclerMenuItem menuItem8 = new RecyclerMenuItem(getResources().getString(R.string.driver_mode), R.drawable.icon_switch, 30, "");
+        RecyclerMenuItem menuItem9 = new RecyclerMenuItem(getResources().getString(R.string.share), R.drawable.icon_share, 40, "");
 
         recyclerMenuItemList.add(taxi);
         recyclerMenuItemList.add(ladyTaxi);
@@ -189,22 +216,27 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         menuRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
     }
 
-    private void setDriverMenu(){
+    private void setDriverMenu(List<String> countList){
         List<RecyclerMenuItem>recyclerMenuItemList = new ArrayList<>();
-        RecyclerMenuItem menuItem11 = new RecyclerMenuItem(getResources().getString(R.string.current_orders), R.drawable.icon_main, 100);
-        RecyclerMenuItem menuItem0 = new RecyclerMenuItem(getResources().getString(R.string.open_session), R.drawable.icon_clock, 200);
-        RecyclerMenuItem menuItem = new RecyclerMenuItem(getResources().getString(R.string.mode_city_), R.drawable.icon_taxi, 300);
-        RecyclerMenuItem menuItem1 = new RecyclerMenuItem(getResources().getString(R.string.mode_intercity), R.drawable.icon_cities_taxi, 400);
-        RecyclerMenuItem menuItem2 = new RecyclerMenuItem(getResources().getString(R.string.mode_cargo), R.drawable.icon_cargo, 500);
-        RecyclerMenuItem menuItemEvo = new RecyclerMenuItem(getResources().getString(R.string.modeEvo), R.drawable.icon_evo, 600);
-        RecyclerMenuItem menuItemInva = new RecyclerMenuItem(getResources().getString(R.string.modeInvaTaxi), R.drawable.icon_inva, 700);
-        RecyclerMenuItem menuItem3 = new RecyclerMenuItem(getResources().getString(R.string.trip_history), R.drawable.icon_history, 10);
-        RecyclerMenuItem menuItem5 = new RecyclerMenuItem(getResources().getString(R.string.mode_coins), R.drawable.icon_by_bonuses_p, 800);
-        RecyclerMenuItem menuNews = new RecyclerMenuItem(getResources().getString(R.string.news), R.drawable.ic_news, 55);
-        RecyclerMenuItem menuItem9 = new RecyclerMenuItem(getResources().getString(R.string.user_mode), R.drawable.icon_switch, 50);
-        RecyclerMenuItem menuItem6 = new RecyclerMenuItem(getResources().getString(R.string.settings), R.drawable.icon_settings, 20);
-        RecyclerMenuItem menuItem7 = new RecyclerMenuItem(getModeString(), R.drawable.icon_driver, 900);
-        RecyclerMenuItem menuItem8 = new RecyclerMenuItem(getResources().getString(R.string.share), R.drawable.icon_share, 40);
+        RecyclerMenuItem menuItem11 = new RecyclerMenuItem(getResources().getString(R.string.current_orders), R.drawable.icon_main, 100, "");
+        RecyclerMenuItem menuItem0 = new RecyclerMenuItem(getResources().getString(R.string.open_session), R.drawable.icon_clock, 200, "");
+        RecyclerMenuItem menuItem = new RecyclerMenuItem(getResources().getString(R.string.mode_city_), R.drawable.icon_taxi, 300,
+                countList == null ? "0" : countList.get(0));
+        RecyclerMenuItem menuItem1 = new RecyclerMenuItem(getResources().getString(R.string.mode_intercity), R.drawable.icon_cities_taxi, 400,
+                countList == null ? "0" : countList.get(4));
+        RecyclerMenuItem menuItem2 = new RecyclerMenuItem(getResources().getString(R.string.mode_cargo), R.drawable.icon_cargo, 500,
+                countList == null ? "0" : countList.get(2));
+        RecyclerMenuItem menuItemEvo = new RecyclerMenuItem(getResources().getString(R.string.modeEvo), R.drawable.icon_evo, 600,
+                countList == null ? "0" : countList.get(3));
+        RecyclerMenuItem menuItemInva = new RecyclerMenuItem(getResources().getString(R.string.modeInvaTaxi), R.drawable.icon_inva, 700,
+                countList == null ? "0" : countList.get(1));
+        RecyclerMenuItem menuItem3 = new RecyclerMenuItem(getResources().getString(R.string.trip_history), R.drawable.icon_history, 10, "");
+        RecyclerMenuItem menuItem5 = new RecyclerMenuItem(getResources().getString(R.string.mode_coins), R.drawable.icon_by_bonuses_p, 800, "");
+        RecyclerMenuItem menuNews = new RecyclerMenuItem(getResources().getString(R.string.news), R.drawable.ic_news, 55, "");
+        RecyclerMenuItem menuItem9 = new RecyclerMenuItem(getResources().getString(R.string.user_mode), R.drawable.icon_switch, 50, "");
+        RecyclerMenuItem menuItem6 = new RecyclerMenuItem(getResources().getString(R.string.settings), R.drawable.icon_settings, 20, "");
+        RecyclerMenuItem menuItem7 = new RecyclerMenuItem(getModeString(), R.drawable.icon_driver, 900, "");
+        RecyclerMenuItem menuItem8 = new RecyclerMenuItem(getResources().getString(R.string.share), R.drawable.icon_share, 40, "");
 
         recyclerMenuItemList.add(menuItem0);
         recyclerMenuItemList.add(menuItem11);
@@ -359,15 +391,47 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
 
+    public void getCount(){
+        subscription.add(NetworkUtil.getRetrofit()
+                .getOnLineCount(Utility.getToken(MainActivity.this))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponseCount, this::handleErrorCount));
+    }
+
+    private void handleResponseCount(OnLineResponse response) {
+        List<String> countList = new ArrayList<>();
+        if (user.getRole_id().equals("2")){
+            countList.add(response.getTaxi() == null ? "0" : response.getTaxi());
+            countList.add(response.getInva() == null ? "0" : response.getInva());
+            countList.add(response.getGruzotaxi() == null ? "0" : response.getGruzotaxi());
+            countList.add(response.getEkavuator() == null ? "0" : response.getEkavuator());
+            countList.add(response.getMejgorod() == null ? "0" : response.getMejgorod());
+            setDriverMenu(countList);
+        }else {
+            countList.add(response.getTaxi() == null ? "0" : response.getTaxi());
+            countList.add(response.getLady() == null ? "0" : response.getLady());
+            countList.add(response.getInva() == null ? "0" : response.getInva());
+            countList.add(response.getGruzotaxi() == null ? "0" : response.getGruzotaxi());
+            countList.add(response.getEkavuator() == null ? "0" : response.getEkavuator());
+            countList.add(response.getMejgorod() == null ? "0" : response.getMejgorod());
+            setUserMenu(countList);
+        }
+    }
+
+    private void handleErrorCount(Throwable throwable) {
+
+    }
+
     //helper functions
     private void setUserData() {
         getUser();
         userName.setText(user.getName());
         userPhone.setText(user.getPhone());
         if(user.getRole_id().equals("2")){
-            setDriverMenu();
+            setDriverMenu(null);
         }else {
-            setUserMenu();
+            setUserMenu(null);
         }
     }
 
@@ -541,6 +605,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }else {
+            getCount();
             drawer.openDrawer(Gravity.START);
         }
     }
@@ -560,22 +625,37 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             if(Utility.checkPermissionReadImage(this)){
                 Image image = ImagePicker.getFirstImageOrNull(data);
                 File file = new File(image.getPath());
-
+//
+//                int compressionRatio = 50;
+//                try {
+//                    Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
+//                    bitmap.compress(Bitmap.CompressFormat.JPEG, compressionRatio, new FileOutputStream(file));
+//                }
+//                catch (Throwable t) {
+//                    Log.e("ERROR", "Error compressing file." + t.toString ());
+//                    t.printStackTrace();
+//                }
+//
                 RetrofitInterface retrofitInterface = NetworkUtil.getRetrofit();
-                RequestBody token = RequestBody.create(MediaType.parse("text/plain"), Utility.getToken(this));
-                MultipartBody.Part filePart = MultipartBody.Part.createFormData("myfile", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
+                RequestBody token = RequestBody.create(parse("text/plain"), Utility.getToken(this));
+
+                RequestBody requestBody = RequestBody.create(parse("*/*"), file);
+                MultipartBody.Part filePart = MultipartBody.Part.createFormData("myfile", file.getName(), requestBody);
 
                 Call<Response> call = retrofitInterface.uploadAva(filePart, token);
                 call.enqueue(new Callback<Response>() {
                     @Override
                     public void onResponse(Call<Response> call, @NonNull retrofit2.Response<Response> response){
-                        if(response.body().getState() != null &&response.body().getState().equals("success")  && response.body().getPath() != null) {
-                            user.setAvatar_path(response.body().getPath());
-                            Glide.with(MainActivity.this)
-                                    .load(response.body().getPath())
-                                    .apply(RequestOptions.circleCropTransform())
-                                    .into(userLogo);
-                            Paper.book().write(Constants.USER, user);
+                        if (response.body() != null) {
+                            if (response.body().getState() != null &&
+                                    response.body().getState().equals("success") && response.body().getPath() != null) {
+                                user.setAvatar_path(response.body().getPath());
+                                Glide.with(MainActivity.this)
+                                        .load(response.body().getPath())
+                                        .apply(RequestOptions.circleCropTransform())
+                                        .into(userLogo);
+                                Paper.book().write(Constants.USER, user);
+                            }
                         }
                     }
 
@@ -592,14 +672,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         public List<RecyclerMenuItem> menuList;
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            public TextView title;
+            public TextView title, count;
             public ImageView logo;
+            public LinearLayout counterView;
             public ConstraintLayout view;
 
 
             public ViewHolder(View v) {
                 super(v);
                 title = (TextView)v.findViewById(R.id.rmi_title);
+                count = (TextView)v.findViewById(R.id.rmi_counter_text);
+                counterView = (LinearLayout) v.findViewById(R.id.rmi_counter_view);
                 logo = (ImageView) v.findViewById(R.id.rmi_icon);
                 view = (ConstraintLayout) v.findViewById(R.id.rmi_view);
             }
@@ -623,6 +706,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         public void onBindViewHolder(RecyclerMenuAdapter.ViewHolder holder, final int position) {
             holder.title.setText(menuList.get(position).getTitle());
             holder.logo.setImageDrawable(getResources().getDrawable(menuList.get(position).getLogo()));
+            if (!menuList.get(position).getCount().equals("")){
+                holder.count.setText(menuList.get(position).getCount());
+            }else {
+                holder.counterView.setVisibility(View.GONE);
+            }
+
             holder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -825,9 +914,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             }else if(type.equals("0")){
                 InfoDialogView infoDialogView = InfoDialogView.newInstance(getResources().getString(R.string.failed_payment), R.drawable.icon_error);
                 infoDialogView.show(getSupportFragmentManager(), InfoDialogView.TAG);
-            }else if(type.equals("2")){
-                openChatFragment(remoteMessage.getData().get("author"), remoteMessage.getData().get("phone"));
             }
+//            else if(type.equals("2")){
+//                openChatFragment(remoteMessage.getData().get("author"), remoteMessage.getData().get("phone"));
+//            }
         }
     }
 

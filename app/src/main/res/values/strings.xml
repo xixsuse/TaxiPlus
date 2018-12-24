@@ -180,7 +180,7 @@
     <string name="new_orders">Новые заказы</string>
     <string name="new_offer_body">на Ваш заказ</string>
     <string name="came_button">Я подъехал</string>
-    <string name="driver_is_came">Водитель подъехал</string>
+    <string name="driver_is_came">Водитель подъехал ! 5 минут ожидания</string>
     <string name="start_way_button">Начал заказ</string>
     <string name="end_way_button">Окончил заказ</string>
     <string name="came_button_response">Ждите клиента</string>
@@ -247,6 +247,7 @@
     <string name="amount_error">Введите количесто монет</string>
     <string name="card_error">Введите номер карты правильно</string>
     <string name="successfully_sended">Заявка успешно принята</string>
+    <string name="choose_order">Выберите заказ</string>
 
     <string name="notifications_admin_channel_name">Name of admin channel</string>
     <string name="notifications_admin_channel_description">Description of admin channel</string>

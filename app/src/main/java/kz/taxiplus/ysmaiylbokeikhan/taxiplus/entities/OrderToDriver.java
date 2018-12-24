@@ -95,8 +95,12 @@ public class OrderToDriver {
         private OrderToDriver order;
         private User client;
         private User driver;
+        private Dispatcher dispatcher;
         private List<Car> car;
         private String state;
+        private String stars;
+        private String rating;
+        private String avatar;
 
         protected GetOrderInfo(Parcel in) {
             state = in.readString();
@@ -132,6 +136,22 @@ public class OrderToDriver {
 
         public List<Car> getCar() {
             return car;
+        }
+
+        public Dispatcher getDispatcher() {
+            return dispatcher;
+        }
+
+        public String getStars() {
+            return stars;
+        }
+
+        public String getRating() {
+            return rating;
+        }
+
+        public String getAvatar() {
+            return avatar;
         }
 
         @Override

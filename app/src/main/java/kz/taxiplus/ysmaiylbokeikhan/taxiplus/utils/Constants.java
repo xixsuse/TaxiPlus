@@ -53,6 +53,7 @@ public class Constants {
     public static final String INFOFRAGMENT = "InfoFragment";
     public static final String NEWSFRAGMENT = "NewsFragment";
     public static final String GETMONEYFRAGMENT = "GetMoneyFragment";
+    public static final String ACTIVEORDERSDIALOGFRAGMENT = "ActiverOrdersDialogFragment";
 
 
     public static final int MAINFRAGMENTCODEFROM = 121;
@@ -66,6 +67,7 @@ public class Constants {
     public static final int SELECTCITYFROMREGISTER = 1;
     public static final int TOCITY = 11;
     public static final int FROMCITY = 12;
+    public static final int ACTIVEORDERSCODE = 7;
 
     public static final String GOOGLE_API_KEY = "AIzaSyBQacFtBBzmXw9NHkRht8-LH9rJxJ482kk";
     public static final String FROMMAP = "fromMap";
@@ -78,8 +80,9 @@ public class Constants {
     public static final String FROMADDRESS = "fromAddress";
     public static final String ADDRESS = "Address";
     public static final String URL = "http://194.87.146.89/profile/account/";
-    public static final String URL_NODE = "http://185.236.130.126:443/";
-    public static final String TEST_URL = "http://192.168.0.116/profile/account/";
+    public static final String URL_NODE = "http://194.87.146.89:443/";
+    public static final String TEST_URL = "http://194.87.99.4/profile/account/";
+    public static final String TEST_URL_NODE = "http://194.87.99.4:443/";
     public static final String NEWORDER = "newOrder";
     public static final String SELECTEDMODEL = "selectedModel";
     public static final String SELECTEDCITY = "selectedCity";

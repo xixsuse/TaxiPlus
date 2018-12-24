@@ -97,7 +97,6 @@ public class CityFragment extends Fragment implements AcceptOrderInterface{
             @Override
             public void onClick(View v) {
                 newOrdersButton.setVisibility(View.GONE);
-                getAccess();
             }
         });
     }
@@ -197,11 +196,12 @@ public class CityFragment extends Fragment implements AcceptOrderInterface{
     private final BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, android.content.Intent intent) {
-            String orderId = intent.getStringExtra(Constants.ORDERID);
-
-           if (newOrdersButton.getVisibility() == View.GONE){
-                newOrdersButton.setVisibility(View.VISIBLE);
-           }
+            getAccess();
+//            String orderId = intent.getStringExtra(Constants.ORDERID);
+//
+//           if (newOrdersButton.getVisibility() == View.GONE){
+//                newOrdersButton.setVisibility(View.VISIBLE);
+//           }
         }
     };
 }

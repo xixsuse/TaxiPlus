@@ -14,7 +14,6 @@ public class Response {
     private String balance;
     private String link;
     private String status;
-    private String order_id;
     private String path;
     private String url;
     private String stars;
@@ -24,6 +23,7 @@ public class Response {
     private AccessPrice price;
     private CitiesResponse.City city;
     private List<Car> cars;
+    private List<Order> active_orders;
     private Car car;
 
     public String getState() {
@@ -74,10 +74,6 @@ public class Response {
         return status;
     }
 
-    public String getOrder_id() {
-        return order_id;
-    }
-
     public String getPath() {
         return path;
     }
@@ -116,5 +112,9 @@ public class Response {
 
     public String getRating() {
         return rating;
+    }
+
+    public List<Order> getActive_orders() {
+        return active_orders;
     }
 }

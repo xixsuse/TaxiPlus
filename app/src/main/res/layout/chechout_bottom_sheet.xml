@@ -38,6 +38,24 @@
         android:drawableEnd="@drawable/icon_current_order"/>
 
     <ImageView
+        android:id="@+id/driver_logo"
+        android:layout_width="@dimen/_65sdp"
+        android:layout_height="@dimen/_65sdp"
+        android:layout_marginTop="@dimen/_15sdp"
+        app:layout_constraintTop_toBottomOf="@id/confirm_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ImageView
+        android:id="@+id/logo_frame"
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="@dimen/_80sdp"
+        app:layout_constraintTop_toTopOf="@id/driver_logo"
+        app:layout_constraintBottom_toBottomOf="@id/driver_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ImageView
         android:id="@+id/from_icon"
         android:layout_width="@dimen/_25sdp"
         android:layout_height="@dimen/_17sdp"
@@ -50,10 +68,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="?attr/colorPrimary"
-        android:layout_marginTop="@dimen/_13sdp"
+        android:layout_marginTop="@dimen/_8sdp"
         android:layout_marginStart="@dimen/_5sdp"
         android:text="@string/from"
-        app:layout_constraintTop_toBottomOf="@id/confirm_text"
+        app:layout_constraintTop_toBottomOf="@id/logo_frame"
         app:layout_constraintStart_toEndOf="@id/from_icon"
         android:textSize="@dimen/_13ssp"/>
     <TextView
@@ -245,41 +263,6 @@
         android:textSize="@dimen/_13ssp"/>
 
     <ImageView
-        android:id="@+id/date_icon"
-        android:layout_width="@dimen/_17sdp"
-        android:layout_height="@dimen/_17sdp"
-        android:layout_marginStart="@dimen/_4sdp"
-        app:layout_constraintTop_toTopOf="@id/date_name"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/date_name"
-        android:background="@drawable/icon_clock"/>
-    <TextView
-        android:id="@+id/date_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="?attr/colorPrimary"
-        android:layout_marginTop="@dimen/_13ssp"
-        android:layout_marginStart="@dimen/_5sdp"
-        android:text="@string/offer_date"
-        app:layout_constraintTop_toBottomOf="@id/number_name"
-        app:layout_constraintStart_toEndOf="@id/to_icon"
-        android:textSize="@dimen/_13ssp"/>
-    <TextView
-        android:id="@+id/mf_confirm_date_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textColor="?attr/colorPrimary"
-        android:text="@string/date"
-        android:textAlignment="textEnd"
-        android:maxLines="1"
-        android:ellipsize="end"
-        app:layout_constraintStart_toEndOf="@id/date_name"
-        app:layout_constraintTop_toTopOf="@id/date_name"
-        app:layout_constraintBottom_toBottomOf="@id/date_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="@dimen/_13ssp"/>
-
-    <ImageView
         android:id="@+id/mode_icon"
         android:layout_width="@dimen/_25sdp"
         android:layout_height="@dimen/_17sdp"
@@ -295,7 +278,7 @@
         android:layout_marginTop="@dimen/_13sdp"
         android:layout_marginStart="@dimen/_5sdp"
         android:text="@string/offer_mode"
-        app:layout_constraintTop_toBottomOf="@id/date_name"
+        app:layout_constraintTop_toBottomOf="@id/number_name"
         app:layout_constraintStart_toEndOf="@id/to_icon"
         android:textSize="@dimen/_13ssp"/>
     <TextView

@@ -39,18 +39,26 @@ public class Utility {
     }
 
     public static String getToken(Context context) {
-        Paper.init(context);
-        User user = Paper.book().read(Constants.USER);
-        Log.d("currentToken", user.getToken());
+        try {
+            Paper.init(context);
+            User user = Paper.book().read(Constants.USER);
+            Log.d("currentToken", user.getToken());
 
-        return user.getToken();
+            return user.getToken();
+        }catch (Exception e){
+            return "";
+        }
     }
 
     public static String getPushId(Context context) {
-        Paper.init(context);
-        String push_id = Paper.book().read(Constants.FIREBASE_TOKEN, "");
+        try {
+            Paper.init(context);
+            String push_id = Paper.book().read(Constants.FIREBASE_TOKEN, "");
 
-        return push_id;
+            return push_id;
+        }catch (Exception e){
+            return "";
+        }
     }
 
     public static LatLng getLocation(Context context) {

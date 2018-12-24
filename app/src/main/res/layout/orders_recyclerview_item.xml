@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="@dimen/_6sdp"
+    android:paddingStart="@dimen/_6sdp"
+    android:paddingEnd="@dimen/_6sdp"
+    android:id="@+id/roi_view">
+
+    <TextView
+        android:id="@+id/roi_direction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="@dimen/_13ssp"
+        android:textColor="?attr/colorPrimary"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:text="Direction"/>
+    <TextView
+        android:id="@+id/roi_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/roi_direction"
+        app:layout_constraintBottom_toTopOf="@id/line"
+        android:textSize="@dimen/_12ssp"
+        android:textColor="@color/gray"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:text="12:00"/>
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/_3sdp"
+        android:background="@color/gray"
+        app:layout_constraintTop_toBottomOf="@id/roi_date"/>
+</android.support.constraint.ConstraintLayout>

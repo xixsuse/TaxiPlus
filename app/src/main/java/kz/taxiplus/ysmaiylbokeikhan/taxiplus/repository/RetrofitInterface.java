@@ -10,6 +10,7 @@ import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.HistoryItem;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.IntercityOrder;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Model;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.NewsItem;
+import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.OnLineResponse;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Order;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.OrderToDriver;
 import kz.taxiplus.ysmaiylbokeikhan.taxiplus.entities.Place;
@@ -299,6 +300,10 @@ public interface RetrofitInterface {
     @FormUrlEncoded
     @POST("logout/")
     Observable<Response> logout(@Field("token")String token);
+
+    @FormUrlEncoded
+    @POST("get-amount/")
+    Observable<OnLineResponse> getOnLineCount(@Field("token")String token);
 
     @FormUrlEncoded
     @POST("get-news/")

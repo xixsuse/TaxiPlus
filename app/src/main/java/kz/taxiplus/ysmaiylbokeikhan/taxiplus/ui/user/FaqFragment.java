@@ -71,7 +71,6 @@ public class FaqFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 fragmentTransaction = getFragmentManager().beginTransaction();
-
                 AddRecomendationFragment addRecomendationFragment = new AddRecomendationFragment();
 
                 fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);

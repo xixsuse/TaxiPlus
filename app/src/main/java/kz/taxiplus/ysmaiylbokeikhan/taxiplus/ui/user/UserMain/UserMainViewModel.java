@@ -30,6 +30,7 @@ public class UserMainViewModel extends AndroidViewModel implements DirectionCall
     private LiveData<Response> responseDriverFinishLiveData;
     private MutableLiveData<Direction> directionLiveData = new MutableLiveData<>();
     private LiveData<OrderToDriver.GetOrderInfo> orderInfoLiveData;
+    private LiveData<OrderToDriver.GetOrderInfo> orderLiveData;
     private Context context;
 
     public UserMainViewModel(@NonNull Application application, Context context) {
@@ -54,6 +55,13 @@ public class UserMainViewModel extends AndroidViewModel implements DirectionCall
         return orderInfoLiveData;
     }
 
+    public void sentRequestToOrder(String orderId){
+        this.orderLiveData = ProjectRepository.getInstance().getOrderInfo(orderId);
+    }
+
+    public LiveData<OrderToDriver.GetOrderInfo> getOrderLiveData(){
+        return orderLiveData;
+    }
 
     public void closeSession(){
         this.responseSessionLiveData = ProjectRepository.getInstance().closeSession(Utility.getToken(context));
